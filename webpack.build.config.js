@@ -15,6 +15,13 @@ const defaultInclude = [SRC_DIR];
 const package = require('./package.json');
 const title = `${package.name} ${package.version}`
 
+// Dependencies (use node_modules)
+const dependencies = Object.keys(package.dependencies);
+const externals = Object.create(null);
+for (let d of dependencies) {
+  externals[d] = `require('${d}')`;
+}
+
 
 module.exports = {
   entry: SRC_DIR + '/index.js',
@@ -52,6 +59,7 @@ module.exports = {
   },
   target: 'electron-renderer',
   plugins: [
+    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       title: title
     }),
@@ -61,6 +69,8 @@ module.exports = {
     }),
     new BabiliPlugin()
   ],
+  devtool: 'cheap-module-eval-source-map',
+  externals: externals,
   stats: {
     colors: true,
     children: false,

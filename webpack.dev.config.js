@@ -13,6 +13,8 @@ const defaultInclude = [SRC_DIR];
 // Title
 const package = require('./package.json');
 const title = `${package.name} ${package.version}`
+
+// Dependencies (use node_modules)
 const dependencies = Object.keys(package.dependencies);
 const externals = Object.create(null);
 for (let d of dependencies) {
