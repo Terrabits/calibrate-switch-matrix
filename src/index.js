@@ -1,7 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import Window from './components/Window';
+import React          from 'react';
+import ReactDOM       from 'react-dom';
+import {AppContainer} from 'react-hot-loader';
+
+import App from './components/app.js';
 
 import './assets/css/global.css';
 import './vendor/photon/css/photon.css';
@@ -12,7 +13,7 @@ root.id = "root";
 document.body.appendChild( root );
 
 // Now we can render our application into it
-const render = Component => {
+window.render = Component => {
   ReactDOM.render(
     <AppContainer>
       <Component />
@@ -21,9 +22,9 @@ const render = Component => {
   )
 }
 
-render(Window)
+window.render(App)
 
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('./components/Window', () => { render(Window) })
+  module.hot.accept('./components/app', () => { window.render(App) })
 }

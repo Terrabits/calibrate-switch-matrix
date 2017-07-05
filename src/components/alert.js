@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 class Alert extends React.Component {
   constructor(props) {
@@ -54,4 +54,4 @@ class Alert extends React.Component {
   }
 }
 
-module.exports = Alert;
+export default Alert;

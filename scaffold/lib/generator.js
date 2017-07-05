@@ -43,10 +43,10 @@ const writeTemplates = ( newComponentPath, args) => {
 
     let files = [];
     if ( args.stateless ) {
-      files.push({in: 'statelessComponent.js', out: `${args.name}.js`});
+      files.push({in: 'statelessComponent.js', out: `${args.name.toLowerCase()}.js`});
     }
     else {
-      files.push({in: 'statefulComponent.js', out: `${args.name}.js`});
+      files.push({in: 'statefulComponent.js', out: `${args.name.toLowerCase()}.js`});
     }
 
     let promises = [];

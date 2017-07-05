@@ -1,4 +1,3 @@
-
 class PageIndex {
   constructor(initialPage='null', initialStep=0) {
     this.page = initialPage;

@@ -1,6 +1,4 @@
-const React = require('react');
-const Store = require('electron-store');
-const store = new Store();
+import React from 'react';
 
 class LineEdit extends React.Component {
   constructor(props) {
@@ -15,4 +13,4 @@ class LineEdit extends React.Component {
   }
 }
 
-module.exports = LineEdit;
+export default LineEdit;

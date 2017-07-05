@@ -1,16 +1,15 @@
-const Alert                 = require('./alert.js');
-const VnaPage               = require('./vna-page.js');
-const OspPage               = require('./osp-page.js');
-const PageIndex             = require('./page-index.js');
-const ProcedurePage         = require('./procedure-page.js');
-const ChooseCalibrationPage = require('./choose-calibration-page.js');
-const CalibratePage         = require('./calibrate-page.js');
-const MeasurePage           = require('./measure-page.js');
-const React                 = require('react');
-const Store                 = require('electron-store');
-const store                 = new Store();
+import React                 from 'react';
 
-CalibrationChoices = {
+import CalibratePage         from './pages/calibrate.js';
+import ChooseCalibrationPage from './pages/choose-calibration.js';
+import PageIndex             from '../lib/page-index.js';
+import MeasurePage           from './pages/measure.js';
+import SettingsPage          from './pages/settings.js';
+
+import Store from 'electron-store';
+const  store = new Store();
+
+const CalibrationChoices = {
   NONE: 'no calibration',
   EXISTING: 'use existing calibration',
   CALIBRATE: 'calibrate'
@@ -22,14 +21,14 @@ class Wizard extends React.Component {
     this.state = {
       index:             new PageIndex(),
       vnaAddress:        store.get('vna-address', 'localhost'),
-      ospAddress:        store.get('osp-address', '192.168.1.101'),
+      matrixAddress:     store.get('matrix-address', '192.168.1.101'),
       procedureFilename: store.get('procedure-filename', ''),
       calibrationChoice: store.get('calibration-choice', CalibrationChoices.CALIBRATE),
       calGroup:          store.get('cal-group', ''),
       saveCalibrationAs: store.get('save-calibration-as', '')
     };
-    this.handleVnaAddressChange = this.handleVnaAddressChange.bind(this);
-    this.handleOspAddressChange = this.handleOspAddressChange.bind(this);
+    this.handleVnaAddressChange        = this.handleVnaAddressChange.bind(this);
+    this.handleMatrixAddressChange     = this.handleMatrixAddressChange.bind(this);
     this.handleProcedureFilenameChange = this.handleProcedureFilenameChange.bind(this);
     this.handleCalibrationChoiceChange = this.handleCalibrationChoiceChange.bind(this);
     this.handleCalGroupChange          = this.handleCalGroupChange.bind(this);
@@ -39,8 +38,8 @@ class Wizard extends React.Component {
   handleVnaAddressChange(event) {
     this.vnaAddress = event.target.value;
   }
-  handleOspAddressChange(event) {
-    this.ospAddress = event.target.value;
+  handleMatrixAddressChange(event) {
+    this.matrixAddress = event.target.value;
   }
   handleProcedureFilenameChange(event) {
     // TODO
@@ -71,12 +70,12 @@ class Wizard extends React.Component {
     store.set('vna-address', addr);
     this.setState({vnaAddress: addr});
   }
-  get ospAddress() {
-    return this.state.ospAddress;
+  get matrixAddress() {
+    return this.state.matrixAddress;
   }
-  set ospAddress(addr) {
-    store.set('osp-address', addr);
-    this.setState({ospAddress: addr});
+  set matrixAddress(addr) {
+    store.set('matrix-address', addr);
+    this.setState({matrixAddress: addr});
   }
   get procedureFilename() {
     return this.state.procedureFilename;
@@ -115,14 +114,22 @@ class Wizard extends React.Component {
   }
 
   render() {
+    let settings = {
+      vnaAddress:        this.vnaAddress,
+      matrixAddress:     this.matrixAddress,
+      procedureFilename: this.procedureFilename
+    }
+    let onSettingsChanges = {
+      handleVnaAddressChange: this.handleVnaAddressChange,
+      handleMatrixAddressChange: this.handleMatrixAddressChange,
+      handleProcedureFilenameChange: this.handleProcedureFilenameChange
+    }
     return (
       <div id="pages" className="wizard row">
-        <VnaPage address={this.state.vnaAddress} onChange={this.handleVnaAddressChange} />
-        <OspPage address={this.state.ospAddress} onChange={this.handleOspAddressChange} />
-        <ProcedurePage filename={this.state.procedureFilename} onChange={this.handleProcedureFilenameChange} />
-        <ChooseCalibrationPage choice={this.state.calibrationChoice} onChoiceChange={this.handleCalibrationChoiceChange} onChange={this.handleCalibrationChoiceChange} />
-        <CalibratePage step={this.state.index.step} params={this.state.params} value={this.state.saveCalibrationAs} onChange={this.handleSaveCalibrationAsChange} />
-        <MeasurePage step={this.state.index.step} params={this.state.params} value={this.state.calGroup} onChange={this.handleCalGroupChange} />
+        <SettingsPage values={settings} onChanges={onSettingsChanges} />
+        <ChooseCalibrationPage />
+        <CalibratePage />
+        <MeasurePage />
         <div id="console">
           Page {this.state.index.page}, step {this.state.index.step}
         </div>
@@ -131,4 +138,4 @@ class Wizard extends React.Component {
   }
 }
 
-module.exports = Wizard;
+export default Wizard;

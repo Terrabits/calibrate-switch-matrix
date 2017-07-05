@@ -1,7 +1,7 @@
-const webpack = require('webpack');
-const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { spawn } = require('child_process');
+const path              = require('path');
+const { spawn }         = require('child_process');
+const webpack           = require('webpack');
 
 // Config directories
 const SRC_DIR = path.resolve(__dirname, 'src');
@@ -13,6 +13,11 @@ const defaultInclude = [SRC_DIR];
 // Title
 const package = require('./package.json');
 const title = `${package.name} ${package.version}`
+const dependencies = Object.keys(package.dependencies);
+const externals = Object.create(null);
+for (let d of dependencies) {
+  externals[d] = `require('${d}')`;
+}
 
 module.exports = {
   entry: {
@@ -51,7 +56,12 @@ module.exports = {
     ]
   },
   target: 'electron-renderer',
+  externals: externals,
+  // externals: [
+  //   nodeExternals()
+  // ],
   plugins: [
+    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       title: title
     }),
@@ -59,7 +69,7 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('development')
     })
   ],
-  devtool: 'cheap-source-map',
+  devtool: 'cheap-module-eval-source-map',
   devServer: {
     contentBase: OUTPUT_DIR,
     stats: {

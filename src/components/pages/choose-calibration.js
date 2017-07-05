@@ -1,6 +1,4 @@
-const LineEdit = require('./lineedit.js');
-const React = require('react');
-
+import React from 'react';
 
 class ChooseCalibrationPage extends React.Component {
   constructor(props) {
@@ -10,10 +8,10 @@ class ChooseCalibrationPage extends React.Component {
     return(
       <div id="choose-calibration-page">
         <h4>Choose Calibration</h4>
-        <LineEdit value={this.props.choice} onChange={this.props.onChange}/>
+        This page will choose the calibration.
       </div>
     );
   }
 }
 
-module.exports = ChooseCalibrationPage;
+export default ChooseCalibrationPage;
