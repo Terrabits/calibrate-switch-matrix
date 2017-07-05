@@ -1,0 +1,76 @@
+k10:
+  instrument:  1
+  module:     12
+  switch:     43
+k11:
+  instrument:  1
+  module:     11
+  switch:     25
+k12:
+  instrument:  1
+  module:     12
+  switch:     44
+k13:
+  instrument:  1
+  module:     11
+  switch:     26
+k14:
+  instrument:  1
+  module:     11
+  switch:      1
+k15:
+  instrument:  1
+  module:     11
+  switch:      2
+k16:
+  instrument:  1
+  module:     11
+  switch:      3
+k17:
+  instrument:  1
+  module:     11
+  switch:     19
+k18:
+  instrument:  1
+  module:     11
+  switch:      7
+k19:
+  instrument:  1
+  module:     11
+  switch:     20
+k20:
+  instrument:  1
+  module:     11
+  switch:      8
+k40:
+  instrument:  1
+  module:     12
+  switch:     55
+k41:
+  instrument:  1
+  module:     11
+  switch:     67
+k42:
+  instrument:  1
+  module:     11
+  switch:     61
+k43:
+  instrument:  1
+  module:     11
+  switch:     62
+k44:
+  instrument:  1
+  module:     11
+  switch:     49
+k45:
+  instrument:  1
+  module:     11
+  switch:     37
+k46:
+  instrument:  1
+  module:     12
+  switch:     49
+k47:
+  instrument:  1
+  module:     12
+  switch:     37

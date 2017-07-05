@@ -1,0 +1,120 @@
+k10:
+  instrument:  1
+  module:     11
+  switch:      7
+  osp panel:  P2-K1
+k11:
+  instrument:  1
+  module:     11
+  switch:      8
+  osp panel:  P2-K2
+k12:
+  instrument:  1
+  module:     11
+  switch:      9
+  osp panel:  P2-K3
+k13:
+  instrument:  1
+  module:     11
+  switch:     10
+  osp panel:  P2-K4
+k20:
+  instrument:  1
+  module:     12
+  switch:     22
+  osp panel:  P4-K4
+k21:
+  instrument:  1
+  module:     12
+  switch:     20
+  osp panel:  P4-K2
+k22:
+  instrument:  1
+  module:     12
+  switch:     16
+  osp panel:  P3-K4
+k23:
+  instrument:  1
+  module:     12
+  switch:     14
+  osp panel:  P3-K2
+k24:
+  instrument:  1
+  module:     12
+  switch:     21
+  osp panel:  P4-K3
+k25:
+  instrument:  1
+  module:     12
+  switch:     19
+  osp panel:  P4-K1
+k26:
+  instrument:  1
+  module:     12
+  switch:     15
+  osp panel:  P3-K3
+k27:
+  instrument:  1
+  module:     12
+  switch:     13
+  osp panel:  P3-K1
+k30:
+  instrument:  1
+  module:     11
+  switch:     37
+  osp panel:  P7-K1
+k31:
+  instrument:  1
+  module:     11
+  switch:     39
+  osp panel:  P7-K3
+k32:
+  instrument:  1
+  module:     11
+  switch:     38
+  osp panel:  P7-K2
+k33:
+  instrument:  1
+  module:     11
+  switch:     44
+  osp panel:  P8-K2
+k34:
+  instrument:  1
+  module:     11
+  switch:     43
+  osp panel:  P8-K1
+k35:
+  instrument:  1
+  module:     11
+  switch:     45
+  osp panel:  P8-K3
+k36:
+  instrument:  1
+  module:     11
+  switch:     46
+  osp panel:  P8-K4
+k40:
+  instrument:  1
+  module:     11
+  switch:     55
+  osp panel:  P10
+k41:
+  instrument:  1
+  module:     12
+  switch:     61
+  osp panel:  P11
+k42:
+  instrument:  1
+  module:     12
+  switch:     67
+  osp panel:  P12
+k43:
+  instrument:  1
+  module:     11
+  switch:     61
+  osp panel:  P11
+k44:
+  instrument:  1
+  module:     11
+  switch:     67
+  osp panel:  P12

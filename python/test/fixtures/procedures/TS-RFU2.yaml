@@ -1,0 +1,58 @@
+name: TS-RFU2 Characterization
+switch matrix: TS-RFU2
+vna calibration:
+  setup: calibrate_all
+  ports:    [1,2,3,4]
+measurement steps:
+  - name: IF Step 1
+    vna connections:
+      1: Spec An In
+      2: Sig Gen In
+      3: IF(H) Out1
+      4: IF(V) Out1
+    measurements:
+      - switch path: Rx_IFH_Out1
+        vna setup:   all_freq
+        vna ports:   [1, 2]
+      - switch path: Tx_IFH_Out1
+        vna setup:   all_freq
+        vna ports:   [3, 4]
+  - name: IF Step 2
+    vna connections:
+      1: Spec An In
+      2: Sig Gen In
+      3: IF(H) Out2
+      4: IF(V) Out2
+    measurements:
+      - switch path: Rx_IFH_Out2
+        vna setup:   all_freq
+        vna ports:   [1, 2]
+      - switch path: Tx_IFH_Out2
+        vna setup:   all_freq
+        vna ports:   [3, 4]
+  - name: RF Step 1
+    vna connections:
+      1: Spec An In
+      2: Sig Gen In
+      3: RF1
+      4: RF2
+    measurements:
+      - switch path: Rx_RF1
+        vna setup:   all_freq
+        vna ports:   [1, 2]
+      - switch path: Tx_RF1
+        vna setup:   all_freq
+        vna ports:   [3, 4]
+  - name: RF Step 2
+    vna connections:
+      1: Spec An In
+      2: Sig Gen In
+      3: RF3
+      4: RF4
+    measurements:
+      - switch path: Rx_RF3
+        vna setup:   all_freq
+        vna ports:   [1, 2]
+      - switch path: Tx_RF4
+        vna setup:   all_freq
+        vna ports:   [3, 4]

@@ -1,0 +1,72 @@
+{
+  "name": "rs-calibrate-switch-matrix",
+  "productName": "R&S Calibrate Switch Matrix",
+  "version": "1.0.0",
+  "description": "Measure switch matrix with a VNA and generate touchstone files for each path for deembedding.",
+  "author": "Nick Lalic",
+  "homepage": "https://vna.rs-us.net",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "Rohde & Schwarz Inc. Terms and Conditions for Royalty-Free Products",
+  "main": "main.js",
+  "scripts": {
+    "test": "ava || true",
+    "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
+    "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
+    "clean": "git clean -x -d -f build/ && del dist/**/* dist/** !dist !dist/*.dmg !dist/*.zip !dist/*.exe",
+    "build": "webpack --config webpack.build.config.js",
+    "testpy": "cd ./python && python -m unittest -b || true",
+    "buildpy": "cd ./python && pyinstaller main.spec",
+    "package": "webpack --config webpack.build.config.js",
+    "postpackage": "build --dir",
+    "scaffold": "node ./scaffold/scaffold.js",
+    "postinstall": "cd ./scaffold && npm install && cd ../python && pip install -r requirements.txt"
+  },
+  "build": {
+    "appId": "com.rohde-schwarz.calibrate-switch-matrix",
+    "files": [
+      "build/**/*",
+      "LICENSE.txt",
+      "main.js",
+      "!python",
+      "!scaffold",
+      "!scratch",
+      "!src",
+      "!test",
+      "!.*",
+      "!webpack.*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "nsis": {
+      "perMachine": true
+    }
+  },
+  "devDependencies": {
+    "ava": "^0.20.0",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.0",
+    "babel-preset-react": "^6.24.1",
+    "babili-webpack-plugin": "^0.0.11",
+    "css-loader": "^0.28.1",
+    "del-cli": "^1.1.0",
+    "electron": "^1.6.7",
+    "electron-builder": "^19.8.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "html-webpack-plugin": "^2.28.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-hot-loader": "next",
+    "style-loader": "^0.17.0",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
+  },
+  "dependencies": {
+    "electron-is-dev": "^0.1.2",
+    "js-yaml": "^3.8.4"
+  }
+}
