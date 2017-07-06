@@ -3,6 +3,7 @@ import React                 from 'react';
 import CalibratePage         from './pages/calibrate.js';
 import ChooseCalibrationPage from './pages/choose-calibration.js';
 import PageIndex             from '../lib/page-index.js';
+import {Pages}                 from '../lib/controller.js';
 import MeasurePage           from './pages/measure.js';
 import SettingsPage          from './pages/settings.js';
 
@@ -27,40 +28,6 @@ class Wizard extends React.Component {
       calGroup:          store.get('cal-group', ''),
       saveCalibrationAs: store.get('save-calibration-as', '')
     };
-    this.handleVnaAddressChange        = this.handleVnaAddressChange.bind(this);
-    this.handleMatrixAddressChange     = this.handleMatrixAddressChange.bind(this);
-    this.handleProcedureFilenameChange = this.handleProcedureFilenameChange.bind(this);
-    this.handleCalibrationChoiceChange = this.handleCalibrationChoiceChange.bind(this);
-    this.handleCalGroupChange          = this.handleCalGroupChange.bind(this);
-    this.handleSaveCalibrationAsChange = this.handleSaveCalibrationAsChange.bind(this);
-  }
-
-  handleVnaAddressChange(event) {
-    this.vnaAddress = event.target.value;
-  }
-  handleMatrixAddressChange(event) {
-    this.matrixAddress = event.target.value;
-  }
-  handleProcedureFilenameChange(event) {
-    // TODO
-    this.procedureFilename = event.target.value;
-  }
-  handleCalibrationChoiceChange(event) {
-    // TODO
-    this.calibrationChoice = event.target.value;
-  }
-  handleCalGroupChange(event) {
-    // TODO
-    this.calGroup = event.target.value;
-  }
-  handleSaveCalibrationAsChange(event) {
-    // TODO
-    this.saveCalibrationAs = event.target.value;
-  }
-  handleClearAlert() {
-    let alert = Object.create(this.state.alert);
-    alert.message = null;
-    this.setState({alert: alert});
   }
 
   get vnaAddress() {
@@ -106,10 +73,10 @@ class Wizard extends React.Component {
     this.setState({saveCalibrationAs: name});
   }
 
-  setPage(index, params) {
+  setPage(page, step) {
+    const index = new PageIndex(page, step);
     this.setState({
-      index: index,
-      params: params
+      index: index
     });
   }
 
@@ -118,18 +85,15 @@ class Wizard extends React.Component {
       vnaAddress:        this.vnaAddress,
       matrixAddress:     this.matrixAddress,
       procedureFilename: this.procedureFilename
-    }
+    };
     let onSettingsChanges = {
-      handleVnaAddressChange: this.handleVnaAddressChange,
-      handleMatrixAddressChange: this.handleMatrixAddressChange,
-      handleProcedureFilenameChange: this.handleProcedureFilenameChange
-    }
+      handleVnaAddressChange:        (event) => {this.vnaAddress = event.target.value;},
+      handleMatrixAddressChange:     (event) => {this.matrixAddress = event.target.value;},
+      handleProcedureFilenameChange: (event) => {this.procedureFilename = event.target.value;}
+    };
     return (
       <div id="pages" className="wizard row">
-        <SettingsPage values={settings} onChanges={onSettingsChanges} />
-        <ChooseCalibrationPage />
-        <CalibratePage />
-        <MeasurePage />
+        <SettingsPage values={settings} onChanges={onSettingsChanges} invisible={this.state.index.page != Pages.SETTINGS} />
         <div id="console">
           Page {this.state.index.page}, step {this.state.index.step}
         </div>

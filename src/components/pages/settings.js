@@ -1,24 +1,22 @@
 import React    from 'react';
 import LineEdit from '../line-edit.js';
 
-class SettingsPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    let values    = this.props.values;
-    let onChanges = this.props.onChanges;
-    return(
-      <div id="settings-page">
-        <h4>VNA Address</h4>
-        <LineEdit value={values.vnaAddress}        onChange={onChanges.handleVnaAddressChange} />
-        <h4>Switch Matrix Address</h4>
-        <LineEdit value={values.matrixAddress}     onChange={onChanges.handleMatrixAddressChange} />
-        <h4>Procedure</h4>
-        <LineEdit value={values.procedureFilename} onChange={onChanges.handleProcedureFilenameChange}/>
-      </div>
-    );
-  }
+
+
+function SettingsPage(props) {
+  console.log('props.invisible: ' + props.invisible);
+  let classes = props.invisible ? 'invisible' : '';
+  console.log('SettingsPage classes: ' + classes);
+  return(
+    <div id="settings-page" className={classes}>
+      <h4>VNA Address</h4>
+      <LineEdit value={props.values.vnaAddress} onChange={props.onChanges.handleVnaAddressChange} />
+      <h4>Switch Matrix Address</h4>
+      <LineEdit value={props.values.matrixAddress}     onChange={props.onChanges.handleMatrixAddressChange} />
+      <h4>Procedure</h4>
+      <LineEdit value={props.values.procedureFilename} onChange={props.onChanges.handleProcedureFilenameChange}/>
+    </div>
+  );
 }
 
 export default SettingsPage;

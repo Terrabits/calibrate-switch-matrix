@@ -1,7 +1,8 @@
-const {Controller, Pages} = require('../src/lib/controller.js');
-const Model               = require('./helpers/model.js');
-const View                = require('./helpers/view.js');
-const test                = require('ava');
+const {Choices} = require('../src/lib/calibration.js')
+const {Controller, Pages}  = require('../src/lib/controller.js');
+const Model                = require('./helpers/model.js');
+const View                 = require('./helpers/view.js');
+const test                 = require('ava');
 
 let model = new Model();
 let view  = new View();
@@ -9,14 +10,14 @@ view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
 
 test('Controller without calibration basically works', t => {
   let c = new Controller(model, view);
-  t.is(c.index.page, Pages.VNA);
-  c.next();
-  t.is(c.index.page, Pages.OSP);
-  c.next();
-  t.is(c.index.page, Pages.CHOOSE_PROCEDURE);
+  t.is(c.index.page, Pages.SETTINGS);
+  view.vnaAddress = '127.0.0.1';
+  view.matrixAddress = '1.2.3.4';
+  view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
   c.next();
   t.is(c.index.page, Pages.CHOOSE_CAL);
-  c.skipCalibration();
+  view.calibrationChoice = Choices.NONE
+  c.next();
   t.is(c.index.page, Pages.MEASURE);
   const NUM_STEPS = c.model.getProcedure().steps.length;
   for (let i = 0; i < NUM_STEPS; i++) {
@@ -31,14 +32,15 @@ test('Controller without calibration basically works', t => {
 
 test('Controller with saved cal basically works', t => {
   let c = new Controller(model, view);
-  t.is(c.index.page, Pages.VNA);
-  c.next();
-  t.is(c.index.page, Pages.OSP);
-  c.next();
-  t.is(c.index.page, Pages.CHOOSE_PROCEDURE);
+  t.is(c.index.page, Pages.SETTINGS);
+  view.vnaAddress = '127.0.0.1';
+  view.matrixAddress = '1.2.3.4';
+  view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
   c.next();
   t.is(c.index.page, Pages.CHOOSE_CAL);
-  c.useCalGroup('saved cal');
+  view.calibrationChoice = Choices.EXISTING
+  view.calGroup = 'saved cal';
+  c.next();
   t.is(c.index.page, Pages.MEASURE);
   const NUM_STEPS = c.model.getProcedure().steps.length;
   for (let i = 0; i < NUM_STEPS; i++) {
@@ -53,15 +55,14 @@ test('Controller with saved cal basically works', t => {
 
 test('Controller performing calibration basically works', t => {
   let c = new Controller(model, view);
-  t.is(c.index.page, Pages.VNA);
+  t.is(c.index.page, Pages.SETTINGS);
+  view.vnaAddress = '127.0.0.1';
+  view.matrixAddress = '1.2.3.4';
+  view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
   c.next();
-  t.is(c.index.page, Pages.OSP);
-  c.next();
-  t.is(c.index.page, Pages.CHOOSE_PROCEDURE);
-  c.next();
-
   t.is(c.index.page, Pages.CHOOSE_CAL);
-  c.startCalibration();
+  view.calibrationChoice = Choices.CALIBRATE
+  c.next();
   t.is(c.index.page, Pages.CALIBRATE);
   t.is(c.index.step, 0);
   c.next();

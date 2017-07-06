@@ -1,12 +1,11 @@
+const {Choices} = require('./calibration.js');
 const PageIndex = require('./page-index.js');
 const Procedure = require('./procedure.js');
 
 
 // pages:
 let Pages = {
-  VNA:        'Connect to VNA',
-  OSP:        'Connect to switch matrix',
-  CHOOSE_PROCEDURE: 'Choose procedure',
+  SETTINGS:   'Settings',
   CHOOSE_CAL: 'Choose calibration',
   CALIBRATE:  'Calibrate',
   MEASURE:    'Measure'
@@ -20,7 +19,7 @@ class Controller {
     this.restart();
   }
   restart() {
-    this.index = new PageIndex(Pages.VNA, 0);
+    this.index = new PageIndex(Pages.SETTINGS, 0);
     this.history   = [];
   }
   back() {
@@ -32,11 +31,13 @@ class Controller {
   }
   next() {
     switch(this.index.page) {
-      case Pages.VNA:
-        this.processVna(this.view.vnaAddress);
-        break;
-      case Pages.OSP:
-        this.processOsp(this.view.ospAddress);
+      case Pages.SETTINGS:
+        let params = {
+          'vna address': this.view.vnaAddress,
+          'matrix address': this.view.matrixAddress,
+          'procedure filename': this.view.procedureFilename
+        };
+        this.processSettings(params);
         break;
       case Pages.CHOOSE_PROCEDURE:
         this.processProcedure(this.view.procedureFilename);
@@ -59,45 +60,35 @@ class Controller {
     this.view.setPage(this.index, params)
   }
 
-  processVna(address) {
-    if (!address) {
+  processSettings(params) {
+    if (!params['vna address']) {
       // TODO: Error message
-      console.log('No VNA Address');
+      console.log('No VNA address');
       return;
     }
-    this.model.vnaAddress = address;
+    this.model.vnaAddress = params['vna address'];
     if (!this.model.isVna()) {
       // TODO: Error message
       console.log('Could not connect to VNA');
       return;
     }
-    this.pushCurrentIndexToHistory();
-    this.index.page = Pages.OSP;
-    this.render();
-  }
-  processOsp(address) {
-    if (!address) {
+    if (!params['matrix address']) {
       // TODO: Error message
-      console.log('No OSP Address');
+      console.log('No switch matrix address');
       return;
     }
-    this.model.ospAddress = address;
-    if (!this.model.isOsp()) {
+    this.model.matrixAddress = params['matrix address'];
+    if (!this.model.isMatrix()) {
       // TODO: Error message
-      console.log('Could not connect to OSP');
+      console.log('Could not connect to switch matrix');
       return;
     }
-    this.pushCurrentIndexToHistory();
-    this.index.page = Pages.CHOOSE_PROCEDURE;
-    this.render();
-  }
-  processProcedure(filename) {
-    if (!filename) {
+    if (!params['procedure filename']) {
       // TODO: Error message
       console.log('No procedure filename');
       return;
     }
-    this.model.procedureFilename = filename;
+    this.model.procedureFilename = params['procedure filename'];
     let procedure = this.model.getProcedure();
     let status = procedure.validate();
     if (!status.isValid) {
@@ -111,24 +102,27 @@ class Controller {
   }
   processCalibrationChoice() {
     let choice = this.view.calibrationChoice;
-    if (choice == 'no calibration') {
+    if (choice == Choices.NONE) {
       this.skipCalibration();
     }
-    else if (choice == 'use existing calibration') {
+    else if (choice == Choices.EXISTING) {
       this.useCalGroup(this.view.calGroup);
     }
-    else {
+    else if (choice = Choices.CALIBRATE) {
       this.startCalibration();
+    }
+    else {
+      console.log('Choose calibration option');
+      return;
     }
   }
   skipCalibration() {
     if (this.index.page != Pages.CHOOSE_CAL) {
       return;
     }
-    this.model.calGroup = null;
     console.log("Skipping calibration...");
-    this.pushCurrentIndexToHistory();
     this.model.calGroup = null;
+    this.pushCurrentIndexToHistory();
     this.startMeasurements();
   }
   useCalGroup(name) {
@@ -181,6 +175,9 @@ class Controller {
         return;
       }
       this.purgeCalibrationSteps();
+      this.view.calibrationChoice = Choices.EXISTING;
+      this.view.calGroup          = name;
+      this.model.calGroup         = name;
       this.startMeasurements();
     }
     else {

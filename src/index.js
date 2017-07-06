@@ -16,7 +16,7 @@ document.body.appendChild( root );
 window.render = Component => {
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <Component ref={(app) => { window.view = app; }} />
     </AppContainer>,
     document.getElementById('root')
   )

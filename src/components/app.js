@@ -8,18 +8,12 @@ class App extends React.Component {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
-    // window.app = this;
-    // console.log("Sidebar?");
-    // console.log(this.sidebar);
-  }
   render() {
     let sections = [
       {name: 'Settings'},
       {name: 'Calibrate'},
       {name: 'Measure'}
     ];
-    //
     return (
       <div className="window">
         <header className="toolbar toolbar-header draggable">
@@ -29,7 +23,7 @@ class App extends React.Component {
           <div className="pane-group">
             <Sidebar sections={sections} ref={(sidebar) => { this.sidebar = sidebar; }} />
             <div className="pane padded-more">
-              main pane
+              <Wizard ref={(wizard) => {this.wizard = wizard;}} />
             </div>
           </div>
         </div>

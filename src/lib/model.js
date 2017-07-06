@@ -4,7 +4,7 @@ const python    = require('./python.js');
 class Model {
   constructor() {
     this.vnaAddress  = '127.0.0.1';
-    this.ospAddress  = '1.2.3.4';
+    this.matrixAddress  = '1.2.3.4';
     this.procedureFilename = null;
     this.calGroup          = 'calibration';
   }
@@ -24,19 +24,19 @@ class Model {
     console.log("Vna connected");
     return true;
   }
-  isOsp() {
+  isMatrix() {
     let args = [
-      '--is-osp',
-      '--osp-address', this.vnaAddress
+      '--is-matrix',
+      '--matrix-address', this.matrixAddress
     ];
-    // TODO: check for osp
+    // TODO: check for matrix
     // let result = python.startSync(args);
     // if (!result.status) {
     //   // TODO: Error message
     //   return false;
     // }
     // return result.stdout.trim().toLowerCase() == 'true'
-    console.log("Osp connected");
+    console.log("Switch matrix connected");
     return true;
   }
 
@@ -139,7 +139,7 @@ class Model {
       '--step',          i,
       '--vna-address',   this.vnaAddress,
       '--vna-cal-group', this.calGroup,
-      '--osp-address',   this.ospAddress
+      '--matrix-address',   this.matrixAddress
     ];
     // TODO: Perform measurement
     // let result = python.startSync(args);

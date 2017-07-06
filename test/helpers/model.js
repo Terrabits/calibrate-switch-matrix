@@ -3,9 +3,9 @@ const Procedure = require('../../src/lib/procedure.js');
 class Model {
   constructor() {
     this.vnaAddress   = '127.0.0.1';
-    this.ospAddress   = '1.2.3.4';
+    this.matrixAddress   = '1.2.3.4';
     this.procedureFilename = null;
-    this.calGroup          = 'calibration';
+    this.calGroup          = null;
 
     this.calUnitPorts = () => {
       const ports = 2;
@@ -18,8 +18,8 @@ class Model {
     console.log("Vna connected");
     return true;
   }
-  isOsp() {
-    console.log("Osp connected");
+  isMatrix() {
+    console.log("Switch matrix connected");
     return true;
   }
 
