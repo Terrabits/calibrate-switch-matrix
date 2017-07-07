@@ -2,10 +2,17 @@ import React          from 'react';
 import ReactDOM       from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
 
-import App from './components/app.js';
+import App            from './components/app.js';
+import {Controller}   from './lib/controller.js';
+import Model          from './lib/model.js';
+
+import path           from 'path';
 
 import './assets/css/global.css';
 import './vendor/photon/css/photon.css';
+
+// Probably not best practices, but...
+const pkg = require('../package.json');
 
 // Since we are using HtmlWebpackPlugin WITHOUT a template, we should create our own root node in the body element before rendering into it
 let root = document.createElement('div');
@@ -16,11 +23,13 @@ document.body.appendChild( root );
 window.render = Component => {
   ReactDOM.render(
     <AppContainer>
-      <Component ref={(app) => { window.view = app; }} />
+      <Component
+        ref={(app) => { window.view = app; }}
+        title={`${pkg.productName} ${pkg.version}`} />
     </AppContainer>,
     document.getElementById('root')
   )
-}
+};
 
 window.render(App)
 
@@ -28,3 +37,6 @@ window.render(App)
 if (module.hot) {
   module.hot.accept('./components/app', () => { window.render(App) })
 }
+
+window.model      = new Model();
+window.controller = new Controller(model, window.view);

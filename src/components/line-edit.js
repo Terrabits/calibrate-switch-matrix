@@ -6,9 +6,16 @@ class LineEdit extends React.Component {
   }
   render() {
     return (
-      <div>
-        <input className="form-control" type="text" value={this.props.value} onChange={this.props.onChange} />
+      <div className="form-group">
+        <label>{this.props.label}</label>
+        <input
+          className="form-control"
+          type="text"
+          value={this.props.value} onChange={this.props.onChange}
+          disabled={!!this.props.disabled}
+        />
       </div>
+
     );
   }
 }

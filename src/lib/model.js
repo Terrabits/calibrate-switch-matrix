@@ -1,13 +1,45 @@
+const {Choices} = require('./calibration.js');
 const Procedure = require('./procedure.js');
 const python    = require('./python.js');
+const Store     = require('electron-store');
+
 
 class Model {
   constructor() {
-    this.vnaAddress  = '127.0.0.1';
-    this.matrixAddress  = '1.2.3.4';
-    this.procedureFilename = null;
-    this.calGroup          = 'calibration';
+    this.store = new Store();
   }
+
+  get vnaAddress() {
+    return this.store.get('vna-address', 'localhost');
+  }
+  set vnaAddress(addr) {
+    this.store.set('vna-address', addr);
+  }
+  get matrixAddress() {
+    return this.store.get('matrix-address', '1.2.3.4');
+  }
+  set matrixAddress(addr) {
+    this.store.set('matrix-address', addr);
+  }
+  get procedureFilename() {
+    return this.store.get('procedure-filename', '');
+  }
+  set procedureFilename(filename) {
+    this.store.set('procedure-filename', filename);
+  }
+  get calChoice() {
+    return this.store.get('cal-choice', Choices.CALIBRATE);
+  }
+  set calChoice(choice) {
+    this.store.set('cal-choice', choice);
+  }
+  get calGroup() {
+    return this.store.get('cal-group', 'cal group 1');
+  }
+  set calGroup(name) {
+    this.store.set('cal-group', name);
+  }
+
 
   isVna() {
     let args = [

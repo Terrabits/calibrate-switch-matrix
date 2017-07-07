@@ -7,21 +7,57 @@ import Wizard  from './wizard.js';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      sidebar: null
+    }
+  }
+  renderNewParameters(params) {
+    if (params.vnaAddress) {
+      this.wizard.vnaAddress        = params.vnaAddress;
+    }
+    if (params.matrixAddress) {
+      this.wizard.matrixAddress     = params.matrixAddress;
+    }
+    if (params.procedureFilename) {
+      this.wizard.procedureFilename = params.procedureFilename;
+    }
+    if (params.calChoice) {
+      this.wizard.calChoice         = params.calChoice;
+    }
+    if (params.calGroup) {
+      this.wizard.calGroup          = params.calGroup;
+    }
+    if (params.index) {
+      this.wizard.index             = params.index;
+    }
+    if (params.sidebar) {
+      this.setState({sidebar: params.sidebar});
+    }
+  }
+  getUserInputs() {
+    return {
+      vnaAddress:        this.wizard.vnaAddress,
+      matrixAddress:     this.wizard.matrixAddress,
+      procedureFilename: this.wizard.procedureFilename,
+      calChoice:         this.wizard.calChoice,
+      calGroup:          this.wizard.calGroup
+    };
+  }
+  getSaveCalFromDialog() {
+    console.log('save cal as...');
+    return 'calibration';
   }
   render() {
-    let sections = [
-      {name: 'Settings'},
-      {name: 'Calibrate'},
-      {name: 'Measure'}
-    ];
     return (
       <div className="window">
         <header className="toolbar toolbar-header draggable">
-          <h1 className="title">Header</h1>
+          <h1 className="title">{this.props.title || ''}</h1>
         </header>
         <div className="window-content">
           <div className="pane-group">
-            <Sidebar sections={sections} ref={(sidebar) => { this.sidebar = sidebar; }} />
+            <Sidebar
+              ref={(sidebar) => { this.sidebar = sidebar; }}
+              sections={this.state.sidebar} />
             <div className="pane padded-more">
               <Wizard ref={(wizard) => {this.wizard = wizard;}} />
             </div>

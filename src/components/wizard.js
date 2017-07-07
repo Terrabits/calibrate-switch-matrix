@@ -1,32 +1,27 @@
-import React                 from 'react';
+import React         from 'react';
+const  Store    = require('electron-store');
 
-import CalibratePage         from './pages/calibrate.js';
-import ChooseCalibrationPage from './pages/choose-calibration.js';
-import PageIndex             from '../lib/page-index.js';
-import {Pages}                 from '../lib/controller.js';
-import MeasurePage           from './pages/measure.js';
-import SettingsPage          from './pages/settings.js';
-
-import Store from 'electron-store';
-const  store = new Store();
-
-const CalibrationChoices = {
-  NONE: 'no calibration',
-  EXISTING: 'use existing calibration',
-  CALIBRATE: 'calibrate'
-}
+import CalibratePage from './pages/calibrate.js';
+import Choices       from '../lib/calibration.js';
+import ChooseCalPage from './pages/choose-cal.js';
+import PageIndex     from '../lib/page-index.js';
+import {Pages}       from '../lib/controller.js';
+import MeasurePage   from './pages/measure.js';
+import SettingsPage  from './pages/settings.js';
 
 class Wizard extends React.Component {
   constructor(props) {
     super(props);
+    this.store = new Store();
     this.state = {
-      index:             new PageIndex(),
-      vnaAddress:        store.get('vna-address', 'localhost'),
-      matrixAddress:     store.get('matrix-address', '192.168.1.101'),
-      procedureFilename: store.get('procedure-filename', ''),
-      calibrationChoice: store.get('calibration-choice', CalibrationChoices.CALIBRATE),
-      calGroup:          store.get('cal-group', ''),
-      saveCalibrationAs: store.get('save-calibration-as', '')
+      // defaults
+      index:             new PageIndex(Pages.SETTINGS),
+      vnaAddress:        '127.0.0.1',
+      matrixAddress:     '1.2.3.4',
+      procedureFilename: '/procedure.yaml',
+      calChoice:         Choices.CALIBRATE,
+      calGroup:          'cal group 1',
+      saveCalAs:         this.store.get('save-cal-as', '')
     };
   }
 
@@ -34,66 +29,80 @@ class Wizard extends React.Component {
     return this.state.vnaAddress;
   }
   set vnaAddress(addr) {
-    store.set('vna-address', addr);
     this.setState({vnaAddress: addr});
   }
   get matrixAddress() {
     return this.state.matrixAddress;
   }
   set matrixAddress(addr) {
-    store.set('matrix-address', addr);
     this.setState({matrixAddress: addr});
   }
   get procedureFilename() {
     return this.state.procedureFilename;
   }
   set procedureFilename(filename) {
-    store.set('procedure-filename', filename);
     this.setState({procedureFilename: filename});
   }
-  get calibrationChoice() {
-    this.state.calibrationChoice;
+  get calChoice() {
+    return this.state.calChoice;
   }
-  set calibrationChoice(choice) {
-    store.set('calibration-choice', choice);
-    this.setState({calibrationChoice: choice});
+  set calChoice(choice) {
+    this.setState({calChoice: choice});
   }
   get calGroup() {
     return this.state.calGroup;
   }
   set calGroup(name) {
-    store.set('cal-group', name);
     this.setState({calGroup: name});
   }
-  get saveCalibrationAs() {
-    return this.state.saveCalibrationAs;
+  get saveCalAs() {
+    return this.state.saveCalAs;
   }
-  set saveCalibrationAs(name) {
-    store.set('save-calibration-as', name);
-    this.setState({saveCalibrationAs: name});
+  set saveCalAs(name) {
+    this.store.set('save-cal-as', name);
+    this.setState({saveCalAs: name});
   }
-
-  setPage(page, step) {
-    const index = new PageIndex(page, step);
-    this.setState({
-      index: index
-    });
+  set index(i) {
+    this.setState({index: i});
   }
 
   render() {
+    // settings page
+    let isSettingsInvisible = this.state.index.page != Pages.SETTINGS;
     let settings = {
       vnaAddress:        this.vnaAddress,
       matrixAddress:     this.matrixAddress,
       procedureFilename: this.procedureFilename
     };
     let onSettingsChanges = {
-      handleVnaAddressChange:        (event) => {this.vnaAddress = event.target.value;},
-      handleMatrixAddressChange:     (event) => {this.matrixAddress = event.target.value;},
+      handleVnaAddressChange:        (event) => {this.vnaAddress        = event.target.value;},
+      handleMatrixAddressChange:     (event) => {this.matrixAddress     = event.target.value;},
       handleProcedureFilenameChange: (event) => {this.procedureFilename = event.target.value;}
+    };
+    // choose cal page
+    let isChooseCalPageInvisible = this.state.index.page != Pages.CHOOSE_CAL;
+    let chooseCal = {
+      choice:   this.state.calChoice,
+      calGroup: this.state.calGroup
+    };
+    let onChooseCalChanges = {
+      handleChoiceChange:   (event) => {
+        console.log('Changing cal choice to: ' + event.target.value);
+        this.calChoice = event.target.value;
+        console.log('Cal choice now is: ' + this.calChoice);
+      },
+      handleCalGroupChange: (event) => {this.calGroup  = event.target.value}
     };
     return (
       <div id="pages" className="wizard row">
-        <SettingsPage values={settings} onChanges={onSettingsChanges} invisible={this.state.index.page != Pages.SETTINGS} />
+        <SettingsPage
+          values={settings}
+          onChanges={onSettingsChanges}
+          invisible={isSettingsInvisible} />
+        <ChooseCalPage
+          values={chooseCal}
+          onChanges={onChooseCalChanges}
+          invisible={isChooseCalPageInvisible}/>
         <div id="console">
           Page {this.state.index.page}, step {this.state.index.step}
         </div>

@@ -15,8 +15,9 @@ class Controller {
   constructor(model=null, view=null) {
     this.model = model;
     this.view  = view;
-    this.index = new PageIndex();
+    this.index = new PageIndex(Pages.SETTINGS);
     this.restart();
+    this.render();
   }
   restart() {
     this.index = new PageIndex(Pages.SETTINGS, 0);
@@ -30,20 +31,17 @@ class Controller {
     this.render();
   }
   next() {
+    this.updateModelWithInputs();
+    const params = this.getSettingsFromModel();
     switch(this.index.page) {
       case Pages.SETTINGS:
-        let params = {
-          'vna address': this.view.vnaAddress,
-          'matrix address': this.view.matrixAddress,
-          'procedure filename': this.view.procedureFilename
-        };
         this.processSettings(params);
         break;
       case Pages.CHOOSE_PROCEDURE:
-        this.processProcedure(this.view.procedureFilename);
+        this.processProcedure(params);
         break;
       case Pages.CHOOSE_CAL:
-        this.processCalibrationChoice();
+        this.processCalibrationChoice(params);
         break;
       case Pages.CALIBRATE:
         this.processCalibrationStep();
@@ -56,39 +54,104 @@ class Controller {
     }
   }
 
-  render(params=Object.create(null)) {
-    this.view.setPage(this.index, params)
+  render() {
+    this.view.renderNewParameters(this.getSettingsFromModel());
+  }
+  updateModelWithInputs() {
+    const inputs = this.getInputs();
+    this.model.vnaAddress        = inputs.vnaAddress;
+    this.model.matrixAddress     = inputs.matrixAddress;
+    this.model.procedureFilename = inputs.procedureFilename;
+    this.model.calChoie          = inputs.calChoice;
+    this.model.calGroup          = inputs.calGroup;
+  }
+  getSettingsFromModel() {
+    return {
+      vnaAddress:        this.model.vnaAddress,
+      matrixAddress:     this.model.matrixAddress,
+      procedureFilename: this.model.procedureFilename,
+      calChoice:         this.model.calChoice,
+      calGroup:          this.model.calGroup,
+      index:             this.index,
+      sidebar:           this.summary()
+    };
+  }
+  getInputs() {
+    const inputs = this.view.getUserInputs();
+    return {
+      vnaAddress:        inputs.vnaAddress,
+      matrixAddress:     inputs.matrixAddress,
+      procedureFilename: inputs.procedureFilename,
+      calChoice:         inputs.calChoice,
+      calGroup:          inputs.calGroup
+    };
+  }
+  summary() {
+    const pro = this.model.getProcedure();
+    let settings  = {name: 'Settings'};
+    let calibrate = {name: 'Calibrate'};
+    let measure   = {name: 'Measure'};
+    if (!pro.isValid) {
+      return [
+        settings,
+        calibrate,
+        measure
+      ];
+    }
+    if (this.index.page != Pages.SETTINGS) {
+      measure.items = [];
+      for (let i = 0; i < pro.steps.length; i++) {
+        const step = pro.steps[i];
+        measure.items.push({
+          name: step.name,
+          active: this.index.page == Pages.MEASURE? this.index.step == i : false
+        });
+      }
+    }
+    if (this.index.page == Pages.CALIBRATE) {
+      calibrate.items = [];
+      const steps = pro.calibrationSteps;
+      for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+        calibrate.items.push({
+          name: `Ports ${step}`,
+          active: this.index.step == i
+        });
+      }
+    }
+    return [
+      settings,
+      calibrate,
+      measure
+    ];
   }
 
   processSettings(params) {
-    if (!params['vna address']) {
+    if (!params.vnaAddress) {
       // TODO: Error message
       console.log('No VNA address');
       return;
     }
-    this.model.vnaAddress = params['vna address'];
     if (!this.model.isVna()) {
       // TODO: Error message
       console.log('Could not connect to VNA');
       return;
     }
-    if (!params['matrix address']) {
+    if (!params.matrixAddress) {
       // TODO: Error message
       console.log('No switch matrix address');
       return;
     }
-    this.model.matrixAddress = params['matrix address'];
     if (!this.model.isMatrix()) {
       // TODO: Error message
       console.log('Could not connect to switch matrix');
       return;
     }
-    if (!params['procedure filename']) {
+    if (!params.procedureFilename) {
       // TODO: Error message
       console.log('No procedure filename');
       return;
     }
-    this.model.procedureFilename = params['procedure filename'];
     let procedure = this.model.getProcedure();
     let status = procedure.validate();
     if (!status.isValid) {
@@ -100,45 +163,22 @@ class Controller {
     this.index.page = Pages.CHOOSE_CAL;
     this.render();
   }
-  processCalibrationChoice() {
-    let choice = this.view.calibrationChoice;
-    if (choice == Choices.NONE) {
-      this.skipCalibration();
-    }
-    else if (choice == Choices.EXISTING) {
-      this.useCalGroup(this.view.calGroup);
-    }
-    else if (choice = Choices.CALIBRATE) {
-      this.startCalibration();
-    }
-    else {
+  processCalibrationChoice(params) {
+    const choice = params.calChoice;
+    console.log('processing calibration choice: ' + choice);
+    if (!choice) {
       console.log('Choose calibration option');
       return;
     }
-  }
-  skipCalibration() {
-    if (this.index.page != Pages.CHOOSE_CAL) {
-      return;
+    if (choice == Choices.CALIBRATE) {
+      this.startCalibration();
     }
-    console.log("Skipping calibration...");
-    this.model.calGroup = null;
-    this.pushCurrentIndexToHistory();
-    this.startMeasurements();
-  }
-  useCalGroup(name) {
-    if (this.index.page != Pages.CHOOSE_CAL) {
-      return;
+    else {
+      this.pushCurrentIndexToHistory();
+      this.startMeasurements();
     }
-    // TODO
-    this.model.calGroup = name
-    console.log('Using saved cal');
-    this.pushCurrentIndexToHistory();
-    this.startMeasurements();
   }
   startCalibration() {
-    if (this.index.page != Pages.CHOOSE_CAL) {
-      return;
-    }
     if (!this.model.isCalUnit()) {
       //TODO: Display error message
       console.log("No cal unit");
@@ -156,6 +196,7 @@ class Controller {
   processCalibrationStep() {
     if (!this.model.performCalibrationStep(this.index.step)) {
       // TODO: Handle error / message
+      console.log('calibration step failed')
       return;
     }
 
@@ -165,18 +206,24 @@ class Controller {
       // Finished, apply calibration
       // TODO: get cal name with
       // modal dialog? Separate page?
-      let name = 'calibration'
       if (!this.model.applyCalibration()) {
         // TODO: Error message
+        console.log('Error applying calibration');
+        return;
+      }
+      const name = this.view.getSaveCalFromDialog();
+      if (!name) {
+        console.log('Save canceled. No calibration?');
         return;
       }
       if (!this.model.saveCalibration(name)) {
         // TODO: Error message
+        console.log('Error saving calibration');
         return;
       }
       this.purgeCalibrationSteps();
-      this.view.calibrationChoice = Choices.EXISTING;
-      this.view.calGroup          = name;
+      this.view.wizard.calChoice = Choices.EXISTING;
+      this.view.wizard.calGroup          = name;
       this.model.calGroup         = name;
       this.startMeasurements();
     }
