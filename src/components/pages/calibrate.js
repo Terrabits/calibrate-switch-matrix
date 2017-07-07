@@ -1,17 +1,17 @@
 import React from 'react';
 
-class CalibratePage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return(
-      <div id="calibrate-page">
-        <h4>Calibrate</h4>
-        This page will calibrate.
-      </div>
-    );
-  }
+function CalibratePage(props) {
+  const classes = props.invisible? 'invisible' : '';
+  return (
+    <div id="calibrate-page" className={classes}>
+      <h4>Calibration Step {props.index}</h4>
+      <p>
+        Connect the following VNA ports to any cal unit port. The VNA will auto-detect the connections you make.
+      </p>
+      <h2>VNA Ports {props.ports.join(", ")}</h2>
+    </div>
+  );
+
 }
 
 export default CalibratePage;

@@ -19,13 +19,19 @@ let root = document.createElement('div');
 root.id = "root";
 document.body.appendChild( root );
 
-// Now we can render our application into it
+// Model, Controller
+window.model      = new Model();
+window.controller = new Controller(model, window.view);
+
+// View
 window.render = Component => {
   ReactDOM.render(
     <AppContainer>
       <Component
         ref={(app) => { window.view = app; }}
-        title={`${pkg.productName} ${pkg.version}`} />
+        title={`${pkg.productName} ${pkg.version}`}
+        onNext={() => {controller.next()}}
+        onBack={() => {controller.back()}}/>
     </AppContainer>,
     document.getElementById('root')
   )
@@ -38,5 +44,5 @@ if (module.hot) {
   module.hot.accept('./components/app', () => { window.render(App) })
 }
 
-window.model      = new Model();
-window.controller = new Controller(model, window.view);
+controller.view = window.view
+controller.restart();

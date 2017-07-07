@@ -27,12 +27,16 @@ class App extends React.Component {
     if (params.calGroup) {
       this.wizard.calGroup          = params.calGroup;
     }
+    if (params.calPorts) {
+      this.wizard.calPorts          = params.calPorts;
+    }
     if (params.index) {
       this.wizard.index             = params.index;
     }
     if (params.sidebar) {
       this.setState({sidebar: params.sidebar});
     }
+
   }
   getUserInputs() {
     return {
@@ -65,11 +69,15 @@ class App extends React.Component {
         </div>
         <footer className="toolbar toolbar-footer">
           <div className="toolbar-actions">
-            <button className="btn btn-primary pull-right">
-              Save
+            <button
+              className="btn btn-primary pull-right"
+              onClick={this.props.onNext}>
+              Next
             </button>
-            <button className="btn btn-default pull-right">
-              Cancel
+            <button
+              className="btn btn-default pull-right"
+              onClick={this.props.onBack}>
+              Back
             </button>
           </div>
         </footer>

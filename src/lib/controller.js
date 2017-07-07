@@ -17,11 +17,11 @@ class Controller {
     this.view  = view;
     this.index = new PageIndex(Pages.SETTINGS);
     this.restart();
-    this.render();
   }
   restart() {
     this.index = new PageIndex(Pages.SETTINGS, 0);
     this.history   = [];
+    this.render();
   }
   back() {
     if (!this.history.length) {
@@ -31,8 +31,8 @@ class Controller {
     this.render();
   }
   next() {
-    this.updateModelWithInputs();
-    const params = this.getSettingsFromModel();
+    this.updateModel();
+    const params = this.parameters();
     switch(this.index.page) {
       case Pages.SETTINGS:
         this.processSettings(params);
@@ -55,17 +55,19 @@ class Controller {
   }
 
   render() {
-    this.view.renderNewParameters(this.getSettingsFromModel());
+    if (this.view) {
+      this.view.renderNewParameters(this.parameters());
+    }
   }
-  updateModelWithInputs() {
+  updateModel() {
     const inputs = this.getInputs();
     this.model.vnaAddress        = inputs.vnaAddress;
     this.model.matrixAddress     = inputs.matrixAddress;
     this.model.procedureFilename = inputs.procedureFilename;
-    this.model.calChoie          = inputs.calChoice;
+    this.model.calChoice          = inputs.calChoice;
     this.model.calGroup          = inputs.calGroup;
   }
-  getSettingsFromModel() {
+  parameters() {
     return {
       vnaAddress:        this.model.vnaAddress,
       matrixAddress:     this.model.matrixAddress,
@@ -73,7 +75,8 @@ class Controller {
       calChoice:         this.model.calChoice,
       calGroup:          this.model.calGroup,
       index:             this.index,
-      sidebar:           this.summary()
+      calPorts:          this.getCalPorts(),
+      sidebar:           this.summary(),
     };
   }
   getInputs() {
@@ -124,6 +127,14 @@ class Controller {
       calibrate,
       measure
     ];
+  }
+  getCalPorts() {
+    const isCalPage = this.index.page == Pages.CALIBRATE;
+    if (!isCalPage) {
+      return [-1]
+    }
+    const procedure = this.model.getProcedure();
+    return procedure.calibrationSteps[this.index.step];
   }
 
   processSettings(params) {
@@ -194,23 +205,24 @@ class Controller {
     this.render();
   }
   processCalibrationStep() {
+    // run step
     if (!this.model.performCalibrationStep(this.index.step)) {
       // TODO: Handle error / message
       console.log('calibration step failed')
       return;
     }
+    this.pushCurrentIndexToHistory();
 
+    // next
     this.index.step++;
     let steps = this.model.getProcedure().calibrationSteps;
     if (this.index.step >= steps.length) {
-      // Finished, apply calibration
-      // TODO: get cal name with
-      // modal dialog? Separate page?
       if (!this.model.applyCalibration()) {
         // TODO: Error message
         console.log('Error applying calibration');
         return;
       }
+      // TODO: Finish dialog
       const name = this.view.getSaveCalFromDialog();
       if (!name) {
         console.log('Save canceled. No calibration?');
@@ -228,15 +240,16 @@ class Controller {
       this.startMeasurements();
     }
     else {
-      this.pushCurrentIndexToHistory();
       this.render();
     }
   }
   purgeCalibrationSteps() {
-    for (let i = 0; i < this.history.length; i++) {
+    for (let i = this.history.length-1; i >= 0; i--) {
       const page = this.history[i].page;
+      console.log(`${i}: ${page}`)
       if (page == Pages.CALIBRATE) {
-        this.history.splice(i, 1);
+        console.log('purging...');
+        this.history.pop();
       }
     }
   }

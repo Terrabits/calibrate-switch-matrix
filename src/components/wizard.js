@@ -21,7 +21,8 @@ class Wizard extends React.Component {
       procedureFilename: '/procedure.yaml',
       calChoice:         Choices.CALIBRATE,
       calGroup:          'cal group 1',
-      saveCalAs:         this.store.get('save-cal-as', '')
+      saveCalAs:         this.store.get('save-cal-as', ''),
+      calPorts: [-1]
     };
   }
 
@@ -62,36 +63,44 @@ class Wizard extends React.Component {
     this.store.set('save-cal-as', name);
     this.setState({saveCalAs: name});
   }
+  set calPorts(ports) {
+    this.setState({'calPorts': ports});
+  }
   set index(i) {
     this.setState({index: i});
   }
 
   render() {
     // settings page
-    let isSettingsInvisible = this.state.index.page != Pages.SETTINGS;
-    let settings = {
+    const isSettingsInvisible = this.state.index.page != Pages.SETTINGS;
+    const settings = {
       vnaAddress:        this.vnaAddress,
       matrixAddress:     this.matrixAddress,
       procedureFilename: this.procedureFilename
     };
-    let onSettingsChanges = {
+    const onSettingsChanges = {
       handleVnaAddressChange:        (event) => {this.vnaAddress        = event.target.value;},
       handleMatrixAddressChange:     (event) => {this.matrixAddress     = event.target.value;},
       handleProcedureFilenameChange: (event) => {this.procedureFilename = event.target.value;}
     };
     // choose cal page
-    let isChooseCalPageInvisible = this.state.index.page != Pages.CHOOSE_CAL;
-    let chooseCal = {
+    const isChooseCalPageInvisible = this.state.index.page != Pages.CHOOSE_CAL;
+    const chooseCal = {
       choice:   this.state.calChoice,
       calGroup: this.state.calGroup
     };
-    let onChooseCalChanges = {
+    const onChooseCalChanges = {
       handleChoiceChange:   (event) => {
         console.log('Changing cal choice to: ' + event.target.value);
         this.calChoice = event.target.value;
         console.log('Cal choice now is: ' + this.calChoice);
       },
       handleCalGroupChange: (event) => {this.calGroup  = event.target.value}
+    };
+    const isCalibrationInvisible = this.state.index.page != Pages.CALIBRATE;
+    const calibration = {
+      index: this.state.index.step,
+      ports: this.state.calPorts
     };
     return (
       <div id="pages" className="wizard row">
@@ -103,6 +112,11 @@ class Wizard extends React.Component {
           values={chooseCal}
           onChanges={onChooseCalChanges}
           invisible={isChooseCalPageInvisible}/>
+        <CalibratePage
+          index={calibration.index}
+          ports={calibration.ports}
+          invisible={isCalibrationInvisible}
+        />
         <div id="console">
           Page {this.state.index.page}, step {this.state.index.step}
         </div>
