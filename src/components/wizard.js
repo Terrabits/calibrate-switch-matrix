@@ -22,7 +22,7 @@ class Wizard extends React.Component {
       calChoice:         Choices.CALIBRATE,
       calGroup:          'cal group 1',
       saveCalAs:         this.store.get('save-cal-as', ''),
-      calPorts: [-1]
+      calPorts:          [-1]
     };
   }
 
