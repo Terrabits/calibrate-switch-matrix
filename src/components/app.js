@@ -9,7 +9,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       sidebar: null
-    }
+    };
   }
   renderNewParameters(params) {
     if (params.vnaAddress) {
@@ -36,7 +36,6 @@ class App extends React.Component {
     if (params.sidebar) {
       this.setState({sidebar: params.sidebar});
     }
-
   }
   getUserInputs() {
     return {

@@ -22,7 +22,8 @@ class Wizard extends React.Component {
       calChoice:         Choices.CALIBRATE,
       calGroup:          'cal group 1',
       saveCalAs:         this.store.get('save-cal-as', ''),
-      calPorts:          [-1]
+      calPorts:          [-1],
+      measurePorts:      {1: 'one', 2: 'two'}
     };
   }
 
@@ -102,6 +103,11 @@ class Wizard extends React.Component {
       index: this.state.index.step,
       ports: this.state.calPorts
     };
+    const isMeasureInvisible = this.state.index.page != Pages.MEASURE;
+    const measure = {
+      index: this.state.index.step,
+      ports: this.state.measurePorts
+    };
     return (
       <div id="pages" className="wizard row">
         <SettingsPage
@@ -117,9 +123,11 @@ class Wizard extends React.Component {
           ports={calibration.ports}
           invisible={isCalibrationInvisible}
         />
-        <div id="console">
-          Page {this.state.index.page}, step {this.state.index.step}
-        </div>
+        <MeasurePage
+          index={measure.index}
+          ports={measure.ports}
+          invisible={isMeasureInvisible}
+        />
       </div>
     );
   }

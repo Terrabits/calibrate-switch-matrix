@@ -16,7 +16,7 @@ test('Controller without calibration basically works', t => {
   view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
   c.next();
   t.is(c.index.page, Pages.CHOOSE_CAL);
-  view.calibrationChoice = Choices.NONE
+  view.calChoice = Choices.NONE
   c.next();
   t.is(c.index.page, Pages.MEASURE);
   const NUM_STEPS = c.model.getProcedure().steps.length;
@@ -38,7 +38,7 @@ test('Controller with saved cal basically works', t => {
   view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
   c.next();
   t.is(c.index.page, Pages.CHOOSE_CAL);
-  view.calibrationChoice = Choices.EXISTING
+  view.calChoice = Choices.EXISTING
   view.calGroup = 'saved cal';
   c.next();
   t.is(c.index.page, Pages.MEASURE);
@@ -61,7 +61,7 @@ test('Controller performing calibration basically works', t => {
   view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
   c.next();
   t.is(c.index.page, Pages.CHOOSE_CAL);
-  view.calibrationChoice = Choices.CALIBRATE
+  view.calChoice = Choices.CALIBRATE
   c.next();
   t.is(c.index.page, Pages.CALIBRATE);
   t.is(c.index.step, 0);
@@ -72,6 +72,9 @@ test('Controller performing calibration basically works', t => {
   t.is(c.index.page, Pages.CALIBRATE);
   t.is(c.index.step, 2);
   c.next(); // Perform and apply
+  for (let i of c.history) {
+    t.not(i.page, Pages.CALIBRATE);
+  }
 
   const NUM_STEPS = c.model.getProcedure().steps.length;
   for (let i = 0; i < NUM_STEPS; i++) {

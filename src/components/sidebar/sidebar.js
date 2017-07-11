@@ -7,7 +7,7 @@ function Sidebar(props) {
   if (props.sections) {
     for (let section of props.sections) {
       console.log('section: ' + section.name);
-      elements.push(<Section key={section.name} name={section.name} />);
+      elements.push(<Section key={section.name} name={section.name} underline={!!section.underline}/>);
       if (section.items) {
         for (let item of section.items) {
           console.log('item: ' + item.name);

@@ -101,7 +101,11 @@ class Controller {
         measure
       ];
     }
-    if (this.index.page != Pages.SETTINGS) {
+    if (this.index.page == Pages.SETTINGS) {
+      settings.underline = true;
+    }
+    else {
+      // Have procedure, display measurement steps
       measure.items = [];
       for (let i = 0; i < pro.steps.length; i++) {
         const step = pro.steps[i];
@@ -111,7 +115,11 @@ class Controller {
         });
       }
     }
+    if (this.index.page == Pages.CHOOSE_CAL) {
+      calibrate.underline = true;
+    }
     if (this.index.page == Pages.CALIBRATE) {
+      // display calibration steps
       calibrate.items = [];
       const steps = pro.calibrationSteps;
       for (let i = 0; i < steps.length; i++) {
@@ -185,7 +193,6 @@ class Controller {
       this.startCalibration();
     }
     else {
-      this.pushCurrentIndexToHistory();
       this.startMeasurements();
     }
   }
@@ -234,9 +241,8 @@ class Controller {
         return;
       }
       this.purgeCalibrationSteps();
-      this.view.wizard.calChoice = Choices.EXISTING;
-      this.view.wizard.calGroup          = name;
-      this.model.calGroup         = name;
+      this.model.calChoice       = Choices.EXISTING;
+      this.model.calGroup        = name;
       this.startMeasurements();
     }
     else {
@@ -246,12 +252,13 @@ class Controller {
   purgeCalibrationSteps() {
     for (let i = this.history.length-1; i >= 0; i--) {
       const page = this.history[i].page;
-      console.log(`${i}: ${page}`)
+      console.log(`${i+1}/${this.history.length}: ${page}`)
       if (page == Pages.CALIBRATE) {
         console.log('purging...');
-        this.history.pop();
+        this.history.splice(i);
       }
     }
+    this.index = this.history.pop();
   }
   startMeasurements() {
     // TODO
