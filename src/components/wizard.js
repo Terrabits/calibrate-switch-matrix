@@ -23,7 +23,7 @@ class Wizard extends React.Component {
       calGroup:          'cal group 1',
       saveCalAs:         this.store.get('save-cal-as', ''),
       calPorts:          [-1],
-      measurePorts:      {1: 'one', 2: 'two'}
+      measurePorts:      {}
     };
   }
 
@@ -67,6 +67,9 @@ class Wizard extends React.Component {
   set calPorts(ports) {
     this.setState({'calPorts': ports});
   }
+  set measurePorts(ports) {
+    this.setState({'measurePorts': ports})
+  }
   set index(i) {
     this.setState({index: i});
   }
@@ -100,12 +103,12 @@ class Wizard extends React.Component {
     };
     const isCalibrationInvisible = this.state.index.page != Pages.CALIBRATE;
     const calibration = {
-      index: this.state.index.step,
+      index: this.state.index,
       ports: this.state.calPorts
     };
     const isMeasureInvisible = this.state.index.page != Pages.MEASURE;
     const measure = {
-      index: this.state.index.step,
+      index: this.state.index,
       ports: this.state.measurePorts
     };
     return (

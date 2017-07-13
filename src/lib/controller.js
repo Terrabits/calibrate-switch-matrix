@@ -266,6 +266,8 @@ class Controller {
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.MEASURE;
     this.index.step = 0;
+    let steps = this.model.getProcedure().steps;
+    this.view.measurePorts = steps[this.index.step]['vna connections'];
     this.render();
   }
   processMeasurementStep() {
@@ -283,6 +285,7 @@ class Controller {
 
     this.pushCurrentIndexToHistory();
     this.index.step++;
+    this.view.measurePorts = steps[this.index.step]['vna connections'];
     this.render();
   }
 
