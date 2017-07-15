@@ -27,8 +27,8 @@ class App extends React.Component {
     if (params.calGroup) {
       this.wizard.calGroup          = params.calGroup;
     }
-    if (params.calPorts) {
-      this.wizard.calPorts          = params.calPorts;
+    if (params.ports) {
+      this.wizard.ports          = params.ports;
     }
     if (params.index) {
       this.wizard.index             = params.index;
@@ -57,11 +57,13 @@ class App extends React.Component {
           <h1 className="title">{this.props.title || ''}</h1>
         </header>
         <div className="window-content">
-          <div className="pane-group">
+          <div className="row">
+            <div className="col-xs-3">
             <Sidebar
               ref={(sidebar) => { this.sidebar = sidebar; }}
               sections={this.state.sidebar} />
-            <div className="pane padded-more">
+            </div>
+            <div className="col-xs-9">
               <Wizard ref={(wizard) => {this.wizard = wizard;}} />
             </div>
           </div>

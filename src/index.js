@@ -10,6 +10,7 @@ import path           from 'path';
 
 import './assets/css/global.css';
 import './vendor/photon/css/photon.css';
+import './vendor/bootstrap/css/bootstrap.css';
 
 // Probably not best practices, but...
 const pkg = require('../package.json');

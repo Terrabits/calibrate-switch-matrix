@@ -68,6 +68,13 @@ class Controller {
     this.model.calGroup          = inputs.calGroup;
   }
   parameters() {
+    let ports = [];
+    if (this.index.page == Pages.CALIBRATE) {
+      ports = this.getCalPorts();
+    }
+    else if (this.index.page == Pages.MEASURE) {
+      ports = this.getMeasurementPorts();
+    }
     return {
       vnaAddress:        this.model.vnaAddress,
       matrixAddress:     this.model.matrixAddress,
@@ -75,7 +82,7 @@ class Controller {
       calChoice:         this.model.calChoice,
       calGroup:          this.model.calGroup,
       index:             this.index,
-      calPorts:          this.getCalPorts(),
+      ports:             ports,
       sidebar:           this.summary(),
     };
   }
@@ -144,6 +151,10 @@ class Controller {
     const procedure = this.model.getProcedure();
     return procedure.calibrationSteps[this.index.step];
   }
+  getMeasurementPorts() {
+    let steps = this.model.getProcedure().steps;
+    return steps[this.index.step]['vna connections'];
+  }
 
   processSettings(params) {
     if (!params.vnaAddress) {
@@ -184,7 +195,6 @@ class Controller {
   }
   processCalibrationChoice(params) {
     const choice = params.calChoice;
-    console.log('processing calibration choice: ' + choice);
     if (!choice) {
       console.log('Choose calibration option');
       return;
@@ -222,7 +232,7 @@ class Controller {
 
     // next
     this.index.step++;
-    let steps = this.model.getProcedure().calibrationSteps;
+    const steps = this.model.getProcedure().calibrationSteps;
     if (this.index.step >= steps.length) {
       if (!this.model.applyCalibration()) {
         // TODO: Error message
@@ -232,7 +242,7 @@ class Controller {
       // TODO: Finish dialog
       const name = this.view.getSaveCalFromDialog();
       if (!name) {
-        console.log('Save canceled. No calibration?');
+        console.log('Save cancelled. No calibration?');
         return;
       }
       if (!this.model.saveCalibration(name)) {
@@ -262,12 +272,9 @@ class Controller {
   }
   startMeasurements() {
     // TODO
-    console.log('Starting measurements');
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.MEASURE;
     this.index.step = 0;
-    let steps = this.model.getProcedure().steps;
-    this.view.measurePorts = steps[this.index.step]['vna connections'];
     this.render();
   }
   processMeasurementStep() {
@@ -285,7 +292,6 @@ class Controller {
 
     this.pushCurrentIndexToHistory();
     this.index.step++;
-    this.view.measurePorts = steps[this.index.step]['vna connections'];
     this.render();
   }
 

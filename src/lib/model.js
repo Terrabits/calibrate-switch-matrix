@@ -53,7 +53,6 @@ class Model {
     //   return false;
     // }
     // return result.stdout.trim().toLowerCase() == 'true'
-    console.log("Vna connected");
     return true;
   }
   isMatrix() {
@@ -68,7 +67,6 @@ class Model {
     //   return false;
     // }
     // return result.stdout.trim().toLowerCase() == 'true'
-    console.log("Switch matrix connected");
     return true;
   }
 
@@ -88,7 +86,6 @@ class Model {
     //   return false;
     // }
     // return result.stdout.trim().toLowerCase() == 'true'
-    console.log('is cal unit');
     return true;
   }
   calUnitPorts() {
@@ -103,7 +100,6 @@ class Model {
     //   return -1;
     // }
     // return Number(result.stdout)
-    console.log("cal unit ports: 2");
     return 2;
   }
   startCalibration() {
@@ -117,7 +113,6 @@ class Model {
     //   // TODO: Error message?
     //   return false;
     // }
-    console.log('starting calibration');
     return true;
   }
   performCalibrationStep(i) {
@@ -132,7 +127,6 @@ class Model {
     //   // TODO: Error message?
     //   return false;
     // }
-    console.log('Performing calibration step ' + i);
     return true;
   }
   applyCalibration() {
@@ -146,7 +140,6 @@ class Model {
     //   // TODO: Error message?
     //   return false;
     // }
-    console.log('Applying calibration');
     return true;
   }
   saveCalibration(name) {
@@ -161,7 +154,6 @@ class Model {
     //   // TODO: Error message?
     //   return false;
     // }
-    console.log('Saving calibration as ' + name);
     this.calGroup = name;
     return true;
   }
@@ -179,7 +171,6 @@ class Model {
     //   // TODO: Error message?
     //   return false;
     // }
-    console.log('Performing measurement step ' + i);
     return true;
   }
 }

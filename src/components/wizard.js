@@ -22,8 +22,7 @@ class Wizard extends React.Component {
       calChoice:         Choices.CALIBRATE,
       calGroup:          'cal group 1',
       saveCalAs:         this.store.get('save-cal-as', ''),
-      calPorts:          [-1],
-      measurePorts:      {}
+      ports:             [-1],
     };
   }
 
@@ -64,11 +63,8 @@ class Wizard extends React.Component {
     this.store.set('save-cal-as', name);
     this.setState({saveCalAs: name});
   }
-  set calPorts(ports) {
-    this.setState({'calPorts': ports});
-  }
-  set measurePorts(ports) {
-    this.setState({'measurePorts': ports})
+  set ports(value) {
+    this.setState({'ports': value});
   }
   set index(i) {
     this.setState({index: i});
@@ -95,24 +91,24 @@ class Wizard extends React.Component {
     };
     const onChooseCalChanges = {
       handleChoiceChange:   (event) => {
-        console.log('Changing cal choice to: ' + event.target.value);
         this.calChoice = event.target.value;
-        console.log('Cal choice now is: ' + this.calChoice);
       },
       handleCalGroupChange: (event) => {this.calGroup  = event.target.value}
     };
     const isCalibrationInvisible = this.state.index.page != Pages.CALIBRATE;
     const calibration = {
       index: this.state.index,
-      ports: this.state.calPorts
+      ports: this.state.ports
     };
     const isMeasureInvisible = this.state.index.page != Pages.MEASURE;
     const measure = {
       index: this.state.index,
-      ports: this.state.measurePorts
+      ports: this.state.ports
     };
+    console.log('wizard ports: ' + this.state.ports);
+
     return (
-      <div id="pages" className="wizard row">
+      <div id="pages" className="wizard padded-more">
         <SettingsPage
           values={settings}
           onChanges={onSettingsChanges}
