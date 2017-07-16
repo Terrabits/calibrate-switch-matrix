@@ -39,6 +39,14 @@ class Model {
   set calGroup(name) {
     this.store.set('cal-group', name);
   }
+  get calGroups() {
+    return [
+      'cal group 1',
+      'cal group 2',
+      'cal group 3',
+      'cal group 4'
+    ];
+  }
 
 
   isVna() {

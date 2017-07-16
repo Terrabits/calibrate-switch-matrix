@@ -12,7 +12,7 @@ class LineEdit extends React.Component {
           className="form-control"
           type="text"
           value={this.props.value}
-          onChange={this.props.onChange}
+          onChange={this.props.onChange? this.props.onChange : null}
           disabled={!!this.props.disabled}
         />
       </div>

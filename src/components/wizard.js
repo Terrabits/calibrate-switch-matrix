@@ -21,6 +21,7 @@ class Wizard extends React.Component {
       procedureFilename: '/procedure.yaml',
       calChoice:         Choices.CALIBRATE,
       calGroup:          'cal group 1',
+      calGroups:         [],
       saveCalAs:         this.store.get('save-cal-as', ''),
       ports:             [-1],
     };
@@ -56,6 +57,9 @@ class Wizard extends React.Component {
   set calGroup(name) {
     this.setState({calGroup: name});
   }
+  set calGroups(names) {
+    this.setState({calGroups: names});
+  }
   get saveCalAs() {
     return this.state.saveCalAs;
   }
@@ -71,6 +75,7 @@ class Wizard extends React.Component {
   }
 
   render() {
+    const disabled = false;
     // settings page
     const isSettingsInvisible = this.state.index.page != Pages.SETTINGS;
     const settings = {
@@ -79,21 +84,25 @@ class Wizard extends React.Component {
       procedureFilename: this.procedureFilename
     };
     const onSettingsChanges = {
-      handleVnaAddressChange:        (event) => {this.vnaAddress        = event.target.value;},
-      handleMatrixAddressChange:     (event) => {this.matrixAddress     = event.target.value;},
-      handleProcedureFilenameChange: (event) => {this.procedureFilename = event.target.value;}
+      handleVnaAddressChange:        (event)    => {this.vnaAddress        = event.target.value;},
+      handleMatrixAddressChange:     (event)    => {this.matrixAddress     = event.target.value;},
+      handleProcedureFilenameChange: (filename) => {this.procedureFilename = filename;          }
     };
     // choose cal page
     const isChooseCalPageInvisible = this.state.index.page != Pages.CHOOSE_CAL;
     const chooseCal = {
-      choice:   this.state.calChoice,
-      calGroup: this.state.calGroup
+      choice:    this.state.calChoice,
+      calGroup:  this.state.calGroup,
+      calGroups: this.state.calGroups
     };
     const onChooseCalChanges = {
       handleChoiceChange:   (event) => {
         this.calChoice = event.target.value;
       },
-      handleCalGroupChange: (event) => {this.calGroup  = event.target.value}
+      handleCalGroupChange: (event) => {
+        console.log('Cal group change: ' + event.target.value);
+        this.calGroup  = event.target.value
+      }
     };
     const isCalibrationInvisible = this.state.index.page != Pages.CALIBRATE;
     const calibration = {
@@ -112,20 +121,26 @@ class Wizard extends React.Component {
         <SettingsPage
           values={settings}
           onChanges={onSettingsChanges}
-          invisible={isSettingsInvisible} />
+          invisible={isSettingsInvisible}
+          disabled={!!disabled}
+        />
         <ChooseCalPage
           values={chooseCal}
           onChanges={onChooseCalChanges}
-          invisible={isChooseCalPageInvisible}/>
+          invisible={isChooseCalPageInvisible}
+          disabled={!!disabled}
+        />
         <CalibratePage
           index={calibration.index}
           ports={calibration.ports}
           invisible={isCalibrationInvisible}
+          disabled={!!disabled}
         />
         <MeasurePage
           index={measure.index}
           ports={measure.ports}
           invisible={isMeasureInvisible}
+          disabled={!!disabled}
         />
       </div>
     );

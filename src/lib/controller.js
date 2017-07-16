@@ -81,6 +81,7 @@ class Controller {
       procedureFilename: this.model.procedureFilename,
       calChoice:         this.model.calChoice,
       calGroup:          this.model.calGroup,
+      calGroups:         this.model.calGroups,
       index:             this.index,
       ports:             ports,
       sidebar:           this.summary(),

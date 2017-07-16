@@ -27,8 +27,11 @@ class App extends React.Component {
     if (params.calGroup) {
       this.wizard.calGroup          = params.calGroup;
     }
+    if (params.calGroups) {
+      this.wizard.calGroups         = params.calGroups;
+    }
     if (params.ports) {
-      this.wizard.ports          = params.ports;
+      this.wizard.ports             = params.ports;
     }
     if (params.index) {
       this.wizard.index             = params.index;
