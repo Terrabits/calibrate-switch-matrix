@@ -9,6 +9,7 @@ class Model {
     this.store = new Store();
   }
 
+  // User settings
   get vnaAddress() {
     return this.store.get('vna-address', 'localhost');
   }
@@ -39,30 +40,13 @@ class Model {
   set calGroup(name) {
     this.store.set('cal-group', name);
   }
-  get calGroups() {
-    return [
-      'cal group 1',
-      'cal group 2',
-      'cal group 3',
-      'cal group 4'
-    ];
+
+  // procedure
+  getProcedure() {
+    return new Procedure(this.procedureFilename, this.calUnitPorts());
   }
 
-
-  isVna() {
-    let args = [
-      '--is-vna',
-      '--vna-address', this.vnaAddress
-    ];
-    // TODO: check for vna
-    // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message
-    //   return false;
-    // }
-    // return result.stdout.trim().toLowerCase() == 'true'
-    return true;
-  }
+  // switch matrix
   isMatrix() {
     let args = [
       '--is-matrix',
@@ -78,10 +62,29 @@ class Model {
     return true;
   }
 
-  getProcedure() {
-    return new Procedure(this.procedureFilename, this.calUnitPorts());
+  // vna
+  isVna() {
+    let args = [
+      '--is-vna',
+      '--vna-address', this.vnaAddress
+    ];
+    // TODO: check for vna
+    // let result = python.startSync(args);
+    // if (!result.status) {
+    //   // TODO: Error message
+    //   return false;
+    // }
+    // return result.stdout.trim().toLowerCase() == 'true'
+    return true;
   }
-
+  calGroups() {
+    return [
+      'cal group 1',
+      'cal group 2',
+      'cal group 3',
+      'cal group 4'
+    ];
+  }
   isCalUnit() {
     let args = [
       '--is-cal-unit',

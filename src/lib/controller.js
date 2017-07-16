@@ -81,7 +81,7 @@ class Controller {
       procedureFilename: this.model.procedureFilename,
       calChoice:         this.model.calChoice,
       calGroup:          this.model.calGroup,
-      calGroups:         this.model.calGroups,
+      calGroups:         this.calGroups(),
       index:             this.index,
       ports:             ports,
       sidebar:           this.summary(),
@@ -96,6 +96,14 @@ class Controller {
       calChoice:         inputs.calChoice,
       calGroup:          inputs.calGroup
     };
+  }
+  calGroups() {
+    if (this.index.page != Pages.SETTINGS) {
+      return this.model.calGroups();
+    }
+    else {
+      return [];
+    }
   }
   summary() {
     const pro = this.model.getProcedure();
