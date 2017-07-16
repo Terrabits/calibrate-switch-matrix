@@ -57,13 +57,13 @@ class App extends React.Component {
           <h1 className="title">{this.props.title || ''}</h1>
         </header>
         <div className="window-content">
-          <div className="row">
-            <div className="col-xs-3">
+          <div className="pane-group">
+            <div className="pane-sm sidebar">
             <Sidebar
               ref={(sidebar) => { this.sidebar = sidebar; }}
               sections={this.state.sidebar} />
             </div>
-            <div className="col-xs-9">
+            <div className="pane">
               <Wizard ref={(wizard) => {this.wizard = wizard;}} />
             </div>
           </div>

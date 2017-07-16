@@ -8,9 +8,9 @@ import Model          from './lib/model.js';
 
 import path           from 'path';
 
-import './assets/css/global.css';
 import './vendor/photon/css/photon.css';
-import './vendor/bootstrap/css/bootstrap.css';
+import './assets/css/global.css';
+
 
 // Probably not best practices, but...
 const pkg = require('../package.json');
