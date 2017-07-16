@@ -98,12 +98,10 @@ class Controller {
     };
   }
   calGroups() {
-    if (this.index.page != Pages.SETTINGS) {
-      return this.model.calGroups();
-    }
-    else {
+    if (this.index.page == Pages.SETTINGS) {
       return [];
     }
+    return this.model.calGroups();
   }
   summary() {
     const pro = this.model.getProcedure();
