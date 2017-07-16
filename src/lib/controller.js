@@ -146,13 +146,17 @@ class Controller {
   getCalPorts() {
     const isCalPage = this.index.page == Pages.CALIBRATE;
     if (!isCalPage) {
-      return [-1]
+      return [-1];
     }
     const procedure = this.model.getProcedure();
     return procedure.calibrationSteps[this.index.step];
   }
   getMeasurementPorts() {
-    let steps = this.model.getProcedure().steps;
+    const isMeasurePage = this.index.page == Pages.MEASURE;
+    if (!isMeasurePage) {
+      return {};
+    }
+    const steps = this.model.getProcedure().steps;
     return steps[this.index.step]['vna connections'];
   }
 
@@ -219,6 +223,7 @@ class Controller {
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.CALIBRATE;
     this.index.step = 0;
+    this.index.totalSteps = this.model.getProcedure().calibrationSteps.length;
     this.render();
   }
   processCalibrationStep() {
@@ -275,6 +280,7 @@ class Controller {
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.MEASURE;
     this.index.step = 0;
+    this.index.totalSteps = this.model.getProcedure().steps.length;
     this.render();
   }
   processMeasurementStep() {

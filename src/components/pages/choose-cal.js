@@ -7,7 +7,7 @@ function ChooseCalPage(props) {
   const classes = props.invisible ? 'invisible' : '';
   return(
     <div id="choose-cal-page" className={classes}>
-      <h2>Choose Calibration</h2>
+      <h2 className="no-margin-top">Choose Calibration</h2>
       <form>
         <Radio
           label="Calibrate"

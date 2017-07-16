@@ -3,8 +3,9 @@ import React from 'react';
 function Head(props) {
   return (
     <thead>
-      <th>VNA Port</th>
-      <th>Switch Matrix Port</th>
+      <tr>
+        <th>VNA Port</th>
+      </tr>
     </thead>
   );
 }

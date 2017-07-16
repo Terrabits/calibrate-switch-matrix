@@ -1,16 +1,18 @@
 import React from 'react';
-import Table from '../table/table.js';
+import PortTable from '../port-table/port-table.js';
 
 function MeasurePage(props) {
   const classes = props.invisible? 'invisible' : '';
   return(
     <div id="measure-page" className={classes}>
-      <h2>Measure</h2>
-      <h4>Measurement Step {props.index.step+1} of {props.index.totalSteps}</h4>
+      <div>
+        <h2 className="with-step">Measure</h2>
+        <h2 className="step-heading pull-right"> {props.index.step+1} / {props.index.totalSteps}</h2>
+      </div>
       <p>
-        Make the following port connections and click next
+        Make the following port connections and click next.
       </p>
-      <Table />
+      <PortTable ports={props.ports}/>
     </div>
   );
 }

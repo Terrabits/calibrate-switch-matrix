@@ -11,11 +11,11 @@ class LineEdit extends React.Component {
         <input
           className="form-control"
           type="text"
-          value={this.props.value} onChange={this.props.onChange}
+          value={this.props.value}
+          onChange={this.props.onChange}
           disabled={!!this.props.disabled}
         />
       </div>
-
     );
   }
 }

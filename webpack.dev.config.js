@@ -36,6 +36,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.scss$/,
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
+        include: defaultInclude
+      },
+      {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
         include: defaultInclude

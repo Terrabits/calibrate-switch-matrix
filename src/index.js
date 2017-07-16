@@ -8,8 +8,8 @@ import Model          from './lib/model.js';
 
 import path           from 'path';
 
-import './vendor/photon/css/photon.css';
-import './assets/css/global.css';
+import './vendor/photon/sass/photon.scss';
+import './assets/css/global.scss';
 
 
 // Probably not best practices, but...

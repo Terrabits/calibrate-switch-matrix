@@ -3,8 +3,7 @@ import React from 'react';
 function Row(props) {
   return (
     <tr>
-      <td>one</td>
-      <td>two</td>
+      <td>{props.port}</td>
     </tr>
   );
 }

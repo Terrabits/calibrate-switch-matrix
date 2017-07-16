@@ -98,12 +98,12 @@ class Wizard extends React.Component {
     const isCalibrationInvisible = this.state.index.page != Pages.CALIBRATE;
     const calibration = {
       index: this.state.index,
-      ports: this.state.ports
+      ports: (isCalibrationInvisible? [] : this.state.ports)
     };
     const isMeasureInvisible = this.state.index.page != Pages.MEASURE;
     const measure = {
       index: this.state.index,
-      ports: this.state.ports
+      ports: (isMeasureInvisible? {} : this.state.ports)
     };
     console.log('wizard ports: ' + this.state.ports);
 
