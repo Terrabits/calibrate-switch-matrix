@@ -54,11 +54,7 @@ class Model {
     ];
     // TODO: check for matrix
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message
-    //   return false;
-    // }
-    // return result.stdout.trim().toLowerCase() == 'true'
+    // return !!result.status;
     return true;
   }
 
@@ -70,20 +66,22 @@ class Model {
     ];
     // TODO: check for vna
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message
-    //   return false;
-    // }
-    // return result.stdout.trim().toLowerCase() == 'true'
+    // return !!result.status;
     return true;
   }
   calGroups() {
-    return [
-      'cal group 1',
-      'cal group 2',
-      'cal group 3',
-      'cal group 4'
+    let args = [
+      '--cal-groups',
+      '--vna-address', this.vnaAddress
     ];
+    // TODO: get cal groups
+    // let result = python.startSync(args);
+    // if (!result.status) {
+    //   // TODO: Error Message
+    //   return [];
+    // }
+    // return result.stdout.trim().split(',');
+    return ['cal group 1', 'cal group 2', 'cal group 3'];
   }
   isCalUnit() {
     let args = [
@@ -92,11 +90,7 @@ class Model {
     ];
     // TODO: check for cal unit
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error Message
-    //   return false;
-    // }
-    // return result.stdout.trim().toLowerCase() == 'true'
+    // return !!result.status;
     return true;
   }
   calUnitPorts() {
@@ -120,10 +114,7 @@ class Model {
     ];
     // TODO: start calibration
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message?
-    //   return false;
-    // }
+    // return !!result.status;
     return true;
   }
   performCalibrationStep(i) {
@@ -134,10 +125,7 @@ class Model {
     ];
     // TODO: Perform calibration step
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message?
-    //   return false;
-    // }
+    // return !!result.status;
     return true;
   }
   applyCalibration() {
@@ -147,10 +135,7 @@ class Model {
     ];
     // TODO: Apply calibration
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message?
-    //   return false;
-    // }
+    // return !!result.status;
     return true;
   }
   saveCalibration(name) {
@@ -162,7 +147,6 @@ class Model {
     // TODO: save calibration
     // let result = python.startSync(args);
     // if (!result.status) {
-    //   // TODO: Error message?
     //   return false;
     // }
     this.calGroup = name;
@@ -178,10 +162,7 @@ class Model {
     ];
     // TODO: Perform measurement
     // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message?
-    //   return false;
-    // }
+    // return !!result.status;
     return true;
   }
 }

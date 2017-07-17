@@ -71,9 +71,10 @@ class Procedure:
         return self.paths.set_file_path(self.yaml['vna calibration']['setup'])
     def calibrate_ports(self):
         return self.yaml['vna calibration']['ports']
+    def calibration_steps(self):
+        create_steps(self.calibration_ports, self.cal_unit_ports)
     def calibration_step_ports(self, i):
-        steps = create_steps(self.calibration_ports, self.cal_unit_ports)
-        return steps[i]
+        return self.calibration_steps()[i]
 
     def step(self, i):
         step = self.yaml['measurement steps'][i]

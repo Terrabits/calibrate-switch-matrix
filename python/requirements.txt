@@ -2,4 +2,4 @@ setuptools      >= 36.0.1
 ddt             >=1.1.1
 pyinstaller     >=3.2
 ruamel.yaml     >=0.14.12
-rohdeschwarz    >=0.11.1dev1
+rohdeschwarz    >=0.12.1dev1

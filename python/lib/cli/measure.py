@@ -16,7 +16,7 @@ def perform_step(args):
 
     step = procedure.step(args.step)
 
-    for m in step['measureents']:
+    for m in step['measurements']:
         # To perform a measurement:
         # 1. apply vna set file
         # 2. apply cal group
@@ -32,7 +32,7 @@ def perform_step(args):
         # 2. apply cal group
         if args.cal_group:
             ch1.cal_group = args.cal_group
-            ch1.dissolve_cal_group # TODO: Implement this
+            ch1.dissolve_cal_group_link()
 
         # 3. set switch matrix path
         matrix.set_switches(read_yaml(m['switch path']))
