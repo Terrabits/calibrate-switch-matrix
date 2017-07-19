@@ -3,20 +3,22 @@ from lib.cli.procedure import process as process_procedure
 from lib.cli.vna       import process  as process_vna
 from lib.cli.vna       import is_cal_unit, cal_unit_ports
 
+from pathlib           import Path
+
 def process_args(args):
     vna = process_vna(args)
     if not vna:
-        return [None]*3
-    set_file_extension = set_file_extension(vna)
-    if not vna.is_cal_unit():
-        return [None]*3
+        return [None]*2
+    file_extension = set_file_extension(vna)
+    if not vna.cal_units:
+        return [None]*2
     # TODO: cal_unit_ports = vna.cal_unit().ports
-    cal_unit_ports   = 2
+    cal_unit_ports   = vna.cal_unit().ports
     if not cal_unit_ports:
-        return [None]*3
-    procedure = process_procedure(args, set_file_extension, cal_unit_ports)
+        return [None]*2
+    procedure = process_procedure(args, file_extension, cal_unit_ports)
     if not procedure:
-        return [None]*3
+        return [None]*2
     return [vna, procedure]
 
 def scpi_errors(vna):
@@ -35,11 +37,15 @@ def start(args):
     vna.is_error()
     vna.clear_status()
     # TODO: Start calibration here
-    vna.open_set(procedure.calibration_set_path)
+    set_path = procedure.calibration_set_path()
+    if not Path(set_path).is_file():
+        print('Could not find calibration setup file')
+        return False
+    vna.open_set_locally(set_path)
 
     vna.write("SENS1:CORR:COLL:AUTO:CONF FNP, ''")
     steps = procedure.calibration_steps()
-    for i in range(1,len(steps)+1)
+    for i in range(1,len(steps)+1):
         scpi = 'SENS1:CORR:COLL:AUTO:ASS{0}:DEF:TPOR {1}'
         scpi = scpi.format(i, ",".join(map(str,steps[i])))
         vna.write(scpi)

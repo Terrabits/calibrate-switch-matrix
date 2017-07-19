@@ -1,3 +1,4 @@
+from os.path import abspath
 from pathlib import Path
 
 def set_file_extension(vna):
@@ -11,10 +12,10 @@ class Paths:
     def __init__(self, filename, set_extension='.zvx'):
         if not filename.lower().endswith('.yaml'):
             filename += '.yaml'
-        self.procedure       = filename
+        self.procedure       = abspath(filename)
         self.set_extension   = set_extension.lower()
         # path objects
-        self.root            = Path(filename).parent.parent
+        self.root            = Path(self.procedure).parent.parent
         self.procedures      = self.root / "procedures"
         self.sets            = self.root / "sets"
         self.switch_matrices = self.root / "switch matrices"

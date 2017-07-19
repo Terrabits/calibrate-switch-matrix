@@ -1,4 +1,3 @@
-print(__name__)
 from lib.calibration     import create_steps
 from lib.procedure.paths import Paths
 from lib.readyaml        import read_yaml
@@ -75,15 +74,19 @@ class Procedure:
         create_steps(self.calibration_ports, self.cal_unit_ports)
     def calibration_step_ports(self, i):
         return self.calibration_steps()[i]
-
+    def number_of_steps(self):
+        return len(self.yaml['measurement steps'])
     def step(self, i):
         step = self.yaml['measurement steps'][i]
         for m in step['measurements']:
-            #   - switch path (yaml)
-            #   - vna setup   (.zvx)
-            #   - vna ports
-            # add: results file
-            m['results file'] = self.paths.results_path(self.matrix_name(), m['switch path'])
+            # - results file (extension added by vna)
+            # - switch path
+            # - vna setup
+            # - vna ports
+            results_file = m['switch path']
+            if results_file.lower().endswith('.yaml'):
+                results_file = results_file[:-5]
+            m['results file'] = self.paths.results_file(self.matrix_name(), results_file)
             m['switch path']  = self.paths.switch_matrix_path_file(self.matrix_name(), m['switch path'])
             m['vna setup']    = self.paths.set_file_path(m['vna setup'])
         return step

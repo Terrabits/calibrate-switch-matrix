@@ -29,13 +29,16 @@ def is_matrix(args):
 
 def process(args, procedure):
     # TODO
-    matrix = None
-    root_path    = Path(args.procedure_filename).parent.parent
+    driver_path = procedure.matrix_driver_path()
+    if not Path(driver_path).is_file():
+        msg = "No switch matrix driver found at '{0}'"
+        msg = msg.format(driver_path)
+        print(msg)
+        return None
     try:
-    	matrix = SwitchMatrix(str(root_path / 'switch_matrix.yaml'))
+    	 return SwitchMatrix(driver_path)
     except:
-    	msg = "Error loading 'switch_matrix.yaml'"
-    	print(msg, flush=True)
-    	vna.local()
-    	sys.exit(1)
-    return None
+        msg = "Error loading switch matrix driver: '{0}'"
+        msg = msg.format(driver_path)
+        print(msg)
+        return None
