@@ -1,6 +1,6 @@
 class IOStream {
 	constructor() {
-		var text;
+		this.text = '';
 		this.reset();
 		this.writeLambda = (text) => {
 			this.append(text);
