@@ -1,4 +1,4 @@
-class Buffer {
+class IOStream {
 	constructor() {
 		var text;
 		this.reset();
@@ -14,4 +14,4 @@ class Buffer {
 	}
 }
 
-module.exports = Buffer;
+module.exports = IOStream;

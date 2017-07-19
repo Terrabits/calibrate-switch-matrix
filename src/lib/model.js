@@ -48,122 +48,105 @@ class Model {
 
   // switch matrix
   isMatrix() {
-    let args = [
+    const args = [
       '--is-matrix',
       '--matrix-address', this.matrixAddress
     ];
-    // TODO: check for matrix
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true;
+    });
   }
 
   // vna
   isVna() {
-    let args = [
+    const args = [
       '--is-vna',
       '--vna-address', this.vnaAddress
     ];
-    // TODO: check for vna
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true;
+    });
   }
   calGroups() {
     let args = [
       '--cal-groups',
       '--vna-address', this.vnaAddress
     ];
-    // TODO: get cal groups
-    // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error Message
-    //   return [];
-    // }
-    // return result.stdout.trim().split(',');
-    return ['cal group 1', 'cal group 2', 'cal group 3'];
+    return python.start(args).then((result) => {
+      return result.stdout.text.split(',');
+    });
   }
   isCalUnit() {
     let args = [
       '--is-cal-unit',
       '--vna-address', this.vnaAddress
     ];
-    // TODO: check for cal unit
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true
+    });
   }
   calUnitPorts() {
     let args = [
       '--cal-unit-ports',
       '--vna-address', this.vnaAddress
     ];
-    // TODO: check cal unit ports
-    // let result = python.startSync(args);
-    // if (!result.status) {
-    //   // TODO: Error message
-    //   return -1;
-    // }
-    // return Number(result.stdout)
-    return 2;
+    return python.start(args).then((result) => {
+      return Number(result.stdout.text);
+    })
   }
   startCalibration() {
     let args = [
       '--start-calibration',
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--procedure',   this.procedureFilename
     ];
-    // TODO: start calibration
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true;
+    })
   }
   performCalibrationStep(i) {
     let args = [
       '--perform-calibration',
-      '--step',        i,
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--procedure',   this.procedureFilename,
+      '--step',        i
     ];
-    // TODO: Perform calibration step
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true;
+    });
   }
   applyCalibration() {
     let args = [
       '--apply-calibration',
       '--vna-address', this.vnaAddress
     ];
-    // TODO: Apply calibration
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true;
+    });
   }
   saveCalibration(name) {
     let args = [
       '--save-calibration',
-      '--vna-cal-group', name,
-      '--vna-address',   this.vnaAddress
+      '--vna-address',   this.vnaAddress,
+      '--cal-group', name
     ];
-    // TODO: save calibration
-    // let result = python.startSync(args);
-    // if (!result.status) {
-    //   return false;
-    // }
-    this.calGroup = name;
-    return true;
+    return python.start(args).then((result) => {
+      this.calGroup = name;
+      return true;
+    });
   }
   measure(i) {
     let args = [
       '--measure',
-      '--step',          i,
-      '--vna-address',   this.vnaAddress,
-      '--vna-cal-group', this.calGroup,
-      '--matrix-address',   this.matrixAddress
+      '--vna-address',    this.vnaAddress,
+      '--matrix-address', this.matrixAddress,
+      '--procedure',      this.procedureFilename,
+      '--vna-cal-group',  this.calGroup,
+      '--step',           i
     ];
-    // TODO: Perform measurement
-    // let result = python.startSync(args);
-    // return !!result.status;
-    return true;
+    return python.start(args).then((result) => {
+      return true;
+    });
   }
 }
 
