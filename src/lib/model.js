@@ -96,7 +96,7 @@ class Model {
       '--vna-address', this.vnaAddress
     ];
     return python.start(this.exe, args).then((result) => {
-      return true
+      return true;
     });
   }
   calUnitPorts() {
@@ -106,7 +106,7 @@ class Model {
     ];
     return python.start(this.exe, args).then((result) => {
       return Number(result.stdout.text);
-    })
+    });
   }
   startCalibration() {
     let args = [
@@ -116,7 +116,7 @@ class Model {
     ];
     return python.start(this.exe, args).then((result) => {
       return true;
-    })
+    });
   }
   performCalibrationStep(i) {
     let args = [
