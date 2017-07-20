@@ -100,7 +100,6 @@ class Wizard extends React.Component {
         this.calChoice = event.target.value;
       },
       handleCalGroupChange: (event) => {
-        console.log('Cal group change: ' + event.target.value);
         this.calGroup  = event.target.value
       }
     };
@@ -114,7 +113,6 @@ class Wizard extends React.Component {
       index: this.state.index,
       ports: (isMeasureInvisible? {} : this.state.ports)
     };
-    console.log('wizard ports: ' + this.state.ports);
 
     return (
       <div id="pages" className="wizard padded-more">

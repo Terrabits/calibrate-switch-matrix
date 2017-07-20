@@ -1,13 +1,34 @@
-const {Choices} = require('./calibration.js');
-const Procedure = require('./procedure.js');
-const python    = require('./python.js');
-const Store     = require('electron-store');
+const {Choices}   = require('./calibration.js');
+const isDev       = require('electron-is-dev');
+const noDevServer = require('./no-dev-server.js');
+const Procedure   = require('./procedure.js');
+const python      = require('./python.js');
+
+const path        = require('path');
+const Store       = require('electron-store');
 
 
 class Model {
   constructor(store) {
     this.store = new Store();
-    this.exe   = 'python ./python';
+    if (isDev && !noDevServer) {
+      // yarn run dev
+      this.exe   = path.resolve(__dirname, '../../python/__main__.py');
+    }
+    else {
+      if (noDevServer) {
+        // yarn run prod
+        this.exe = path.resolve(__dirname, './python/main');
+      }
+      else {
+        // full-on production
+        // TODO: python in app.asar.unpack?
+        this.exe = path.resolve(__dirname, '../build/python/main');
+      }
+      if (process.platform == 'win32') {
+        this.exe += '.exe';
+      }
+    }
   }
 
   // User settings
@@ -87,7 +108,7 @@ class Model {
       '--vna-address', this.vnaAddress
     ];
     return python.start(this.exe, args).then((result) => {
-      return result.stdout.text.split(',');
+      return result.stdout.text.trim().split(',');
     });
   }
   isCalUnit() {
@@ -105,7 +126,7 @@ class Model {
       '--vna-address', this.vnaAddress
     ];
     return python.start(this.exe, args).then((result) => {
-      return Number(result.stdout.text);
+      return Number(result.stdout.text.trim());
     });
   }
   startCalibration() {

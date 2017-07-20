@@ -13,13 +13,13 @@
   "main": "main.js",
   "scripts": {
     "test": "ava || true",
-    "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
+    "prod": "yarn run buildpy && yarn run build && electron --noDevServer .",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
     "clean": "git clean -x -d -f build/ && del dist/**/* dist/** !dist !dist/*.dmg !dist/*.zip !dist/*.exe",
     "build": "webpack --config webpack.build.config.js",
     "testpy": "cd ./python && python -m unittest -b || true",
-    "buildpy": "cd ./python && pyinstaller main.spec",
-    "package": "webpack --config webpack.build.config.js",
+    "buildpy": "cd ./python && pyinstaller main.spec --distpath ../build --noconfirm",
+    "package": "yarn run build && yarn run buildpy",
     "postpackage": "build --dir",
     "scaffold": "node ./scaffold/scaffold.js",
     "postinstall": "cd ./scaffold && npm install && cd ../python && pip install -r requirements.txt"
@@ -30,6 +30,7 @@
       "build/**/*",
       "LICENSE.txt",
       "main.js",
+      "!build/python",
       "!python",
       "!scaffold",
       "!scratch",
@@ -37,6 +38,9 @@
       "!test",
       "!.*",
       "!webpack.*"
+    ],
+    "extraResources": [
+      "build/python/**/*"
     ],
     "mac": {
       "category": "public.app-category.utilities"

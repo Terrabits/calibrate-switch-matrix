@@ -236,7 +236,8 @@ class Controller {
     catch(result) {
       // TODO: Error message
       console.log('caught exception in processSettings');
-      console.log(`stdout: '${result.stdout.text}'`);
+      console.log(`  stdout: '${result.stdout.text}'`);
+      console.log(`  stderr: '${result.stderr.text}'`);
     }
   }
   async processCalibrationChoice(params) {

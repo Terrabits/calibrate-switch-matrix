@@ -63,6 +63,10 @@ module.exports = {
     ]
   },
   target: 'electron-renderer',
+  node: {
+    __dirname: true,
+    __filename: true
+  },
   externals: externals,
   // externals: [
   //   nodeExternals()

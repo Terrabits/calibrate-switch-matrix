@@ -2,9 +2,9 @@
 
 // Import parts of electron to use
 const {app, BrowserWindow} = require('electron');
-const path  = require('path');
-const url   = require('url');
-const isDev = require('electron-is-dev');
+const isDev                = require('electron-is-dev');
+const path                 = require('path');
+const url                  = require('url');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -20,7 +20,7 @@ function createWindow() {
 
   // and load the index.html of the app.
   let indexPath;
-  if ( isDev && process.argv.indexOf('--noDevServer') === -1 ) {
+  if (isDev && !process.argv.includes('--noDevServer')) {
     indexPath = url.format({
       protocol: 'http:',
       host: 'localhost:8080',
@@ -40,7 +40,7 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     // Open the DevTools automatically if developing
-    if ( isDev ) {
+    if (isDev) {
       mainWindow.webContents.openDevTools();
     }
   });

@@ -2,7 +2,6 @@
 
 block_cipher = None
 
-
 a = Analysis(['__main__.py'],
              pathex=['.'],
              binaries=[],
@@ -19,7 +18,7 @@ pyz = PYZ(a.pure, a.zipped_data,
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
-          name='main',
+          name='main', # executable name
           debug=False,
           strip=False,
           upx=True,
@@ -30,4 +29,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='main')
+               name='python') # folder name

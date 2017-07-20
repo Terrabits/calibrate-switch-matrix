@@ -11,7 +11,6 @@ function start(exe, args=[]) {
 		env.LANG             = "en_US.UTF-8";
 		const options = {env: env, encoding: 'utf8'};
 		const handleClose = (code) => {
-			console.log(`handling close: ${code}`);
 			const result = {
 				code:   code,
 				stdout: stdout,
@@ -21,14 +20,12 @@ function start(exe, args=[]) {
 				reject(result);
 			}
 			else {
-				console.log('rejecting normally...');
 				resolve(result);
 			}
 		};
 		const handleError = (err) => {
 			stdout.text = 'Error spawning python script.';
 		};
-		console.trace();
 		const _process = spawn(exe, args, options);
 		_process.stdout.on('data', stdout.writeLambda);
 		_process.stderr.on('data', stderr.writeLambda);
