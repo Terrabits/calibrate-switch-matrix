@@ -4,11 +4,11 @@ import React, { Component } from 'react';
 
 function Sidebar(props) {
   let elements = [];
-  if (props.sections) {
+  if (props.sections && props.sections.length) {
     for (let section of props.sections) {
       console.log('section: ' + section.name);
       elements.push(<Section key={section.name} name={section.name} underline={!!section.underline}/>);
-      if (section.items) {
+      if (section.items && section.items.length) {
         for (let item of section.items) {
           console.log('item: ' + item.name);
           elements.push(<Item key={item.name} name={item.name} active={!!item.active}/>);
