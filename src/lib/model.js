@@ -45,7 +45,7 @@ class Model {
   // procedure
   getProcedure(fetchCalUnitPorts=false) {
     if (!fetchCalUnitPorts) {
-      return return new Procedure(this.procedureFilename, 0);
+      return new Procedure(this.procedureFilename, 0);
     }
 
     let calUnitPorts;
