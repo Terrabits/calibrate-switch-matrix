@@ -5,8 +5,9 @@ const Store     = require('electron-store');
 
 
 class Model {
-  constructor() {
+  constructor(store) {
     this.store = new Store();
+    this.exe   = 'python ./python';
   }
 
   // User settings
@@ -42,8 +43,21 @@ class Model {
   }
 
   // procedure
-  getProcedure() {
-    return new Procedure(this.procedureFilename, this.calUnitPorts());
+  getProcedure(fetchCalUnitPorts=false) {
+    if (!fetchCalUnitPorts) {
+      return return new Procedure(this.procedureFilename, 0);
+    }
+
+    let calUnitPorts;
+    return (async function() {
+      try {
+        calUnitPorts = await this.model.calUnitPorts();
+        return new Procedure(this.procedureFilename, calUnitPorts);
+      }
+      catch (result) {
+        return new Procedure(this.procedureFilename, 0);
+      }
+    })();
   }
 
   // switch matrix
@@ -52,7 +66,7 @@ class Model {
       '--is-matrix',
       '--matrix-address', this.matrixAddress
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true;
     });
   }
@@ -63,7 +77,7 @@ class Model {
       '--is-vna',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true;
     });
   }
@@ -72,7 +86,7 @@ class Model {
       '--cal-groups',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return result.stdout.text.split(',');
     });
   }
@@ -81,7 +95,7 @@ class Model {
       '--is-cal-unit',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true
     });
   }
@@ -90,7 +104,7 @@ class Model {
       '--cal-unit-ports',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return Number(result.stdout.text);
     })
   }
@@ -100,7 +114,7 @@ class Model {
       '--vna-address', this.vnaAddress,
       '--procedure',   this.procedureFilename
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true;
     })
   }
@@ -111,7 +125,7 @@ class Model {
       '--procedure',   this.procedureFilename,
       '--step',        i
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true;
     });
   }
@@ -120,7 +134,7 @@ class Model {
       '--apply-calibration',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true;
     });
   }
@@ -130,7 +144,7 @@ class Model {
       '--vna-address',   this.vnaAddress,
       '--cal-group', name
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       this.calGroup = name;
       return true;
     });
@@ -144,7 +158,7 @@ class Model {
       '--vna-cal-group',  this.calGroup,
       '--step',           i
     ];
-    return python.start(args).then((result) => {
+    return python.start(this.exe, args).then((result) => {
       return true;
     });
   }

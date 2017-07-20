@@ -11,7 +11,7 @@ function Option(props) {
 function ComboBox(props) {
   const disabled = props.disabled? !!props.disabled : false;
   const options = [];
-  if (props.options) {
+  if (props.options && props.options.length) {
     for (let option of props.options) {
       if (option == props.selected) {
         options.push(

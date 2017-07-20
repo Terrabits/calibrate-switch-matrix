@@ -2,17 +2,10 @@ const IOStream = require('./iostream.js');
 const path     = require('path');
 const spawn    = require('child_process').spawn;
 
-// TODO: dev/prod paths?
-const exe   = path.resolve('../python/main');
-
-function start(args) {
+function start(exe, args) {
 	const stdout = new IOStream();
 	const stderr = new IOStream();
 	return new Promise((resolve, reject) => {
-		let pyexe = exe;
-		if (process.platform == "win32") {
-			pyexe = pyexe + ".exe";
-		}
 		const env = Object.create(process.env);
 		env.PYTHONIOENCODING = 'utf-8';
 		env.LANG             = "en_US.UTF-8";
@@ -30,7 +23,8 @@ function start(args) {
 				resolve(result);
 			}
 		}
-		const _process = spawn(pyexe, args, options);
+		console.trace();
+		const _process = spawn(exe, args, options);
 		_process.stdout.on('data', stdout.writeLambda);
 		_process.stderr.on('data', stderr.writeLambda);
 		_process.on('close', handleClose);

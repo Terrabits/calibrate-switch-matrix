@@ -64,28 +64,50 @@ class Controller {
     this.model.vnaAddress        = inputs.vnaAddress;
     this.model.matrixAddress     = inputs.matrixAddress;
     this.model.procedureFilename = inputs.procedureFilename;
-    this.model.calChoice          = inputs.calChoice;
+    this.model.calChoice         = inputs.calChoice;
     this.model.calGroup          = inputs.calGroup;
   }
   parameters() {
-    let ports = [];
+    const params = Object.create(null);
+    params.vnaAddress        = this.model.vnaAddress;
+    params.matrixAddress     = this.model.matrixAddress;
+    params.procedureFilename = this.model.procedureFilename;
+    params.calChoice         = this.model.calChoice;
+    params.calGroup          = this.model.calGroup;
+    params.index             = this.index;
+    params.sidebar           = this.summary();
+    if (this.index.page == Pages.CHOOSE_CAL) {
+      this.model.calGroups().then((result) => {
+        params.calGroups = result.stdout.text.split(',');
+      }).catch((result) => {
+        params.calGroups = [];
+      });
+      params.cal_groups = this.model.calGroups();
+    }
+    else {
+      params.cal_groups = [];
+    }
     if (this.index.page == Pages.CALIBRATE) {
-      ports = this.getCalPorts();
+      params.ports = this.getCalPorts();
     }
     else if (this.index.page == Pages.MEASURE) {
-      ports = this.getMeasurementPorts();
+      params.ports = this.getMeasurementPorts();
     }
-    return {
-      vnaAddress:        this.model.vnaAddress,
-      matrixAddress:     this.model.matrixAddress,
-      procedureFilename: this.model.procedureFilename,
-      calChoice:         this.model.calChoice,
-      calGroup:          this.model.calGroup,
-      calGroups:         this.calGroups(),
-      index:             this.index,
-      ports:             ports,
-      sidebar:           this.summary(),
-    };
+    else {
+      params.ports = [];
+    }
+    return params;
+    // return {
+    //   vnaAddress:        this.model.vnaAddress,
+    //   matrixAddress:     this.model.matrixAddress,
+    //   procedureFilename: this.model.procedureFilename,
+    //   calChoice:         this.model.calChoice,
+    //   calGroup:          this.model.calGroup,
+    //   calGroups:         this.calGroups(),
+    //   index:             this.index,
+    //   ports:             ports,
+    //   sidebar:           this.summary(),
+    // };
   }
   getInputs() {
     const inputs = this.view.getUserInputs();
@@ -96,12 +118,6 @@ class Controller {
       calChoice:         inputs.calChoice,
       calGroup:          inputs.calGroup
     };
-  }
-  calGroups() {
-    if (this.index.page == Pages.SETTINGS) {
-      return [];
-    }
-    return this.model.calGroups();
   }
   summary() {
     const pro = this.model.getProcedure();
