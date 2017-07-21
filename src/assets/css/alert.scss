@@ -1,0 +1,27 @@
+@import "../../vendor/photon/sass/variables.scss";
+
+@import "alert-variables.scss";
+@import "alert-mixins.scss";
+@import "alert-functions.scss";
+
+//
+// Base styles
+//
+
+.alert {
+  padding: $alert-padding-y $alert-padding-x;
+  margin: 3px;
+  margin-bottom: 0;
+  border: $alert-border-width solid transparent;
+  @include border-radius($alert-border-radius);
+}
+
+// Alternate styles
+//
+// Generate contextual modifier classes for colorizing the alert.
+
+@each $color, $value in $theme-colors {
+  .alert-#{$color} {
+    @include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
+  }
+}

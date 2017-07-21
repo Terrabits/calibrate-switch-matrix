@@ -18,19 +18,20 @@ class Controller {
     this.index = new PageIndex(Pages.SETTINGS);
     this.restart();
   }
-  restart() {
+  async restart() {
     this.index = new PageIndex(Pages.SETTINGS, 0);
     this.history   = [];
-    this.render();
+    await this.render();
   }
-  back() {
+  async back() {
     if (!this.history.length) {
       return;
     }
     this.index = this.history.pop();
-    this.render();
+    await this.render();
   }
   async next() {
+    this.view.alert.clear();
     this.updateModel();
     try {
       const params = await this.parameters();
@@ -54,11 +55,8 @@ class Controller {
           return;
       }
     }
-    catch (result) {
-      console.log('Error in next');
-      console.log(`code:   ${result.code}`);
-      console.log(`stdout: '${result.stdout.text}'`);
-      console.log(`stderr: '${result.stderr.text}'`);
+    catch (err) {
+      this.view.alert.showMessage('danger', String(err));
     }
   }
 
@@ -85,13 +83,7 @@ class Controller {
     params.index             = this.index;
     params.sidebar           = await this.summary();
     if (this.index.page == Pages.CHOOSE_CAL) {
-      try {
         params.calGroups = await this.model.calGroups();
-      }
-      catch(result) {
-        // TODO: Handle error?
-        params.calGroups = [];
-      }
     }
     else {
       params.calGroups = [];
@@ -100,23 +92,12 @@ class Controller {
       params.ports = await this.getCalPorts();
     }
     else if (this.index.page == Pages.MEASURE) {
-      params.ports = this.getMeasurementPorts();
+      params.ports = await this.getMeasurementPorts();
     }
     else {
       params.ports = [];
     }
     return params;
-    // return {
-    //   vnaAddress:        this.model.vnaAddress,
-    //   matrixAddress:     this.model.matrixAddress,
-    //   procedureFilename: this.model.getProcedureFilename,
-    //   calChoice:         this.model.calChoice,
-    //   calGroup:          this.model.calGroup,
-    //   calGroups:         this.calGroups(),
-    //   index:             this.index,
-    //   ports:             ports,
-    //   sidebar:           this.summary(),
-    // };
   }
   getInputs() {
     const inputs = this.view.getUserInputs();
@@ -129,22 +110,17 @@ class Controller {
     };
   }
   async summary() {
-    let pro = null;
+    let procedure = null;
     if (this.index.page == Pages.CALIBRATE) {
-      try {
-        pro = await this.model.getProcedure(true);
-      }
-      catch (result) {
-        // TODO: Handle error
-      }
+        procedure = await this.model.getProcedure(true);
     }
-    if (!pro) {
-      pro = await this.model.getProcedure();
+    else {
+      procedure = await this.model.getProcedure();
     }
     let settings  = {name: 'Settings'};
     let calibrate = {name: 'Calibrate'};
     let measure   = {name: 'Measure'};
-    if (!pro.isValid) {
+    if (!procedure || !procedure.isValid) {
       return [
         settings,
         calibrate,
@@ -194,57 +170,35 @@ class Controller {
     const procedure = await this.model.getProcedure(true);
     return procedure.calibrationSteps[this.index.step];
   }
-  getMeasurementPorts() {
+  async getMeasurementPorts() {
     const isMeasurePage = this.index.page == Pages.MEASURE;
     if (!isMeasurePage) {
       return {};
     }
-    const steps = this.model.getProcedure().steps;
+    const procedure = await this.model.getProcedure();
+    const steps     = procedure.steps;
     return steps[this.index.step]['vna connections'];
   }
 
   async processSettings(params) {
-    if (!params.vnaAddress) {
-      // TODO: Error message
-      console.log('No VNA address');
-      return;
+    if (!this.model.procedureFilename) {
+      throw 'Procedure filename is missing';
     }
-    if (!params.matrixAddress) {
-      // TODO: Error message
-      console.log('No switch matrix address');
-      return;
+    await this.model.isVna();
+    await this.model.isMatrix();
+    let procedure = await this.model.getProcedure();
+    let status = procedure.validate();
+    if (!status.isValid) {
+      throw status.message;
     }
-    if (!params.procedureFilename) {
-      // TODO: Error message
-      console.log('No procedure filename');
-      return;
-    }
-    try {
-      await this.model.isVna();
-      await this.model.isMatrix();
-      let procedure = await this.model.getProcedure();
-      let status = procedure.validate();
-      if (!status.isValid) {
-        // TODO: Display error message
-        console.log(status.message);
-        return;
-      }
-      this.pushCurrentIndexToHistory();
-      this.index.page = Pages.CHOOSE_CAL;
-      await this.render();
-    }
-    catch(result) {
-      // TODO: Error message
-      console.log('caught exception in processSettings');
-      console.log(`  stdout: '${result.stdout.text}'`);
-      console.log(`  stderr: '${result.stderr.text}'`);
-    }
+    this.pushCurrentIndexToHistory();
+    this.index.page = Pages.CHOOSE_CAL;
+    await this.render();
   }
   async processCalibrationChoice(params) {
     const choice = params.calChoice;
     if (!choice) {
-      console.log('Choose calibration option');
-      return;
+      throw 'Choose calibration option';
     }
     if (choice == Choices.CALIBRATE) {
       await this.startCalibration();
@@ -254,15 +208,9 @@ class Controller {
     }
   }
   async startCalibration() {
-    let procedure;
-    try {
-      this.model.isCalUnit();
-      this.model.startCalibration();
-      procedure = await this.model.getProcedure(true);
-    }
-    catch (result) {
-      // TODO: Display error
-    }
+    this.model.isCalUnit();
+    this.model.startCalibration();
+    const procedure = await this.model.getProcedure(true);
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.CALIBRATE;
     this.index.step = 0;
@@ -271,79 +219,59 @@ class Controller {
   }
   async processCalibrationStep() {
     // run step
-    if (!this.model.performCalibrationStep(this.index.step)) {
-      // TODO: Handle error / message
-      console.log('calibration step failed')
-      return;
-    }
+    await this.model.performCalibrationStep(this.index.step);
     this.pushCurrentIndexToHistory();
 
     // next
     this.index.step++;
-    const steps = this.model.getProcedure().calibrationSteps;
+    const procedure = await this.model.getProcedure();
+    const steps     = procedure.calibrationSteps;
     if (this.index.step >= steps.length) {
-      if (!this.model.applyCalibration()) {
-        // TODO: Error message
-        console.log('Error applying calibration');
-        return;
-      }
+      await this.model.applyCalibration();
       // TODO: Finish dialog
       const name = this.view.getSaveCalFromDialog();
-      if (!name) {
-        console.log('Save cancelled. No calibration?');
-        return;
+      if (name) {
+        await this.model.saveCalibration(name);
+        this.purgeCalibrationSteps();
+        this.model.calChoice = Choices.EXISTING;
+        this.model.calGroup  = name;
+        await this.startMeasurements();
       }
-      if (!this.model.saveCalibration(name)) {
-        // TODO: Error message
-        console.log('Error saving calibration');
-        return;
-      }
-      this.purgeCalibrationSteps();
-      this.model.calChoice       = Choices.EXISTING;
-      this.model.calGroup        = name;
-      this.startMeasurements();
     }
     else {
-      this.render();
+      await this.render();
     }
   }
   purgeCalibrationSteps() {
     for (let i = this.history.length-1; i >= 0; i--) {
       const page = this.history[i].page;
-      console.log(`${i+1}/${this.history.length}: ${page}`)
       if (page == Pages.CALIBRATE) {
-        console.log('purging...');
         this.history.splice(i);
       }
     }
     this.index = this.history.pop();
   }
   async startMeasurements() {
-    // TODO
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.MEASURE;
     this.index.step = 0;
-    this.index.totalSteps = this.model.getProcedure().steps.length;
-    this.render();
+    const procedure = await this.model.getProcedure();
+    this.index.totalSteps = procedure.steps.length;
+    await this.render();
   }
   async processMeasurementStep() {
-    if (!this.model.measure(this.index.step)) {
-      // TODO: Handle error / message
-      return;
-    }
-
-    let steps = this.model.getProcedure().steps;
+    await this.model.measure(this.index.step);
+    const procedure = await this.model.getProcedure();
+    const steps     = procedure.steps;
     if (this.index.step + 1 >= steps.length) {
-      console.log('Measurements complete!');
-      // TODO: What do I do next?
-      return;
+      this.view.alert.showMessage('success', 'Measurements complete!');
     }
-
-    this.pushCurrentIndexToHistory();
-    this.index.step++;
-    this.render();
+    else {
+      this.pushCurrentIndexToHistory();
+      this.index.step++;
+      await this.render();
+    }
   }
-
   pushCurrentIndexToHistory() {
     this.history.push(this.index.copy());
   }

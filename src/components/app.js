@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 // import Alert   from './alert.js';
+import Alert   from './alert.js';
 import Sidebar from './sidebar/sidebar.js';
 import Wizard  from './wizard.js';
 
@@ -67,6 +68,7 @@ class App extends React.Component {
               sections={this.state.sidebar} />
             </div>
             <div className="pane">
+              <Alert  ref={(alert)  => {this.alert = alert;  }} />
               <Wizard ref={(wizard) => {this.wizard = wizard;}} />
             </div>
           </div>

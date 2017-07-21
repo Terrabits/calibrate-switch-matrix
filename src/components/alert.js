@@ -1,4 +1,5 @@
 import React from 'react';
+import "../assets/css/alert.scss";
 
 class Alert extends React.Component {
   constructor(props) {
@@ -7,26 +8,38 @@ class Alert extends React.Component {
     // this.props.message
     this.timer = null;
     this.state = {
-      context: props.context,
-      message: props.message
+      visible: false,
+      context: props.context? props.context : 'success',
+      message: props.message? props.message : 'hidden'
     }
   }
 
   showMessage(context, message) {
     this.setState({
+      visible: true,
       context: context,
       message: message
+    });
+    this.setTimer();
+  }
+  clear() {
+    this.clearTimer();
+    this.setState({
+      visible: false,
+      context: 'success',
+      message: 'hidden'
     });
   }
 
   setTimer() {
-    let callback = () => {
+    let handleTimeout = () => {
       this.clearTimer();
       this.setState({
-        message: null
+        visible: false,
+        message: 'hidden'
       });
     };
-    this.timer = setTimeout(callback, 5000);
+    this.timer = setTimeout(handleTimeout, 7000);
   }
   clearTimer() {
     if (!this.timer) {
@@ -37,13 +50,10 @@ class Alert extends React.Component {
   }
 
   render() {
-    let classes = ['alert', 'fade', 'in'];
+    let classes = ['alert'];
     classes.push(`alert-${this.state.context}`)
-    if (this.state.message) {
-      this.setTimer();
-    }
-    else {
-      classes.push('invisible');
+    if (!this.state.visible) {
+      classes.push('hidden');
     }
     const className = classes.join(' ');
     return (

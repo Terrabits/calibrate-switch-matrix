@@ -31,7 +31,10 @@ function start(exe, args=[]) {
 		_process.stderr.on('data', stderr.writeLambda);
 		_process.on('error', handleError);
 		_process.on('close', handleClose);
-
+	}).then((result) => {
+		return result.stdout.text.trim();
+	}).catch((result) => {
+		throw result.stdout.text.trim();
 	});
 }
 
