@@ -57,7 +57,7 @@ class Model {
     this.store.set('cal-choice', choice);
   }
   get calGroup() {
-    return this.store.get('cal-group', 'cal group 1');
+    return this.store.get('cal-group', '');
   }
   set calGroup(name) {
     this.store.set('cal-group', name);
