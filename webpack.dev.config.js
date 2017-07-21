@@ -83,7 +83,7 @@ module.exports = {
   devtool: 'cheap-module-eval-source-map',
   devServer: {
     contentBase: OUTPUT_DIR,
-    port: 8080,
+    port: 8081,
     stats: {
       colors: true,
       chunks: false,
