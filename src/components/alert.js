@@ -42,11 +42,10 @@ class Alert extends React.Component {
     this.timer = setTimeout(handleTimeout, 7000);
   }
   clearTimer() {
-    if (!this.timer) {
-      return;
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
     }
-    clearTimeout(this.timer);
-    this.timer = null;
   }
 
   render() {

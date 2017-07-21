@@ -16,11 +16,11 @@ class Wizard extends React.Component {
     this.state = {
       // defaults
       index:             new PageIndex(Pages.SETTINGS),
-      vnaAddress:        '127.0.0.1',
-      matrixAddress:     '1.2.3.4',
-      procedureFilename: '/procedure.yaml',
+      vnaAddress:        '',
+      matrixAddress:     '',
+      procedureFilename: '',
       calChoice:         Choices.CALIBRATE,
-      calGroup:          'cal group 1',
+      calGroup:          '',
       calGroups:         [],
       saveCalAs:         this.store.get('save-cal-as', ''),
       ports:             [-1],
