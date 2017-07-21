@@ -33,13 +33,13 @@ class Model {
 
   // User settings
   get vnaAddress() {
-    return this.store.get('vna-address', 'localhost');
+    return this.store.get('vna-address', '');
   }
   set vnaAddress(addr) {
     this.store.set('vna-address', addr);
   }
   get matrixAddress() {
-    return this.store.get('matrix-address', '1.2.3.4');
+    return this.store.get('matrix-address', '');
   }
   set matrixAddress(addr) {
     this.store.set('matrix-address', addr);
