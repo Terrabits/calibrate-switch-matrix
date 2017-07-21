@@ -69,7 +69,7 @@ class Controller {
     const inputs = this.getInputs();
     this.model.vnaAddress        = inputs.vnaAddress;
     this.model.matrixAddress     = inputs.matrixAddress;
-    this.model.getProcedureFilename = inputs.procedureFilename;
+    this.model.procedureFilename = inputs.procedureFilename;
     this.model.calChoice         = inputs.calChoice;
     this.model.calGroup          = inputs.calGroup;
   }
