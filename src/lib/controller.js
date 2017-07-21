@@ -133,8 +133,8 @@ class Controller {
     else {
       // Have procedure, display measurement steps
       measure.items = [];
-      for (let i = 0; i < pro.steps.length; i++) {
-        const step = pro.steps[i];
+      for (let i = 0; i < procedure.steps.length; i++) {
+        const step = procedure.steps[i];
         measure.items.push({
           name: step.name,
           active: this.index.page == Pages.MEASURE? this.index.step == i : false
@@ -147,7 +147,7 @@ class Controller {
     if (this.index.page == Pages.CALIBRATE) {
       // display calibration steps
       calibrate.items = [];
-      const steps = pro.calibrationSteps;
+      const steps = procedure.calibrationSteps;
       for (let i = 0; i < steps.length; i++) {
         const step = steps[i];
         calibrate.items.push({
@@ -192,7 +192,7 @@ class Controller {
     }
     await this.model.isVna();
     await this.model.isMatrix();
-    let procedure = await this.model.getProcedure();
+    const procedure = await this.model.getProcedure();
     let status = procedure.validate();
     if (!status.isValid) {
       throw status.message;
