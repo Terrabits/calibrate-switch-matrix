@@ -23,7 +23,7 @@ function createWindow() {
   if (isDev && !process.argv.includes('--noDevServer')) {
     indexPath = url.format({
       protocol: 'http:',
-      host: 'localhost:8080',
+      host: 'localhost:8081',
       pathname: 'index.html',
       slashes: true
     });
