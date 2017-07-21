@@ -23,7 +23,7 @@ class Model {
       else {
         // full-on production
         // TODO: python in app.asar.unpack?
-        this.exe = path.resolve(__dirname, '../build/python/main');
+        this.exe = path.resolve(__dirname, '../../build/python/main');
       }
       if (process.platform == 'win32') {
         this.exe += '.exe';
