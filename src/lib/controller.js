@@ -181,6 +181,12 @@ class Controller {
   }
 
   async processSettings(params) {
+    if (!this.model.vnaAddress) {
+      throw 'VNA address missing';
+    }
+    if (!this.model.matrixAddress) {
+      throw 'Switch matrix address missing';
+    }
     if (!this.model.procedureFilename) {
       throw 'Procedure filename is missing';
     }
