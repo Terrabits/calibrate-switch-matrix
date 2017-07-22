@@ -7,7 +7,7 @@
   "homepage": "https://vna.rs-us.net",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Terrabits/calibrate-switch-matrix.git"
   },
   "license": "Rohde & Schwarz Inc. Terms and Conditions for Royalty-Free Products",
   "main": "main.js",

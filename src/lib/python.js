@@ -52,7 +52,7 @@ class Python {
 				stdout.text = 'Error spawning python script.';
 			};
 			let exe = this.exe;
-			if (this.isWin32) {
+			if (this.isWin32 && this.exe.endsWith('.py')) {
 				args.unshift(this.exe);
 				exe = "python";
 			}
