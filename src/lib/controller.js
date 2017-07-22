@@ -63,6 +63,7 @@ class Controller {
       this.view.alert.showMessage('danger', String(err));
     }
     this.enableInputs();
+    this.view.displayOverlay = false;
   }
 
   // model/view control
@@ -238,6 +239,7 @@ class Controller {
   }
   async processCalibrationStep() {
     // run step
+    this.view.displayOverlay = true;
     await this.model.performCalibrationStep(this.index.step);
     this.pushCurrentIndexToHistory();
 
@@ -260,6 +262,7 @@ class Controller {
     else {
       await this.render();
     }
+    this.view.displayOverlay = false;
   }
   purgeCalibrationSteps() {
     for (let i = this.history.length-1; i >= 0; i--) {

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // import Alert   from './alert.js';
 import Alert   from './alert.js';
 import Button  from './button.js';
+import Overlay from './overlay.js';
 import Sidebar from './sidebar/sidebar.js';
 import Wizard  from './wizard.js';
 
@@ -11,6 +12,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       disableInputs: false,
+      displayOverlay: false,
       sidebar: null
     };
   }
@@ -63,6 +65,12 @@ class App extends React.Component {
     this.wizard.disableInputs = value;
     this.setState({disableInputs: value});
   }
+  get displayOverlay() {
+    return this.state.displayOverlay;
+  }
+  set displayOverlay(value) {
+    this.setState({displayOverlay: value});
+  }
   render() {
     return (
       <div className="window">
@@ -70,6 +78,7 @@ class App extends React.Component {
           <h1 className="title">{this.props.title || ''}</h1>
         </header>
         <div className="window-content">
+          <Overlay on={this.state.displayOverlay} />
           <div className="pane-group">
             <div className="pane-sm sidebar">
             <Sidebar
