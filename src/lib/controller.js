@@ -282,6 +282,7 @@ class Controller {
     await this.render();
   }
   async processMeasurementStep() {
+    this.view.displayOverlay = true;
     await this.model.measure(this.index.step);
     const procedure = await this.model.getProcedure();
     const steps     = procedure.steps;
@@ -293,6 +294,7 @@ class Controller {
       this.index.step++;
       await this.render();
     }
+    this.view.displayOverlay = false;
   }
   pushCurrentIndexToHistory() {
     this.history.push(this.index.copy());
