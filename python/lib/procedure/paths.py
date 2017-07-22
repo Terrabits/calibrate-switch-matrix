@@ -2,9 +2,9 @@ from os.path import abspath
 from pathlib import Path
 
 def set_file_extension(vna):
-    if vna.properties.is_znx:
+    if vna.properties.is_znx():
         return '.znx'
-    if vna.properties.is_zvx:
+    if vna.properties.is_zvx():
         return '.zvx'
     return '.znx'
 
