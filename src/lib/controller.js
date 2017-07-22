@@ -18,10 +18,13 @@ class Controller {
     this.index = new PageIndex(Pages.SETTINGS);
     this.restart();
   }
+
+  // user actions
   async restart() {
     this.index = new PageIndex(Pages.SETTINGS, 0);
     this.history   = [];
     await this.render();
+    this.enableInputs();
   }
   async back() {
     if (!this.history.length) {
@@ -31,6 +34,7 @@ class Controller {
     await this.render();
   }
   async next() {
+    this.disableInputs();
     this.view.alert.clear();
     this.updateModel();
     try {
@@ -58,8 +62,10 @@ class Controller {
     catch (err) {
       this.view.alert.showMessage('danger', String(err));
     }
+    this.enableInputs();
   }
 
+  // model/view control
   async render() {
     if (this.view) {
       await this.view.renderNewParameters(await this.parameters());
@@ -108,6 +114,12 @@ class Controller {
       calChoice:         inputs.calChoice,
       calGroup:          inputs.calGroup
     };
+  }
+  disableInputs(value=true) {
+    this.view.disableInputs = value;
+  }
+  enableInputs(value=true) {
+    this.disableInputs(!value);
   }
   async summary() {
     let procedure = null;
@@ -180,6 +192,7 @@ class Controller {
     return steps[this.index.step]['vna connections'];
   }
 
+  // process action
   async processSettings(params) {
     if (!this.model.vnaAddress) {
       throw 'VNA address missing';

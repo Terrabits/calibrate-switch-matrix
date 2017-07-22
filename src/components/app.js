@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 // import Alert   from './alert.js';
 import Alert   from './alert.js';
+import Button  from './button.js';
 import Sidebar from './sidebar/sidebar.js';
 import Wizard  from './wizard.js';
 
@@ -9,6 +10,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      disableInputs: false,
       sidebar: null
     };
   }
@@ -54,6 +56,13 @@ class App extends React.Component {
     console.log('save cal as...');
     return 'calibration';
   }
+  get disableInputs() {
+    return this.state.disableInputs;
+  }
+  set disableInputs(value) {
+    this.wizard.disableInputs = value;
+    this.setState({disableInputs: value});
+  }
   render() {
     return (
       <div className="window">
@@ -75,16 +84,20 @@ class App extends React.Component {
         </div>
         <footer className="toolbar toolbar-footer">
           <div className="toolbar-actions">
-            <button
-              className="btn btn-primary pull-right"
-              onClick={this.props.onNext}>
-              Next
-            </button>
-            <button
-              className="btn btn-default pull-right"
-              onClick={this.props.onBack}>
-              Back
-            </button>
+            <Button
+              text="Next"
+              role="primary"
+              pullRight={true}
+              onClick={this.props.onNext}
+              disabled={this.state.disableInputs}
+            />
+            <Button
+              text="Back"
+              role="default"
+              pullRight={true}
+              onClick={this.props.onBack}
+              disabled={this.state.disableInputs}
+            />
           </div>
         </footer>
       </div>

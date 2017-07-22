@@ -4,6 +4,9 @@
 .hidden {
   visibility: hidden;
 }
+.disabled {
+  opacity: 0.65;
+}
 div.page h2 {
   color: #444;
 }

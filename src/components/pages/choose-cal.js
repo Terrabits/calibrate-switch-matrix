@@ -28,16 +28,19 @@ function ChooseCalPage(props) {
           name="choice"
           value={Choices.CALIBRATE}
           checked={props.values.choice == Choices.CALIBRATE}
-          onChange={props.onChanges.handleChoiceChange} />
+          onChange={props.onChanges.handleChoiceChange}
+          disabled={!!props.disabled} />
         <CalGroup
           radio={calGroupRadio}
-          combo={calGroupCombo} />
+          combo={calGroupCombo}
+          disabled={!!props.disabled} />
         <Radio
           label="None"
           name="choice"
           value={Choices.NONE}
           checked={props.values.choice == Choices.NONE}
-          onChange={props.onChanges.handleChoiceChange} />
+          onChange={props.onChanges.handleChoiceChange}
+          disabled={!!props.disabled} />
       </form>
     </div>
   );

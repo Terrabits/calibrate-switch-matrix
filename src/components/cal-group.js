@@ -11,13 +11,15 @@ function CalGroup(props) {
           name={props.radio.name}
           value={props.radio.value}
           checked={props.radio.checked}
-          onChange={props.radio.onChange} />
+          onChange={props.radio.onChange}
+          disabled={!!props.disabled} />
         <span style={{marginRight: '10px'}}>{props.radio.label}</span>
         <ComboBox
           options={props.combo.calGroups}
           selected={props.combo.calGroup}
           disabled={!props.radio.checked}
-          onChange={props.combo.onChange} />
+          onChange={props.combo.onChange}
+          disabled={!!props.disabled} />
       </label>
     </div>
   );

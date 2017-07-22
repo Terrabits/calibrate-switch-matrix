@@ -15,6 +15,7 @@ class Wizard extends React.Component {
     this.store = new Store();
     this.state = {
       // defaults
+      disabled:          false,
       index:             new PageIndex(Pages.SETTINGS),
       vnaAddress:        '',
       matrixAddress:     '',
@@ -73,9 +74,16 @@ class Wizard extends React.Component {
   set index(i) {
     this.setState({index: i});
   }
+  get disableInputs() {
+    return this.state.disabled;
+  }
+  set disableInputs(value) {
+    this.setState({
+      disabled: value
+    });
+  }
 
   render() {
-    const disabled = false;
     // settings page
     const isSettingsInvisible = this.state.index.page != Pages.SETTINGS;
     const settings = {
@@ -120,25 +128,25 @@ class Wizard extends React.Component {
           values={settings}
           onChanges={onSettingsChanges}
           invisible={isSettingsInvisible}
-          disabled={!!disabled}
+          disabled={this.state.disabled}
         />
         <ChooseCalPage
           values={chooseCal}
           onChanges={onChooseCalChanges}
           invisible={isChooseCalPageInvisible}
-          disabled={!!disabled}
+          disabled={this.state.disabled}
         />
         <CalibratePage
           index={calibration.index}
           ports={calibration.ports}
           invisible={isCalibrationInvisible}
-          disabled={!!disabled}
+          disabled={this.state.disabled}
         />
         <MeasurePage
           index={measure.index}
           ports={measure.ports}
           invisible={isMeasureInvisible}
-          disabled={!!disabled}
+          disabled={this.state.disabled}
         />
       </div>
     );

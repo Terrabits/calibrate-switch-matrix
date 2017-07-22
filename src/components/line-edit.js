@@ -1,23 +1,22 @@
 import React from 'react';
 
-class LineEdit extends React.Component {
-  constructor(props) {
-    super(props);
+function LineEdit(props) {
+  const classes = ['form-control'];
+  if (props.disabled) {
+    classes.push('disabled');
   }
-  render() {
-    return (
-      <div className="form-group">
-        <label>{this.props.label}</label>
-        <input
-          className="form-control"
-          type="text"
-          value={this.props.value}
-          onChange={this.props.onChange? this.props.onChange : null}
-          disabled={!!this.props.disabled}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="form-group">
+      <label>{props.label}</label>
+      <input
+        className={classes.join(' ')}
+        type="text"
+        value={props.value}
+        onChange={props.onChange? props.onChange : null}
+        disabled={!!props.disabled}
+      />
+    </div>
+  );
 }
 
 export default LineEdit;

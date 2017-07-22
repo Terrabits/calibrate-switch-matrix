@@ -5,7 +5,13 @@ import path     from 'path';
 const  dialog   = electron.remote.dialog;
 
 function Filename(props) {
-  const onClick = (event) => {
+  const buttonClasses   = ['btn', 'btn-default'];
+  const filenameClasses = ['form-control'];
+  if (props.disabled) {
+    buttonClasses.push('disabled');
+    filenameClasses.push('disabled');
+  }
+  const handleClick = (event) => {
     const result = dialog.showOpenDialog({properties: ['openFile']});
     if (result) {
       props.onChange(result[0]);
@@ -23,14 +29,14 @@ function Filename(props) {
             flex: 'auto',
             marginRight: '5px'
           }}
-          className="form-control"
+          className={filenameClasses.join(' ')}
         >{path.basename(props.filename)}</div>
         <button
-          className="btn btn-default"
+          className={buttonClasses.join(' ')}
           type="button"
-          disabled={!!props.disabled}
-          onClick={onClick}
           style={{flex: 'none'}}
+          onClick={handleClick}
+          disabled={!!props.disabled}
         >...</button>
       </div>
     </div>

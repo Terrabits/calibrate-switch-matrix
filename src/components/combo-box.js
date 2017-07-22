@@ -9,7 +9,6 @@ function Option(props) {
 }
 
 function ComboBox(props) {
-  const disabled = props.disabled? !!props.disabled : false;
   const options = [];
   if (props.options && props.options.length) {
     for (let option of props.options) {
@@ -32,11 +31,15 @@ function ComboBox(props) {
       }
     }
   }
-  const classes = disabled? 'invisible' : '';
+  const classes = [];
+  if (props.disabled) {
+    classes.push('disabled');
+  }
   return (
     <select
       className={classes}
       onChange={props.onChange}
+      disabled={!!props.disabled}
     >
       {options}
     </select>
