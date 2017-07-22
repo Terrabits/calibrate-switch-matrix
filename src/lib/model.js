@@ -153,7 +153,7 @@ class Model {
       '--vna-address',    this.vnaAddress,
       '--matrix-address', this.matrixAddress,
       '--procedure',      this.procedureFilename,
-      '--vna-cal-group',  this.calGroup,
+      '--cal-group',  this.calGroup,
       '--step',           i
     ];
     return python.start(args).then((result) => {
