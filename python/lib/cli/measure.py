@@ -1,13 +1,14 @@
-from lib.cli.matrix    import process as process_matrix
-from lib.cli.procedure import process as process_procedure
-from lib.cli.vna       import process as process_vna
-from lib.procedure     import set_file_extension
-from lib.readyaml      import read_yaml
+from   lib.cli.matrix    import process as process_matrix
+from   lib.cli.procedure import process as process_procedure
+from   lib.cli.vna       import process as process_vna
+from   lib.procedure     import set_file_extension
+from   lib.readyaml      import read_yaml
 
-from rohdeschwarz.instruments.vna            import Vna
-from rohdeschwarz.instruments.vna.vnachannel import TouchstoneFormat
+from   rohdeschwarz.instruments.vna            import Vna
+from   rohdeschwarz.instruments.vna.vnachannel import TouchstoneFormat
 
-from pathlib import Path
+import os
+from   pathlib import Path
 
 def perform_step(args):
     vna = process_vna(args)
@@ -70,6 +71,9 @@ def perform_step(args):
         matrix.set_switches(read_yaml(m['switch path']))
 
         # 4. measure, save
-        ch1.save_measurement_locally(m['results file'], m['vna ports'], TouchstoneFormat.db_degrees)
+        results_file = Path(m['results file'])
+        results_folder = results_file.parent
+        os.makedirs(str(results_folder), exist_ok=True)
+        ch1.save_measurement_locally(str(results_file), m['vna ports'], TouchstoneFormat.db_degrees)
     vna.local()
     return True
