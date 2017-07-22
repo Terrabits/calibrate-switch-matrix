@@ -35,10 +35,17 @@ def process(args, procedure):
         msg = msg.format(driver_path)
         print(msg)
         return None
+    matrix = None
     try:
-    	 return SwitchMatrix(driver_path)
+        matrix = SwitchMatrix(driver_path)
     except:
         msg = "Error loading switch matrix driver: '{0}'"
         msg = msg.format(driver_path)
         print(msg)
+        return None
+    try:
+        matrix.open_tcp(args.matrix_address)
+    	return matrix
+    except:
+        print("Error connecting to switch matrix")
         return None
