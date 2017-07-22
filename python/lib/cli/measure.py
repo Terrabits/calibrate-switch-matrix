@@ -65,6 +65,7 @@ def perform_step(args):
         if not Path(m['switch path']).is_file():
             msg = "Switch path '{0}' in step '{1}' not found"
             msg = msg.format(m['switch path'], step['name'])
+            print(msg)
             return False
         matrix.set_switches(read_yaml(m['switch path']))
 
