@@ -74,6 +74,9 @@ def perform_step(args):
         results_file = Path(m['results file'])
         results_folder = results_file.parent
         os.makedirs(str(results_folder), exist_ok=True)
-        ch1.save_measurement_locally(str(results_file), m['vna ports'], TouchstoneFormat.db_degrees)
+        saved = ch1.save_measurement_locally(str(results_file), m['vna ports'], TouchstoneFormat.db_degrees)
+        if not saved:
+            print('Error saving touchstone file')
+            return False
     vna.local()
     return True
