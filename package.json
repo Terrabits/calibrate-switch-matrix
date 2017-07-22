@@ -26,6 +26,7 @@
   },
   "build": {
     "appId": "com.rohde-schwarz.calibrate-switch-matrix",
+    "productName": "Calibrate Switch Matrix",
     "files": [
       "build/**/*",
       "LICENSE.txt",
@@ -46,7 +47,8 @@
       "category": "public.app-category.utilities"
     },
     "nsis": {
-      "perMachine": true
+      "perMachine": true,
+      "menuCategory": "Rohde-Schwarz"
     }
   },
   "devDependencies": {
