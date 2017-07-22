@@ -1,36 +1,13 @@
 const {Choices}   = require('./calibration.js');
-const isDev       = require('electron-is-dev');
-const noDevServer = require('./no-dev-server.js');
 const Procedure   = require('./procedure.js');
 const python      = require('./python.js');
-
-const path        = require('path');
 const Store       = require('electron-store');
 
 
 class Model {
   constructor(store) {
     this.store = new Store();
-    if (isDev && !noDevServer) {
-      // yarn run dev
-      this.exe   = path.resolve(__dirname, '../../python/__main__.py');
-    }
-    else {
-      if (noDevServer) {
-        // yarn run prod
-        this.exe = path.resolve(__dirname, './python/main');
-      }
-      else {
-        // full-on production
-        // TODO: python in app.asar.unpack?
-        this.exe = path.resolve(__dirname, '../../build/python/main');
-      }
-      if (process.platform == 'win32') {
-        this.exe += '.exe';
-      }
-    }
   }
-
   // User settings
   get vnaAddress() {
     return this.store.get('vna-address', '');
@@ -87,7 +64,7 @@ class Model {
       '--is-matrix',
       '--matrix-address', this.matrixAddress
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
@@ -98,7 +75,7 @@ class Model {
       '--is-vna',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
@@ -107,7 +84,7 @@ class Model {
       '--cal-groups',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return result.trim().split(',');
     });
   }
@@ -116,7 +93,7 @@ class Model {
       '--is-cal-unit',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
@@ -125,7 +102,7 @@ class Model {
       '--cal-unit-ports',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return Number(result.trim());
     });
   }
@@ -135,7 +112,7 @@ class Model {
       '--vna-address', this.vnaAddress,
       '--procedure',   this.procedureFilename
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
@@ -146,7 +123,7 @@ class Model {
       '--procedure',   this.procedureFilename,
       '--step',        i
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
@@ -155,7 +132,7 @@ class Model {
       '--apply-calibration',
       '--vna-address', this.vnaAddress
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
@@ -165,7 +142,7 @@ class Model {
       '--vna-address',   this.vnaAddress,
       '--cal-group', name
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       this.calGroup = name;
       return true;
     });
@@ -179,7 +156,7 @@ class Model {
       '--vna-cal-group',  this.calGroup,
       '--step',           i
     ];
-    return python.start(this.exe, args).then((result) => {
+    return python.start(args).then((result) => {
       return true;
     });
   }
