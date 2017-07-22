@@ -62,6 +62,7 @@ class Python {
 			_process.on('error', handleError);
 			_process.on('close', handleClose);
 		}).then((result) => {
+			console.log(result.stdout.text.trim());
 			return result.stdout.text.trim();
 		}).catch((result) => {
 			if (result.stdout) {
@@ -74,6 +75,7 @@ class Python {
 				throw result.stdout.text.trim();
 			}
 			else {
+				console.log(result);
 				throw result;
 			}
 		});

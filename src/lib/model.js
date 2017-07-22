@@ -153,9 +153,12 @@ class Model {
       '--vna-address',    this.vnaAddress,
       '--matrix-address', this.matrixAddress,
       '--procedure',      this.procedureFilename,
-      '--cal-group',  this.calGroup,
       '--step',           i
     ];
+    if (this.model.calChoice == Choices.EXISTING) {
+      args.push('--cal-group');
+      args.push(this.calGroup);
+    }
     return python.start(args).then((result) => {
       return true;
     });
