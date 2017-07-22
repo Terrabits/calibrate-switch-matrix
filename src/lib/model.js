@@ -108,7 +108,7 @@ class Model {
       '--vna-address', this.vnaAddress
     ];
     return python.start(this.exe, args).then((result) => {
-      return result.stdout.text.trim().split(',');
+      return result.trim().split(',');
     });
   }
   isCalUnit() {
@@ -126,7 +126,7 @@ class Model {
       '--vna-address', this.vnaAddress
     ];
     return python.start(this.exe, args).then((result) => {
-      return Number(result.stdout.text.trim());
+      return Number(result.trim());
     });
   }
   startCalibration() {
