@@ -34,7 +34,12 @@ function start(exe, args=[]) {
 	}).then((result) => {
 		return result.stdout.text.trim();
 	}).catch((result) => {
-		throw result.stdout.text.trim();
+		if (result.stdout) {
+			throw result.stdout.text.trim();
+		}
+		else {
+			throw result;
+		}
 	});
 }
 
