@@ -68,6 +68,9 @@ class Python {
 				if (result.stderr.text.trim()) {
 					console.log(result.stderr.text.trim());
 				}
+				if (result.stdout.text.trim()) {
+					console.log(result.stdout.text.trim());
+				}
 				throw result.stdout.text.trim();
 			}
 			else {
