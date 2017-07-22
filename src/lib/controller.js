@@ -30,8 +30,12 @@ class Controller {
     if (!this.history.length) {
       return;
     }
+    this.disableInputs();
+    this.displayOverlay();
     this.index = this.history.pop();
     await this.render();
+    this.hideOverlay();
+    this.enableInputs();
   }
   async next() {
     this.disableInputs();
@@ -63,8 +67,8 @@ class Controller {
     catch (err) {
       this.view.alert.showMessage('danger', String(err));
     }
-    this.enableInputs();
     this.hideOverlay();
+    this.enableInputs();
   }
 
   // model/view control
