@@ -77,7 +77,7 @@ class Controller {
     const params = Object.create(null);
     params.vnaAddress        = this.model.vnaAddress;
     params.matrixAddress     = this.model.matrixAddress;
-    params.procedureFilename = this.model.getProcedureFilename;
+    params.procedureFilename = this.model.procedureFilename;
     params.calChoice         = this.model.calChoice;
     params.calGroup          = this.model.calGroup;
     params.index             = this.index;
