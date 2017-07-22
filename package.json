@@ -20,7 +20,7 @@
     "testpy": "cd ./python && python -m unittest -b || true",
     "buildpy": "cd ./python && pyinstaller main.spec --distpath ../build --noconfirm",
     "package": "yarn run build && yarn run buildpy",
-    "postpackage": "build --dir",
+    "postpackage": "build",
     "scaffold": "node ./scaffold/scaffold.js",
     "postinstall": "cd ./scaffold && npm install && cd ../python && pip install -r requirements.txt"
   },
