@@ -155,7 +155,7 @@ class Model {
       '--procedure',      this.procedureFilename,
       '--step',           i
     ];
-    if (this.model.calChoice == Choices.EXISTING) {
+    if (this.calChoice == Choices.EXISTING) {
       args.push('--cal-group');
       args.push(this.calGroup);
     }
