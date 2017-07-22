@@ -7,6 +7,11 @@ import Overlay from './overlay.js';
 import Sidebar from './sidebar/sidebar.js';
 import Wizard  from './wizard.js';
 
+// Note: removed header above window-content:
+// <header className="toolbar toolbar-header draggable">
+// <h1 className="title">{this.props.title || ''}</h1>
+// </header>
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -74,9 +79,6 @@ class App extends React.Component {
   render() {
     return (
       <div className="window">
-        <header className="toolbar toolbar-header draggable">
-          <h1 className="title">{this.props.title || ''}</h1>
-        </header>
         <div className="window-content">
           <Overlay on={this.state.displayOverlay} />
           <div className="pane-group">

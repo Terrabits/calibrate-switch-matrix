@@ -12,7 +12,7 @@ const defaultInclude = [SRC_DIR];
 
 // Title
 const package = require('./package.json');
-const title = `${package.name} ${package.version}`
+const title = `${package.productName} ${package.version}`
 
 // Dependencies (use node_modules)
 const dependencies = Object.keys(package.dependencies);

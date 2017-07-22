@@ -6,21 +6,26 @@ const isDev                = require('electron-is-dev');
 const path                 = require('path');
 const url                  = require('url');
 
+const noDevServer          = process.argv.includes('--noDevServer')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  const windowOptions = {
     width: 1024, height: 768,
-    titleBarStyle: 'hidden',
     show: false
-  });
+  };
+  // if (process.platform == 'darwin') {
+  //   windowOptions.titleBarStyle = 'hidden';
+  // }
+  mainWindow = new BrowserWindow(windowOptions);
 
   // and load the index.html of the app.
   let indexPath;
-  if (isDev && !process.argv.includes('--noDevServer')) {
+  if (isDev && !noDevServer) {
     indexPath = url.format({
       protocol: 'http:',
       host: 'localhost:8081',
