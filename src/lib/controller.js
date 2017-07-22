@@ -35,6 +35,7 @@ class Controller {
   }
   async next() {
     this.disableInputs();
+    this.displayOverlay()
     this.view.alert.clear();
     this.updateModel();
     try {
@@ -63,7 +64,7 @@ class Controller {
       this.view.alert.showMessage('danger', String(err));
     }
     this.enableInputs();
-    this.view.displayOverlay = false;
+    this.hideOverlay();
   }
 
   // model/view control
@@ -121,6 +122,12 @@ class Controller {
   }
   enableInputs(value=true) {
     this.disableInputs(!value);
+  }
+  displayOverlay(value=true) {
+    this.view.displayOverlay = value;
+  }
+  hideOverlay(value=true) {
+    this.displayOverlay(!value);
   }
   async summary() {
     let procedure = null;
@@ -239,7 +246,6 @@ class Controller {
   }
   async processCalibrationStep() {
     // run step
-    this.view.displayOverlay = true;
     await this.model.performCalibrationStep(this.index.step);
     this.pushCurrentIndexToHistory();
 
@@ -262,7 +268,6 @@ class Controller {
     else {
       await this.render();
     }
-    this.view.displayOverlay = false;
   }
   purgeCalibrationSteps() {
     for (let i = this.history.length-1; i >= 0; i--) {
@@ -282,7 +287,6 @@ class Controller {
     await this.render();
   }
   async processMeasurementStep() {
-    this.view.displayOverlay = true;
     await this.model.measure(this.index.step);
     const procedure = await this.model.getProcedure();
     const steps     = procedure.steps;
@@ -294,7 +298,6 @@ class Controller {
       this.index.step++;
       await this.render();
     }
-    this.view.displayOverlay = false;
   }
   pushCurrentIndexToHistory() {
     this.history.push(this.index.copy());
