@@ -83,7 +83,7 @@ class Procedure:
             # - switch path
             # - vna setup
             # - vna ports
-            results_file = m['switch path']
+            results_file = str(Path(m['switch path']).name)
             if results_file.lower().endswith('.yaml'):
                 results_file = results_file[:-5]
             m['results file'] = self.paths.results_file(self.matrix_name(), results_file)
