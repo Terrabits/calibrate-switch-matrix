@@ -45,7 +45,7 @@ def process(args, procedure):
         return None
     try:
         matrix.open_tcp(args.matrix_address)
-    	return matrix
+        return matrix
     except:
         print("Error connecting to switch matrix")
         return None
