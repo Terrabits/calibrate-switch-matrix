@@ -48,9 +48,6 @@ class Controller {
         case Pages.SETTINGS:
           await this.processSettings(params);
           break;
-        case Pages.CHOOSE_PROCEDURE:
-          await this.processProcedure(params);
-          break;
         case Pages.CHOOSE_CAL:
           await this.processCalibrationChoice(params);
           break;
@@ -239,8 +236,8 @@ class Controller {
     }
   }
   async startCalibration() {
-    this.model.isCalUnit();
-    this.model.startCalibration();
+    await this.model.isCalUnit();
+    await this.model.startCalibration();
     const procedure = await this.model.getProcedure(true);
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.CALIBRATE;

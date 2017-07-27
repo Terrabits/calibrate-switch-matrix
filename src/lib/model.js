@@ -47,7 +47,7 @@ class Model {
     }
 
     let calUnitPorts;
-    return (async function() {
+    return (async () => {
       try {
         calUnitPorts = await this.model.calUnitPorts();
         return new Procedure(this.procedureFilename, calUnitPorts);
