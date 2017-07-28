@@ -62,7 +62,7 @@ The application should open to the settings page.
 
 ### Settings
 
-![Settings page](doc/screenshots/1. Settings.png)
+![Settings page](doc/screenshots/1-settings.png)
 
 Input the IP address of the VNA and Switch Matrix. If the application is installed on a VNA the address `localhost` can be used.
 
@@ -70,7 +70,7 @@ Using the open dialog, select the procedure to run. See the `User-created conten
 
 ### Choose Calibration
 
-![Choose Calibration page](doc/screenshots/2. Choose Calibration - Calibrate.png)
+![Choose Calibration page](doc/screenshots/2-choose-calibration-calibrate.png)
 
 There are three calibration options:
 
@@ -88,7 +88,7 @@ Calibration can be skipped entirely. Note that the results will not be accurate.
 
 ### Calibrate (optional)
 
-![Calibrate page](doc/screenshots/3. Calibrate.png)
+![Calibrate page](doc/screenshots/3-calibrate.png)
 
 `Calibrate` requires using an automatic cal unit. These cal units come in various frequency ranges and port counts. They are connected to the VNA via a USB cable. The `Calibrate` option will fail to load if a cal unit is not present on the VNA.
 
@@ -96,6 +96,6 @@ The Calibrate wizard will set up the VNA for auto-calibration and walk the user 
 
 ### Measure
 
-![Measure page](doc/screenshots/4. Measure.png)
+![Measure page](doc/screenshots/4-measure.png)
 
 This section guides the user through each step of the procedure. Follow the on-screen instructions to create the necessary VNA to switch matrix connections. Each step may generate different amounts of data and measure at different speeds. Depending on the procedure these measurements may take some time. Please be patient.
