@@ -49,7 +49,7 @@ class Model {
     let calUnitPorts;
     return (async () => {
       try {
-        calUnitPorts = await this.model.calUnitPorts();
+        calUnitPorts = await this.calUnitPorts();
         return new Procedure(this.procedureFilename, calUnitPorts);
       }
       catch (result) {

@@ -24,7 +24,8 @@ def process_args(args):
 def scpi_errors(vna):
     errors = vna.errors
     if errors:
-        msg = 'SCPI command error: "{0}"'.format(errors[0][0])
+        err0 = errors[0]
+        msg = "SCPI command error {0}: '{1}'".format(err0[0], err0[1])
         print(msg)
         return True
     return False
@@ -37,6 +38,9 @@ def start(args):
     vna.is_error()
     vna.clear_status()
     # TODO: Start calibration here
+    if vna.properties.is_zvx():
+        print('Calibrate does not work with ZVA yet...')
+        return False
     set_path = procedure.calibration_set_path()
     if not Path(set_path).is_file():
         print('Could not find calibration setup file')
@@ -45,9 +49,9 @@ def start(args):
 
     vna.write("SENS1:CORR:COLL:AUTO:CONF FNP, ''")
     steps = procedure.calibration_steps()
-    for i in range(1,len(steps)+1):
+    for i in range(0, len(steps)):
         scpi = 'SENS1:CORR:COLL:AUTO:ASS{0}:DEF:TPOR {1}'
-        scpi = scpi.format(i, ",".join(map(str,steps[i])))
+        scpi = scpi.format(i+1, ",".join(map(str,steps[i])))
         vna.write(scpi)
     return not scpi_errors(vna)
 

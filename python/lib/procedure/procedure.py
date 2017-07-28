@@ -71,7 +71,7 @@ class Procedure:
     def calibrate_ports(self):
         return self.yaml['vna calibration']['ports']
     def calibration_steps(self):
-        create_steps(self.calibration_ports, self.cal_unit_ports)
+        return create_steps(self.calibrate_ports(), self.cal_unit_ports)
     def calibration_step_ports(self, i):
         return self.calibration_steps()[i]
     def number_of_steps(self):
