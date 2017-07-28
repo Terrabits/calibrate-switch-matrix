@@ -1,3 +1,11 @@
+<style>
+img {
+  border: 1px solid lightgray;
+  border-radius: 7px;
+}
+</style>
+
+
 R&S Calibrate Switch Matrix
 ===========================
 
