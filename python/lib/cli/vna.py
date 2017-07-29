@@ -52,7 +52,6 @@ def process(args):
     		vna.print_info()
     	except:
     		print('Problem generating VNA scpi log', flush=True)
-    		vna.local()
     		return None
     # All good
     return vna

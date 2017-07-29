@@ -45,7 +45,11 @@ parser.add_argument('--procedure',                dest="procedure_filename")
 parser.add_argument('--step',                     dest="step")
 args = parser.parse_args()
 
-def conditional_exit(is_success):
+def conditional_exit(vna, is_success):
+	vna.is_error()
+	vna.clear_status()
+	vna.local()
+	vna.close()
 	sys.exit(0 if is_success else 1)
 
 # Process Actions
