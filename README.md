@@ -25,7 +25,7 @@ Build Instructions
 
 This application requires `node` 6.x, `yarn` or `npm`, `python` 3.5.x and `pip`. To install dependencies, run `yarn` or `npm install`. Python dependencies are installed in this step as well.
 
-For more information, see [build instructions.md](#).
+For more information, see [BUILD.md](https://github.com/Terrabits/calibrate-switch-matrix/blob/master/BUILD.md).
 
 User-created Content
 --------------------
@@ -99,3 +99,25 @@ The Calibrate wizard will set up the VNA for auto-calibration and walk the user 
 ![Measure page](doc/screenshots/4-measure.png)
 
 This section guides the user through each step of the procedure. Follow the on-screen instructions to create the necessary VNA to switch matrix connections. Each step may generate different amounts of data and measure at different speeds. Depending on the procedure these measurements may take some time. Please be patient.
+
+Reporting Bugs
+--------------
+
+Please provide reproducible steps and supporting procedure/files, if possible.
+
+In addition, the application generates a few log files that should be included with a bug report. All io to the VNA and Switch Matrix is captured in these logs, including SCPI command errors. Oftentimes a bug can be tracked down just from these logs.
+
+The log files are located at:
+
+Windows  
+`C:\Users\<username>\AppData\Roaming\R&S Calibrate Switch Matrix`
+
+MacOS  
+`~/Library/Application Support/R&S Calibrate Switch Matrix`
+
+There are two log files:
+
+- `vna scpi log.txt`
+- `matrix scpi log.txt`
+
+Please include both.

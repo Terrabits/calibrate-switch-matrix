@@ -22,7 +22,8 @@
     "package": "yarn run build && yarn run buildpy",
     "postpackage": "build",
     "scaffold": "node ./scaffold/scaffold.js",
-    "postinstall": "cd ./scaffold && npm install && cd ../python && pip install -r requirements.txt"
+    "postinstall": "cd ./scaffold && npm install && cd ../python && pip install -r requirements.txt",
+    "embed-images": "python ./scripts/embed-images.py"
   },
   "build": {
     "appId": "com.rohde-schwarz.calibrate-switch-matrix",
