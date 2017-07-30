@@ -81,6 +81,7 @@ def perform_step(args):
                 cleanup(vna, matrix)
                 return False
             ch1.cal_group = args.cal_group
+            vna.pause() # ...zva ¯\_(ツ)_/¯
             ch1.dissolve_cal_group_link()
 
         # 3. set switch matrix path
