@@ -13,6 +13,7 @@ from   rohdeschwarz.instruments.vna.vnachannel import TouchstoneFormat
 
 import os
 from   pathlib import Path
+import sys
 
 def cleanup(vna, matrix):
     if vna:
@@ -101,9 +102,9 @@ def perform_step(args):
                 print("'{0}' could not be saved".format(results_file.name))
                 cleanup(vna, matrix)
                 return False
-        except(err):
+        except:
             print('Exception saving {0}'.format(results_file.name))
-            print(err)
+            # print(sys.exc_info()[0])
             cleanup(vna, matrix)
             return False
     cleanup(vna, matrix)
