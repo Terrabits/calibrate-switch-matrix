@@ -63,6 +63,7 @@ def perform_step(args):
             cleanup(vna, matrix)
             return False
         vna.open_set_locally(m['vna setup'])
+        vna.pause()
 
         if not 1 in vna.channels:
             msg = "Could not find channel 1 in '{0}' of step '{1}'"
