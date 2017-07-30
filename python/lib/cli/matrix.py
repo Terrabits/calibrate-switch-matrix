@@ -5,30 +5,21 @@ from pathlib import Path
 
 def is_matrix(args):
     if not args.matrix_address:
-    	print("Switch matrix address missing", flush=True)
-    	return False
-
-    instr = GenericInstrument()
+        print('No switch matrix address')
+        return False
+    matrix = GenericInstrument()
     try:
-    	instr.open_tcp(args.matrix_address)
+        matrix.open_tcp(args.matrix_address)
     except:
-    	msg = 'Could not find switch matrix'
-    	print(msg, flush=True)
-    	return False
-
-    if args.matrix_log_filename:
-    	try:
-    		instr.open_log(args.matrix_log_filename)
-    		instr.print_info()
-    	except:
-    		print('Problem generating matrix scpi log', flush=True)
-    		return False
-
-    # Success
+        print("Could not connect to switch matrix")
+        return False
+    cleanup(matrix)
     return True
 
 def process(args, procedure):
-    # TODO
+    if not args.matrix_address:
+        print('No switch matrix address')
+        return None
     driver_path = procedure.matrix_driver_path()
     if not Path(driver_path).is_file():
         msg = "No switch matrix driver found at '{0}'"
@@ -39,13 +30,37 @@ def process(args, procedure):
     try:
         matrix = SwitchMatrix(driver_path)
     except:
-        msg = "Error loading switch matrix driver: '{0}'"
+        msg = "Could not load switch matrix driver: '{0}'"
         msg = msg.format(driver_path)
         print(msg)
         return None
     try:
         matrix.open_tcp(args.matrix_address)
-        return matrix
     except:
-        print("Error connecting to switch matrix")
+        print("Could not connect to switch matrix")
         return None
+    if args.matrix_log_filename:
+    	try:
+    		instr.open_log(args.matrix_log_filename)
+    		instr.print_info()
+    	except:
+    		print('Could not open switch matrix log')
+            matrix.clear_status()
+            matrix.close()
+    		return None
+    return matrix
+
+def init(matrix):
+    matrix.is_error()
+    matrix.clear_status()
+    matrix.preset()
+    matrix.pause()
+
+def cleanup(matrix):
+    if not matrix or not matrix.connected():
+        return
+    matrix.is_error()
+    matrix.clear_status()
+    if matrix.log:
+        matrix.close_log()
+    matrix.close()

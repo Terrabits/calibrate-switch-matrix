@@ -15,7 +15,7 @@ def is_cal_unit(args):
         return False
     vna = process(args)
     if not vna.cal_units:
-        print('No VNA cal unit found', flush=True)
+        print('No VNA cal unit found')
         return False
     else:
         return True
@@ -36,7 +36,7 @@ def cal_unit_ports(args):
 
 def process(args):
     if not args.vna_address:
-    	print("VNA address missing", flush=True);
+    	print("VNA address missing");
     	return None
 
     vna = Vna()
@@ -44,14 +44,32 @@ def process(args):
     	vna.open_tcp(args.vna_address)
     except:
     	msg = 'Could not find VNA'
-    	print(msg, flush=True)
+    	print(msg)
     	return None
     if args.vna_log_filename:
     	try:
     		vna.open_log(args.vna_log_filename)
     		vna.print_info()
     	except:
-    		print('Problem generating VNA scpi log', flush=True)
+    		print('Problem generating VNA scpi log')
     		return None
     # All good
     return vna
+
+def init(vna):
+    vna.is_error()
+    vna.clear_status()
+    vna.close_sets()
+
+def cleanup(vna):
+    if not vna or not vna.connected():
+        return
+    if not vna.sets:
+        vna.preset()
+        vna.pause()
+    vna.is_error()
+    vna.clear_status()
+    if vna.log:
+        vna.close_log()
+    vna.local()
+    vna.close()

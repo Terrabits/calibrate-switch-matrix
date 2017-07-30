@@ -18,7 +18,7 @@ import sys
 
 # cli mode only
 if __name__ != '__main__':
-	print('This is a command line tool', flush=True)
+	print('This is a command line tool')
 	sys.exit(1)
 
 # arg parse
@@ -45,53 +45,49 @@ parser.add_argument('--procedure',                dest="procedure_filename")
 parser.add_argument('--step',                     dest="step")
 args = parser.parse_args()
 
-def conditional_exit(vna, is_success):
-	vna.is_error()
-	vna.clear_status()
-	vna.local()
-	vna.close()
-	sys.exit(0 if is_success else 1)
+def conditional_exit(success):
+	sys.exit(0 if success else 1)
 
 # Process Actions
 # --is-vna
 if args.is_vna:
-	conditional_exit(vna, is_vna(args))
+	conditional_exit(is_vna(args))
 
 # --is-matrix
 if args.is_matrix:
-	conditional_exit(vna, is_matrix(args))
+	conditional_exit(is_matrix(args))
 
 # --is-cal-group
 if args.cal_groups:
-	conditional_exit(vna, cal_groups(args))
+	conditional_exit(cal_groups(args))
 
 # --is-cal-unit
 if args.is_cal_unit:
-	conditional_exit(vna, is_cal_unit(args))
+	conditional_exit(is_cal_unit(args))
 
 # --cal-unit-ports
 if args.cal_unit_ports:
-	conditional_exit(vna, cal_unit_ports(args))
+	conditional_exit(cal_unit_ports(args))
 
 # --start-calibration
 if args.start_calibration:
-	conditional_exit(vna, calibrate.start(args))
+	conditional_exit(calibrate.start(args))
 
 # --perform-calibration-step
 if args.perform_calibration_step:
-	conditional_exit(vna, calibrate.perform_step(args))
+	conditional_exit(calibrate.perform_step(args))
 
 # --apply-calibration
 if args.apply_calibration:
-	conditional_exit(vna, calibrate.apply(args))
+	conditional_exit(calibrate.apply(args))
 
 # --save-calibration
 if args.save_calibration:
-	conditional_exit(vna, calibrate.save(args))
+	conditional_exit(calibrate.save(args))
 
 # --measure
 if args.measure:
-	conditional_exit(vna, measure(args))
+	conditional_exit(measure(args))
 
 # else
 print('No action given.')

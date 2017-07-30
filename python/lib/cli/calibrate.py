@@ -1,6 +1,8 @@
 from lib.procedure     import set_file_extension
 from lib.cli.procedure import process as process_procedure
-from lib.cli.vna       import process  as process_vna
+from lib.cli.vna       import process as process_vna
+from   lib.cli.vna     import init    as init_vna
+from   lib.cli.vna     import cleanup as cleanup_vna
 from lib.cli.vna       import is_cal_unit, cal_unit_ports
 
 from pathlib           import Path
@@ -35,25 +37,29 @@ def start(args):
     [vna, procedure] = process_args(args)
     if not vna or not procedure:
         return False
-    vna.is_error()
-    vna.clear_status()
-    # TODO: Start calibration here
     if vna.properties.is_zvx():
         print('Calibrate does not work with ZVA yet...')
+        cleanup_vna(vna)
         return False
+    # TODO: Start calibration here
+    init_vna(vna)
     set_path = procedure.calibration_set_path()
     if not Path(set_path).is_file():
         print('Could not find calibration setup file')
+        cleanup_vna(vna)
         return False
     vna.open_set_locally(set_path)
-
     vna.write("SENS1:CORR:COLL:AUTO:CONF FNP, ''")
     steps = procedure.calibration_steps()
     for i in range(0, len(steps)):
         scpi = 'SENS1:CORR:COLL:AUTO:ASS{0}:DEF:TPOR {1}'
         scpi = scpi.format(i+1, ",".join(map(str,steps[i])))
         vna.write(scpi)
-    return not scpi_errors(vna)
+    if scpi_errors(vna):
+        cleanup_vna(vna)
+        return False
+    else:
+        return True
 
 def perform_step(args):
     [vna, procedure] = process_args(args)
@@ -85,4 +91,8 @@ def save(args):
     vna.is_error()
     vna.clear_status()
     vna.channel().save_cal(args.cal_group)
-    return not scpi_errors(vna)
+    if scpi_errors(vna):
+        return False
+    else:
+        cleanup_vna(vna)
+        return True
