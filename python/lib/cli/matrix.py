@@ -40,14 +40,14 @@ def process(args, procedure):
         print("Could not connect to switch matrix")
         return None
     if args.matrix_log_filename:
-    	try:
-    		instr.open_log(args.matrix_log_filename)
-    		instr.print_info()
-    	except:
-    		print('Could not open switch matrix log')
+        try:
+            instr.open_log(args.matrix_log_filename)
+            instr.print_info()
+        except:
+            print('Could not open switch matrix log')
             matrix.clear_status()
             matrix.close()
-    		return None
+            return None
     return matrix
 
 def init(matrix):
