@@ -2,11 +2,15 @@ const {Choices}   = require('./calibration.js');
 const Procedure   = require('./procedure.js');
 const python      = require('./python.js');
 const Store       = require('electron-store');
+const path        = require('path');
 
 
 class Model {
   constructor(store) {
     this.store = new Store();
+    let logPath    = path.resolve(this.store.path, '../');
+    this.vnaLog    = path.resolve(logPath,         'vna scpi log.txt'   );
+    this.matrixLog = path.resolve(logPath,         'matrix scpi log.txt');
   }
   // User settings
   get vnaAddress() {
@@ -62,7 +66,8 @@ class Model {
   isMatrix() {
     const args = [
       '--is-matrix',
-      '--matrix-address', this.matrixAddress
+      '--matrix-address', this.matrixAddress,
+      '--matrix-log',     this.matrixLog
     ];
     return python.start(args).then((result) => {
       return true;
@@ -73,7 +78,8 @@ class Model {
   isVna() {
     const args = [
       '--is-vna',
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog
     ];
     return python.start(args).then((result) => {
       return true;
@@ -82,7 +88,8 @@ class Model {
   calGroups() {
     let args = [
       '--cal-groups',
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog
     ];
     return python.start(args).then((result) => {
       return result.trim().split(',');
@@ -91,7 +98,8 @@ class Model {
   isCalUnit() {
     let args = [
       '--is-cal-unit',
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog
     ];
     return python.start(args).then((result) => {
       return true;
@@ -100,7 +108,8 @@ class Model {
   calUnitPorts() {
     let args = [
       '--cal-unit-ports',
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog
     ];
     return python.start(args).then((result) => {
       return Number(result.trim());
@@ -110,6 +119,7 @@ class Model {
     let args = [
       '--start-calibration',
       '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog,
       '--procedure',   this.procedureFilename
     ];
     return python.start(args).then((result) => {
@@ -120,6 +130,7 @@ class Model {
     let args = [
       '--perform-calibration',
       '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog,
       '--procedure',   this.procedureFilename,
       '--step',        i
     ];
@@ -130,7 +141,8 @@ class Model {
   applyCalibration() {
     let args = [
       '--apply-calibration',
-      '--vna-address', this.vnaAddress
+      '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog
     ];
     return python.start(args).then((result) => {
       return true;
@@ -139,8 +151,9 @@ class Model {
   saveCalibration(name) {
     let args = [
       '--save-calibration',
-      '--vna-address',   this.vnaAddress,
-      '--cal-group', name
+      '--vna-address', this.vnaAddress,
+      '--vna-log',     this.vnaLog,
+      '--cal-group',   name
     ];
     return python.start(args).then((result) => {
       this.calGroup = name;
@@ -151,7 +164,9 @@ class Model {
     let args = [
       '--measure',
       '--vna-address',    this.vnaAddress,
+      '--vna-log',        this.vnaLog,
       '--matrix-address', this.matrixAddress,
+      '--matrix-log',     this.matrixLog,
       '--procedure',      this.procedureFilename,
       '--step',           i
     ];
