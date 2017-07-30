@@ -41,8 +41,8 @@ def process(args, procedure):
         return None
     if args.matrix_log_filename:
         try:
-            instr.open_log(args.matrix_log_filename)
-            instr.print_info()
+            matrix.open_log(args.matrix_log_filename)
+            matrix.print_info()
         except:
             print('Could not open switch matrix log')
             matrix.clear_status()
