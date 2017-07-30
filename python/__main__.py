@@ -55,43 +55,43 @@ def conditional_exit(vna, is_success):
 # Process Actions
 # --is-vna
 if args.is_vna:
-	conditional_exit(is_vna(args))
+	conditional_exit(vna, is_vna(args))
 
 # --is-matrix
 if args.is_matrix:
-	conditional_exit(is_matrix(args))
+	conditional_exit(vna, is_matrix(args))
 
 # --is-cal-group
 if args.cal_groups:
-	conditional_exit(cal_groups(args))
+	conditional_exit(vna, cal_groups(args))
 
 # --is-cal-unit
 if args.is_cal_unit:
-	conditional_exit(is_cal_unit(args))
+	conditional_exit(vna, is_cal_unit(args))
 
 # --cal-unit-ports
 if args.cal_unit_ports:
-	conditional_exit(cal_unit_ports(args))
+	conditional_exit(vna, cal_unit_ports(args))
 
 # --start-calibration
 if args.start_calibration:
-	conditional_exit(calibrate.start(args))
+	conditional_exit(vna, calibrate.start(args))
 
 # --perform-calibration-step
 if args.perform_calibration_step:
-	conditional_exit(calibrate.perform_step(args))
+	conditional_exit(vna, calibrate.perform_step(args))
 
 # --apply-calibration
 if args.apply_calibration:
-	conditional_exit(calibrate.apply(args))
+	conditional_exit(vna, calibrate.apply(args))
 
 # --save-calibration
 if args.save_calibration:
-	conditional_exit(calibrate.save(args))
+	conditional_exit(vna, calibrate.save(args))
 
 # --measure
 if args.measure:
-	conditional_exit(measure(args))
+	conditional_exit(vna, measure(args))
 
 # else
 print('No action given.')
