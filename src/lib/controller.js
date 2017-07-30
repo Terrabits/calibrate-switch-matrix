@@ -292,9 +292,10 @@ class Controller {
     const procedure = await this.model.getProcedure();
     const steps     = procedure.steps;
     if (this.index.step + 1 >= steps.length) {
-      this.view.alert.showMessage('success', 'Measurements complete!');
+      this.view.alert.showMessage('success', 'Procedure completed!');
     }
     else {
+      this.view.alert.showMessage('success', 'Step complete!');
       this.pushCurrentIndexToHistory();
       this.index.step++;
       await this.render();
