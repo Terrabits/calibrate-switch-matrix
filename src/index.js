@@ -1,16 +1,40 @@
-import React          from 'react';
-import ReactDOM       from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
+import React           from 'react';
+import ReactDOM        from 'react-dom';
+import {AppContainer}  from 'react-hot-loader';
 
-import App            from './components/app.js';
-import {Controller}   from './lib/controller.js';
-import Model          from './lib/model.js';
+import App             from './components/app.js';
+import {Controller}    from './lib/controller.js';
+import Model           from './lib/model.js';
 
-import path           from 'path';
+import Store           from 'electron-store';
+import ElectronConsole from 'winston-electron';
+import winston         from 'winston';
+
+import path            from 'path';
 
 import './vendor/photon/sass/photon.scss';
 import './assets/css/global.scss';
 
+// logging
+const store = new Store();
+const log_filename = path.resolve(store.path, '../', 'log.txt');
+// window.winston = winston;
+window.winston  = new winston.Logger({
+  transports: [
+    new ElectronConsole({
+      level: 'silly',
+      handleExceptions: true,
+      humanReadableExceptions: true
+    }),
+    new (winston.transports.File)({
+      filename: log_filename,
+      level: 'silly',
+      handleExceptions: true,
+      humanReadableExceptions: true
+    })
+  ],
+  exitOnError: false
+})
 
 // Probably not best practices, but...
 const pkg = require('../package.json');
@@ -22,7 +46,7 @@ document.body.appendChild( root );
 
 // Model, Controller
 window.model      = new Model();
-window.controller = new Controller(model, window.view);
+window.controller = new Controller(model, null);
 
 // View
 window.render = Component => {

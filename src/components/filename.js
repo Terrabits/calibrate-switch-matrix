@@ -2,7 +2,8 @@ import React    from 'react';
 import electron from 'electron'
 import path     from 'path';
 
-const  dialog   = electron.remote.dialog;
+const remote    = electron.remote;
+const  dialog   = remote.dialog;
 
 function Filename(props) {
   const buttonClasses   = ['btn', 'btn-default'];
@@ -12,7 +13,10 @@ function Filename(props) {
     filenameClasses.push('disabled');
   }
   const handleClick = (event) => {
-    const result = dialog.showOpenDialog({properties: ['openFile']});
+    const result = dialog.showOpenDialog(remote.getCurrentWindow(), {
+      properties: [
+        'openFile'
+    ]});
     if (result) {
       props.onChange(result[0]);
     }
