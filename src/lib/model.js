@@ -14,38 +14,54 @@ class Model {
   }
   // User settings
   get vnaAddress() {
-    return this.store.get('vna-address', '');
+    const value = this.store.get('vna-address', '');
+    winston.debug('model.vnaAddress', {value});
+    return value;
   }
   set vnaAddress(addr) {
+    winston.debug('model.vnaAddress=', {value: addr});
     this.store.set('vna-address', addr);
   }
   get matrixAddress() {
-    return this.store.get('matrix-address', '');
+    const value = this.store.get('matrix-address', '');
+    winston.debug('model.matrixAddress', {value});
+    return value;
   }
   set matrixAddress(addr) {
+    winston.debug('model.matrixAddress=', {value: addr});
     this.store.set('matrix-address', addr);
   }
   get procedureFilename() {
-    return this.store.get('procedure-filename', '');
+    const value = this.store.get('procedure-filename', '');
+    winston.debug('model.procedureFilename', {value});
+    return value;
   }
   set procedureFilename(filename) {
+    winston.debug('model.procedureFilename=', {value: filename});
     this.store.set('procedure-filename', filename);
   }
   get calChoice() {
-    return this.store.get('cal-choice', Choices.CALIBRATE);
+    const value = this.store.get('cal-choice', '');
+    winston.debug('model.calChoice', {value});
+    return value;
   }
   set calChoice(choice) {
+    winston.debug('model.calChoice=', {value: choice});
     this.store.set('cal-choice', choice);
   }
   get calGroup() {
-    return this.store.get('cal-group', '');
+    const value = this.store.get('cal-group', '');
+    winston.debug('model.calGroup', {value});
+    return value;
   }
   set calGroup(name) {
+    winston.debug('model.calGroup=', {value: name});
     this.store.set('cal-group', name);
   }
 
   // procedure
   getProcedure(fetchCalUnitPorts=false) {
+    winston.debug('model.getProcedure');
     if (!fetchCalUnitPorts) {
       return new Procedure(this.procedureFilename, 0);
     }
@@ -64,6 +80,7 @@ class Model {
 
   // switch matrix
   isMatrix() {
+    winston.debug('model.isMatrix');
     const args = [
       '--is-matrix',
       '--matrix-address', this.matrixAddress,
@@ -76,6 +93,7 @@ class Model {
 
   // vna
   isVna() {
+    winston.debug('model.isVna');
     const args = [
       '--is-vna',
       '--vna-address', this.vnaAddress,
@@ -86,6 +104,7 @@ class Model {
     });
   }
   calGroups() {
+    winston.debug('model.calGroups');
     let args = [
       '--cal-groups',
       '--vna-address', this.vnaAddress,
@@ -96,6 +115,7 @@ class Model {
     });
   }
   isCalUnit() {
+    winston.debug('model.isCalUnit');
     let args = [
       '--is-cal-unit',
       '--vna-address', this.vnaAddress,
@@ -106,6 +126,7 @@ class Model {
     });
   }
   calUnitPorts() {
+    winston.debug('model.calUnitPorts');
     let args = [
       '--cal-unit-ports',
       '--vna-address', this.vnaAddress,
@@ -116,6 +137,7 @@ class Model {
     });
   }
   startCalibration() {
+    winston.debug('model.startCalibration');
     let args = [
       '--start-calibration',
       '--vna-address', this.vnaAddress,
@@ -127,6 +149,7 @@ class Model {
     });
   }
   performCalibrationStep(i) {
+    winston.debug('model.performCalibrationStep', {i});
     let args = [
       '--perform-calibration',
       '--vna-address', this.vnaAddress,
@@ -139,6 +162,7 @@ class Model {
     });
   }
   applyCalibration() {
+    winston.debug('model.applyCalibration');
     let args = [
       '--apply-calibration',
       '--vna-address', this.vnaAddress,
@@ -149,6 +173,7 @@ class Model {
     });
   }
   saveCalibration(name) {
+    winston.debug('model.saveCalibration', {name});
     let args = [
       '--save-calibration',
       '--vna-address', this.vnaAddress,
@@ -161,6 +186,7 @@ class Model {
     });
   }
   measure(i) {
+    winston.debug('model.measure', {i});
     let args = [
       '--measure',
       '--vna-address',    this.vnaAddress,

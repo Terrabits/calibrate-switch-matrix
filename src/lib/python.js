@@ -28,6 +28,7 @@ class Python {
 	}
 
 	start(args=[]) {
+		winston.debug('python start', {args});
 		const stdout = new IOStream();
 		const stderr = new IOStream();
 		return new Promise((resolve, reject) => {
@@ -36,6 +37,7 @@ class Python {
 			env.LANG             = "en_US.UTF-8";
 			const options = {env: env, encoding: 'utf8'};
 			const handleClose = (code) => {
+				winston.debug('python.start handleClose', {code, stdout, stderr});
 				const result = {
 					code:   code,
 					stdout: stdout,
@@ -49,6 +51,7 @@ class Python {
 				}
 			};
 			const handleError = (err) => {
+				winston.error('python.start handleError', {err, stdout, stderr})
 				stdout.text = 'Error spawning python script.';
 			};
 			let exe = this.exe;
@@ -62,20 +65,17 @@ class Python {
 			_process.on('error', handleError);
 			_process.on('close', handleClose);
 		}).then((result) => {
-			console.log(result.stdout.text.trim());
+			winston.debug('python success', {result});
 			return result.stdout.text.trim();
 		}).catch((result) => {
-			if (result.stdout) {
-				if (result.stderr.text.trim()) {
-					console.log(result.stderr.text.trim());
-				}
-				if (result.stdout.text.trim()) {
-					console.log(result.stdout.text.trim());
-				}
+			winston.error('python error', {result});
+			if (result.stdout && result.stdout.text) {
 				throw result.stdout.text.trim();
 			}
+			else if (result.stderr && result.stderr.text) {
+				throw result.stderr.text.trim();
+			}
 			else {
-				console.log(result);
 				throw result;
 			}
 		});

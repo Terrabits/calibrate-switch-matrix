@@ -17,18 +17,18 @@ import './assets/css/global.scss';
 
 // logging
 const store = new Store();
-const log_filename = path.resolve(store.path, '../', 'log.txt');
-// window.winston = winston;
+const log_filename = path.resolve(store.path, '../', 'ui log.txt');
 window.winston  = new winston.Logger({
   transports: [
     new ElectronConsole({
-      level: 'silly',
+      level: 'error',
       handleExceptions: true,
       humanReadableExceptions: true
     }),
     new (winston.transports.File)({
       filename: log_filename,
       level: 'silly',
+      maxFiles: 5,
       handleExceptions: true,
       humanReadableExceptions: true
     })

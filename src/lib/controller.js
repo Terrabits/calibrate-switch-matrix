@@ -21,12 +21,14 @@ class Controller {
 
   // user actions
   async restart() {
+    winston.debug('controller.restart', {index: this.index});
     this.index = new PageIndex(Pages.SETTINGS, 0);
     this.history   = [];
     await this.render();
     this.enableInputs();
   }
   async back() {
+    winston.debug('controller.back', {index: this.index});
     if (!this.history.length) {
       return;
     }
@@ -38,6 +40,7 @@ class Controller {
     this.enableInputs();
   }
   async next() {
+    winston.debug('controller.next', {index: this.index});
     this.disableInputs();
     this.displayOverlay()
     this.view.alert.clear();
@@ -70,11 +73,13 @@ class Controller {
 
   // model/view control
   async render() {
+    winston.debug('controller.render');
     if (this.view) {
       await this.view.renderNewParameters(await this.parameters());
     }
   }
   updateModel() {
+    winston.debug('controller.updateModel');
     const inputs = this.getInputs();
     this.model.vnaAddress        = inputs.vnaAddress;
     this.model.matrixAddress     = inputs.matrixAddress;
@@ -106,10 +111,12 @@ class Controller {
     else {
       params.ports = [];
     }
+    winston.debug('controller.parameters', {params});
     return params;
   }
   getInputs() {
     const inputs = this.view.getUserInputs();
+    winston.debug('controller.inputs', {inputs});
     return {
       vnaAddress:        inputs.vnaAddress,
       matrixAddress:     inputs.matrixAddress,
@@ -203,6 +210,7 @@ class Controller {
 
   // process action
   async processSettings(params) {
+    winston.debug('controller.processSettings', {index: this.index, params});
     if (!this.model.vnaAddress) {
       throw 'VNA address missing';
     }
@@ -224,6 +232,7 @@ class Controller {
     await this.render();
   }
   async processCalibrationChoice(params) {
+    winston.debug('controller.processCalibrationChoice', {index: this.index, params});
     const choice = params.calChoice;
     if (!choice) {
       throw 'Choose calibration option';
@@ -236,6 +245,7 @@ class Controller {
     }
   }
   async startCalibration() {
+    winston.debug('controller.startCalibration', {index: this.index});
     await this.model.isCalUnit();
     await this.model.startCalibration();
     const procedure = await this.model.getProcedure(true);
@@ -246,6 +256,7 @@ class Controller {
     await this.render();
   }
   async processCalibrationStep() {
+    winston.debug('controller.processCalibrationStep', {index: this.index});
     // run step
     await this.model.performCalibrationStep(this.index.step);
     this.pushCurrentIndexToHistory();
@@ -280,6 +291,7 @@ class Controller {
     this.index = this.history.pop();
   }
   async startMeasurements() {
+    winston.debug('controller.startMeasurements', {index: this.index});
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.MEASURE;
     this.index.step = 0;
@@ -288,6 +300,7 @@ class Controller {
     await this.render();
   }
   async processMeasurementStep() {
+    winston.debug('controller.processMeasurementStep', {index: this.index});
     await this.model.measure(this.index.step);
     const procedure = await this.model.getProcedure();
     const steps     = procedure.steps;
