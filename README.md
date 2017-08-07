@@ -115,9 +115,10 @@ Windows
 MacOS  
 `~/Library/Application Support/R&S Calibrate Switch Matrix`
 
-There are two log files:
+There are three log files:
 
+- `ui log.txt`
 - `vna scpi log.txt`
 - `matrix scpi log.txt`
 
-Please include both.
+Please include all.

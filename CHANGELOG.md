@@ -1,6 +1,12 @@
 R&S Calibrate Switch Matrix Change Log
 ======================================
 
+2017-08-xx Version 0.8.3
+------------------------
+
+* Fixed a bug when choosing existing cal group
+* Added application log file
+
 2017-07-30 Version 0.8.2
 ------------------------
 

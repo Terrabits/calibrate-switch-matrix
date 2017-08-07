@@ -60,6 +60,9 @@ class Wizard extends React.Component {
   }
   set calGroups(names) {
     this.setState({calGroups: names});
+    if (!this.calGroup && names.length) {
+      this.calGroup = names[0];
+    }
   }
   get saveCalAs() {
     return this.state.saveCalAs;
