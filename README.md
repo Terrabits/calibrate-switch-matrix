@@ -121,4 +121,4 @@ There are three log files:
 - `vna scpi log.txt`
 - `matrix scpi log.txt`
 
-Please include all.
+Please include all the logs with the bug report.
