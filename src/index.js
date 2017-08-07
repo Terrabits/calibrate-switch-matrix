@@ -21,14 +21,13 @@ const log_filename = path.resolve(store.path, '../', 'ui log.txt');
 window.winston  = new winston.Logger({
   transports: [
     new ElectronConsole({
-      level: 'error',
+      level: 'warn',
       handleExceptions: true,
       humanReadableExceptions: true
     }),
     new (winston.transports.File)({
       filename: log_filename,
       level: 'silly',
-      maxFiles: 5,
       handleExceptions: true,
       humanReadableExceptions: true
     })
