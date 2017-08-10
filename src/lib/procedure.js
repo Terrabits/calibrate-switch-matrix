@@ -20,21 +20,10 @@ class Procedure {
   }
 
   validate() {
-    let status = Object.create(null);
-    status.isValid = false;
-
-    if (!this.isFile) {
-      status.message = `'${this.filename}' does not exist`;
-      return status;
-    }
-    if (!this.isYaml) {
-      status.message = `'${this.filename} is not valid yaml file'`;
-      return status;
+    if (!this.yaml) {
+      return false;
     }
 
-    // TODO: Look for essential parts?
-    // TODO: make switch matrix, calibration optional steps?
-    // TODO: Put yaml validation into python? One spot?
     let requiredProperties = ['name',
                               'switch matrix',
                               'vna calibration',
@@ -42,19 +31,16 @@ class Procedure {
                              ];
     for (let i of requiredProperties) {
       if (!this.yaml.hasOwnProperty(i)) {
-        // TODO: error message
-        status.message = `${i} missing in procedure`;
+        this.status.message = `${i} missing in procedure`;
         return status;
       }
     }
     if (!this.yaml['measurement steps']) {
-      // TODO: Error message
-      status.message = `No measurement steps found`;
-      return status;
+      this.status.message = `No measurement steps found`;
+      return false;
     }
     if (!this.yaml['measurement steps'].length) {
-      // TODO: Error message
-      status.message = `No measurement steps found`;
+      this.status.message = `No measurement steps found`;
       return status;
     }
     for (let step of this.yaml['measurement steps']) {
@@ -64,74 +50,67 @@ class Procedure {
                            ];
       for (let i of requiredProperties) {
         if (!step.hasOwnProperty(i)) {
-          // TODO: Error message
-          status.message = `Measurement step(s) missing '${i}'`;
+          this.status.message = `Measurement step(s) missing '${i}'`;
           return status;
         }
       }
       if (!Object.getOwnPropertyNames(step['vna connections']).length) {
-        // TODO: Error message
-        status.message = `Measurement step(s) missing vna connections`;
+        this.status.message = `Measurement step(s) missing vna connections`;
         return status;
       }
       if (!step['measurements'].length) {
-        // TODO: Error message
-        status.message = `No measurements in procedure`;
+        this.status.message = `No measurements in procedure`;
         return status;
       }
       for (let meas of step['measurements']) {
         if (!meas.hasOwnProperty('switch path')) {
-          // TODO: Error message
-          status.message = `Measurement step(s) missing switch path`;
+          this.status.message = `Measurement step(s) missing switch path`;
           return status;
         }
         if (!meas.hasOwnProperty('vna setup')) {
-          // TODO: Error message
-          status.message = `Measurement step(s) missing vna setup`;
+          this.status.message = `Measurement step(s) missing vna setup`;
           return status;
         }
         if (!meas.hasOwnProperty('vna ports')) {
-          // TODO: Error message
-          status.message = `Measurement step(s) missing vna ports`;
+          this.status.message = `Measurement step(s) missing vna ports`;
           return status;
         }
         if (!meas['vna ports'].length) {
-          // TODO: Error message
-          status.message = `Measurement step(s) missing vna ports`;
+          this.status.message = `Measurement step(s) missing vna ports`;
           return status;
         }
       }
     }
     // Else
-    status.isValid = true;
-    return status;
+    this.status.isValid = true;
+    this.status.message = '';
+    return true;
   }
 
   load(filename) {
     this.filename = filename;
-    this.isFile   = false;
-    this.isYaml   = false;
-    this.isValid  = false;
-    this.yaml     = Object.create(null);
+    this.yaml     = null;
+    this.status   = {
+      isValid: false,
+      message: 'Error loading YAML file.'
+    }
 
     let text;
     try {
       text = fs.readFileSync(filename);
     }
     catch (e) {
-      return;
+      this.status.message = `'${this.filename}' does not exist`;
+      return false;
     }
-    this.isFile = true;
-
     try {
       this.yaml = yaml.safeLoad(text);
     }
-    catch (e) {
-      return;
+    catch (err) {
+      this.status.message = `'${this.filename}' is not a valid yaml file\n${err.message}`;
+      return false;
     }
-    this.isYaml = true;
-    let status = this.validate();
-    this.isValid = status.isValid;
+    return this.validate();
   }
 }
 

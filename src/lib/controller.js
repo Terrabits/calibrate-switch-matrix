@@ -1,6 +1,5 @@
 const {Choices} = require('./calibration.js');
 const PageIndex = require('./page-index.js');
-const Procedure = require('./procedure.js');
 
 
 // pages:
@@ -65,7 +64,18 @@ class Controller {
       }
     }
     catch (err) {
-      this.view.alert.showMessage('danger', String(err));
+      winston.error('Exception caught in controller.next', err);
+      if (err) {
+        if (err.message) {
+          this.view.alert.showMessage('danger', String(err.message));
+        }
+        else {
+          this.view.alert.showMessage('danger', String(err));
+        }
+      }
+      else {
+        this.view.alert.showMessage('danger', 'Unknown error occurred. See logs for details.');
+      }
     }
     this.hideOverlay();
     this.enableInputs();
@@ -148,7 +158,7 @@ class Controller {
     let settings  = {name: 'Settings'};
     let calibrate = {name: 'Calibrate'};
     let measure   = {name: 'Measure'};
-    if (!procedure || !procedure.isValid) {
+    if (!procedure.status.isValid) {
       return [
         settings,
         calibrate,
@@ -212,20 +222,19 @@ class Controller {
   async processSettings(params) {
     winston.debug('controller.processSettings', {index: this.index, params});
     if (!this.model.vnaAddress) {
-      throw 'VNA address missing';
+      throw new Error('VNA address missing');
     }
     if (!this.model.matrixAddress) {
-      throw 'Switch matrix address missing';
+      throw new Error('Switch matrix address missing');
     }
     if (!this.model.procedureFilename) {
-      throw 'Procedure filename is missing';
+      throw new Error('Procedure filename is missing');
     }
     await this.model.isVna();
     await this.model.isMatrix();
     const procedure = await this.model.getProcedure();
-    let status = procedure.validate();
-    if (!status.isValid) {
-      throw status.message;
+    if (!procedure.status.isValid) {
+      throw new Error(procedure.status.message);
     }
     this.pushCurrentIndexToHistory();
     this.index.page = Pages.CHOOSE_CAL;
@@ -235,7 +244,7 @@ class Controller {
     winston.debug('controller.processCalibrationChoice', {index: this.index, params});
     const choice = params.calChoice;
     if (!choice) {
-      throw 'Choose calibration option';
+      throw new Error('Choose calibration option');
     }
     if (choice == Choices.CALIBRATE) {
       await this.startCalibration();

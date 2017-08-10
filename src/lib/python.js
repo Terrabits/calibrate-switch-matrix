@@ -69,11 +69,11 @@ class Python {
 			return result.stdout.text.trim();
 		}).catch((result) => {
 			winston.error('python error', {result});
-			if (result.stdout && result.stdout.text) {
-				throw result.stdout.text.trim();
+			if (result.stdout && result.stdout.text.trim()) {
+				throw new Error(result.stdout.text.trim());
 			}
-			else if (result.stderr && result.stderr.text) {
-				throw result.stderr.text.trim();
+			else if (result.stderr && result.stderr.text.trim()) {
+				throw new Error(result.stderr.text.trim());
 			}
 			else {
 				throw result;
