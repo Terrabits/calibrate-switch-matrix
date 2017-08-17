@@ -3,7 +3,7 @@ import lib.cli.calibrate                     as calibrate
 from   lib.cli.matrix    import is_matrix
 from   lib.cli.matrix    import process      as process_matrix
 from   lib.cli.measure   import perform_step as measure
-# from   lib.cli.procedure import is_procedure
+from   lib.cli.procedure import is_procedure
 # from   lib.cli.procedure import process as process_procedure
 from   lib.cli.vna       import is_vna
 from   lib.cli.vna       import cal_groups
@@ -24,9 +24,9 @@ if __name__ != '__main__':
 # arg parse
 parser = ArgumentParser(description='Process a switch matrix calibration procedure')
 # actions
-parser.add_argument('--is-vna', action='store_true')
-parser.add_argument('--is-matrix', action='store_true')
-# parser.add_argument('--is-procedure')
+parser.add_argument('--is-vna',                   action='store_true')
+parser.add_argument('--is-matrix',                action='store_true')
+parser.add_argument('--is-procedure',             action='store_true')
 parser.add_argument('--cal-groups',               action='store_true')
 parser.add_argument('--is-cal-unit',              action='store_true')
 parser.add_argument('--cal-unit-ports',           action='store_true')
@@ -56,6 +56,10 @@ if args.is_vna:
 # --is-matrix
 if args.is_matrix:
 	conditional_exit(is_matrix(args))
+
+# --is-procedure
+if args.is_procedure:
+	conditional_exit(is_procedure(args))
 
 # --is-cal-group
 if args.cal_groups:

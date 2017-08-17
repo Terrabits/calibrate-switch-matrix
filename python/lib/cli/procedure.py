@@ -6,10 +6,7 @@ def is_procedure(args):
 
 def process(args, set_file_extension='.zvx', cal_unit_ports=2):
     if not args.procedure_filename:
-        print('No procedure filename given')
-        return None
-    if not Path(args.procedure_filename).is_file():
-        print('Procedure not found')
+        print('No procedure filename')
         return None
     procedure = Procedure(args.procedure_filename, set_file_extension, cal_unit_ports)
     result = procedure.validate()
