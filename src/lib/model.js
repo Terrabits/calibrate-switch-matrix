@@ -1,5 +1,3 @@
-const {Choices}   = require('./calibration.js');
-const Procedure   = require('./procedure.js');
 const python      = require('./python.js');
 const Store       = require('electron-store');
 const path        = require('path');

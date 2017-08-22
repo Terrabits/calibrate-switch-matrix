@@ -34,9 +34,11 @@ class App extends React.Component {
   }
   render() {
     let handleAddressChange = (event) => {
+      console.log('changing address...');
       this.address = event.target.value;
     };
     let handleFilenameChange = (value) => {
+      console.log('changing filename...' + value);
       this.filename = value;
     };
     return (

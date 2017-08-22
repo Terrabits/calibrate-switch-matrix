@@ -1,3 +1,0 @@
-- Use modified calibration routine (see python/doc/autocal.md)
-- (Implement routine in rohdeschwarz, or strip out?)
-- Test application (measure) without guided cal

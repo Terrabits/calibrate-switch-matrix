@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from   lib.cli.driver         import find_driver
 from   lib.readyaml           import read_yaml
 from   lib.switchmatrix       import SwitchMatrix
@@ -41,7 +42,7 @@ if not switches:
 	sys.exit(1)
 
 # find driver
-driver_filename = find_driver(path_filename)
+driver_filename = find_driver(args.path_filename)
 if not driver_filename:
 	print('Could not find switch matrix driver')
 	sys.exit(1)
@@ -51,19 +52,19 @@ matrix = None
 try:
 	matrix = SwitchMatrix(driver_filename)
 	matrix.open_tcp(args.matrix_address)
-	matrix.is_error()
-	matrix.clear_status()
 except ConnectionRefusedError:
 	print('Could not connect to switch matrix')
-	sys.exit(1)
+	matrix = None
 except socket.timeout:
 	print('Could not connect to switch matrix')
-	sys.exit(1)
+	matrix = None
 except FileNotFoundError:
 	print('Could not read driver')
-	sys.exit(1)
+	matrix = None
 except:
 	print(sys.exc_info()[0])
+	matrix = None
+if not matrix:
 	sys.exit(1)
 
 # log
@@ -73,13 +74,14 @@ try:
 		matrix.print_info()
 except:
 	print('Could not open log file')
-	sys.exit(1)
-
-if not matrix or not matrix.connected():
-	print('Could not connect to switch matrix')
+	if matrix.log:
+		matrix.close_log()
+	matrix.close()
 	sys.exit(1)
 
 # set switch positions
+matrix.is_error()
+matrix.clear_status()
 matrix.set_switches(switches)
 
 # exit

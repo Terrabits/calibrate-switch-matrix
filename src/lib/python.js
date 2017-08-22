@@ -59,6 +59,7 @@ class Python {
 				args.unshift(this.exe);
 				exe = "python";
 			}
+			winston.debug('python start: spawning', {exe, args, options});
 			const _process = spawn(exe, args, options);
 			_process.stdout.on('data', stdout.writeLambda);
 			_process.stderr.on('data', stderr.writeLambda);

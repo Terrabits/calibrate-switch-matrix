@@ -12,9 +12,28 @@ class Controller {
   }
   async apply() {
     winston.debug('controller.apply');
-    this.disableInputs();
     this.updateModel();
-    await this.setSwitches();
+    if (!this.model.matrixAddress) {
+      this.view.alert.showMessage('danger', 'Enter IP address');
+      return;
+    }
+    if (!this.model.pathFilename) {
+      this.view.alert.showMessage('danger', 'Choose path file');
+      return;
+    }
+    this.disableInputs();
+    try {
+      await this.setSwitches();
+      this.view.alert.showMessage('success', 'Switch path set!');
+    }
+    catch (err) {
+      if (err && err.message) {
+        this.view.alert.showMessage('danger',  err.message);
+      }
+      else {
+        this.view.alert.showMessage('danger', err);
+      }
+    }
     this.enableInputs();
   }
 
@@ -22,14 +41,14 @@ class Controller {
   render() {
     winston.debug('controller.render');
     if (this.view) {
-      this.view.address      = this.model.matrixAddress;
-      this.view.pathFilename = this.model.pathFilename;
+      this.view.address  = this.model.matrixAddress;
+      this.view.filename = this.model.pathFilename;
     }
   }
   updateModel() {
     winston.debug('controller.updateModel');
     this.model.matrixAddress  = this.view.address;
-    this.model.pathFilename   = this.view.pathFilename;
+    this.model.pathFilename   = this.view.filename;
   }
   disableInputs(value=true) {
     this.view.disableInputs = value;

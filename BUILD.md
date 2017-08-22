@@ -1,5 +1,7 @@
-Build Instructions for R&S Calibrate Switch Matrix
-==================================================
+Build Instructions for R&S Switch Matrix Path
+=============================================
+
+Note: this project exists as a branch of the Calibrate Switch Matrix project/repo.
 
 Requirements
 ------------
@@ -17,8 +19,8 @@ Build Instructions
 
 From the command line:
 
-* Clone this project from [the repo on Github](https://github.com/Terrabits/calibrate-switch-matrix)  
-`git clone https://github.com/Terrabits/calibrate-switch-matrix.git`
+* Clone this project from [the repo on Github](https://github.com/Terrabits/calibrate-switch-matrix/tree/switch-path)  
+`git clone -b switch-path https://github.com/Terrabits/calibrate-switch-matrix.git`
 * `cd` into project root directory
 * Enter `yarn`
 

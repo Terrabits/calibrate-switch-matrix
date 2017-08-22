@@ -28,6 +28,7 @@ window.winston     = new winston.Logger({
     }),
     new (winston.transports.File)({
       filename: log_filename,
+      // json: false,
       level: 'silly',
       handleExceptions: true,
       humanReadableExceptions: true
