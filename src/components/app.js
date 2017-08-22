@@ -9,6 +9,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      address: '',
+      filename: '',
       disableInputs: false
     };
   }
@@ -16,7 +18,6 @@ class App extends React.Component {
     return this.state.disableInputs;
   }
   set disableInputs(value) {
-    this.wizard.disableInputs = value;
     this.setState({disableInputs: value});
   }
   get address() {
@@ -42,14 +43,14 @@ class App extends React.Component {
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
-            <div className="pane">
+            <div className="pane padded-more">
               <Alert  ref={(alert)  => {this.alert = alert;  }} />
               <LineEdit label={'Matrix address'}
                         value={this.address}
                         onChange={handleAddressChange}
                         disabled={this.disableInputs} />
               <Filename label={'Path file'}
-                        filename={this.filename}
+                        filename={this.filename ? this.filename : ''}
                         onChange={handleFilenameChange}
                         disabled={this.disableInputs} />
             </div>

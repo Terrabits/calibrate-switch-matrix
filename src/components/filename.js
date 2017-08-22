@@ -14,6 +14,7 @@ function Filename(props) {
   }
   const handleClick = (event) => {
     const result = dialog.showOpenDialog(remote.getCurrentWindow(), {
+      defaultPath: 'C:\\Users\\Public\\Documents\\Rohde-Schwarz\\Calibrate Switch Matrix\\switch matrices\\',
       properties: [
         'openFile'
     ]});

@@ -1,4 +1,4 @@
-const app = require('electron').remote.app;
+const remote = require('electron').remote;
 
 class Controller {
   constructor(model=null, view=null) {
@@ -8,7 +8,7 @@ class Controller {
 
   async close() {
     winston.debug('controller.close');
-    app.quit();
+    remote.getCurrentWindow().close();
   }
   async apply() {
     winston.debug('controller.apply');

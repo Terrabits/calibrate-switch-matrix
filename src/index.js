@@ -18,7 +18,6 @@ import './assets/css/global.scss';
 // logging
 const store        = new Store();
 const log_filename = path.resolve(store.path, '../', 'ui log.txt');
-console.log('about to create winston logger instance...');
 console.log(log_filename);
 window.winston     = new winston.Logger({
   transports: [
@@ -36,7 +35,6 @@ window.winston     = new winston.Logger({
   ],
   exitOnError: false
 });
-window.winston.debug('Does this debug statement work?');
 
 // Probably not best practices, but...
 const pkg = require('../package.json');
@@ -57,8 +55,8 @@ window.render = Component => {
       <Component
         ref={(app) => { window.view = app; }}
         title={`${pkg.productName} ${pkg.version}`}
-        onNext={() => {controller.apply()}}
-        onBack={() => {controller.close()}}/>
+        onApply={() => {controller.apply()}}
+        onClose={() => {controller.close()}} />
     </AppContainer>,
     document.getElementById('root')
   )
