@@ -3,7 +3,7 @@ import ReactDOM        from 'react-dom';
 import {AppContainer}  from 'react-hot-loader';
 
 import App             from './components/app.js';
-import {Controller}    from './lib/controller.js';
+import Controller      from './lib/controller.js';
 import Model           from './lib/model.js';
 
 import Store           from 'electron-store';
@@ -16,9 +16,11 @@ import './vendor/photon/sass/photon.scss';
 import './assets/css/global.scss';
 
 // logging
-const store = new Store();
+const store        = new Store();
 const log_filename = path.resolve(store.path, '../', 'ui log.txt');
-window.winston  = new winston.Logger({
+console.log('about to create winston logger instance...');
+console.log(log_filename);
+window.winston     = new winston.Logger({
   transports: [
     new ElectronConsole({
       level: 'warn',
@@ -33,14 +35,15 @@ window.winston  = new winston.Logger({
     })
   ],
   exitOnError: false
-})
+});
+window.winston.debug('Does this debug statement work?');
 
 // Probably not best practices, but...
 const pkg = require('../package.json');
 
 // Since we are using HtmlWebpackPlugin WITHOUT a template, we should create our own root node in the body element before rendering into it
 let root = document.createElement('div');
-root.id = "root";
+root.id  = "root";
 document.body.appendChild( root );
 
 // Model, Controller
@@ -54,8 +57,8 @@ window.render = Component => {
       <Component
         ref={(app) => { window.view = app; }}
         title={`${pkg.productName} ${pkg.version}`}
-        onNext={() => {controller.next()}}
-        onBack={() => {controller.back()}}/>
+        onNext={() => {controller.apply()}}
+        onBack={() => {controller.close()}}/>
     </AppContainer>,
     document.getElementById('root')
   )
@@ -69,4 +72,4 @@ if (module.hot) {
 }
 
 controller.view = window.view
-controller.restart();
+controller.render();

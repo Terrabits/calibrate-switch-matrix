@@ -1,8 +1,8 @@
 {
-  "name": "rs-calibrate-switch-matrix",
-  "productName": "R&S Calibrate Switch Matrix",
-  "version": "0.8.3",
-  "description": "Measure switch matrix with a VNA and generate touchstone files for each path for deembedding.",
+  "name": "rs-switch-matrix-path",
+  "productName": "R&S Switch Matrix Path",
+  "version": "1.0.0",
+  "description": "Set switch matrix path from driver and path file(s)",
   "author": "Nick Lalic",
   "homepage": "https://vna.rs-us.net",
   "repository": {
@@ -26,8 +26,8 @@
     "embed-images": "python ./scripts/embed-images.py"
   },
   "build": {
-    "appId": "com.rohde-schwarz.calibrate-switch-matrix",
-    "productName": "Calibrate Switch Matrix",
+    "appId": "com.rohde-schwarz.switch-matrix-path",
+    "productName": "Switch Matrix Path",
     "files": [
       "build/**/*",
       "LICENSE.txt",

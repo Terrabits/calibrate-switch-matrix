@@ -1,19 +1,14 @@
-#!/usr/bin/env python
-import lib.cli.calibrate                     as calibrate
-from   lib.cli.matrix    import is_matrix
-from   lib.cli.matrix    import process      as process_matrix
-from   lib.cli.measure   import perform_step as measure
-from   lib.cli.procedure import is_procedure
-# from   lib.cli.procedure import process as process_procedure
-from   lib.cli.vna       import is_vna
-from   lib.cli.vna       import cal_groups
-from   lib.cli.vna       import is_cal_unit
-from   lib.cli.vna       import cal_unit_ports
-from   lib.cli.vna       import process      as process_vna
+from   lib.cli.driver         import find_driver
+from   lib.readyaml           import read_yaml
+from   lib.switchmatrix       import SwitchMatrix
+
+from   ruamel                 import yaml
 
 from   argparse               import ArgumentParser
 from   distutils.dir_util     import mkpath
+import os
 from   pathlib                import Path
+import socket
 import sys
 
 # cli mode only
@@ -22,77 +17,76 @@ if __name__ != '__main__':
 	sys.exit(1)
 
 # arg parse
-parser = ArgumentParser(description='Process a switch matrix calibration procedure')
-# actions
-parser.add_argument('--is-vna',                   action='store_true')
-parser.add_argument('--is-matrix',                action='store_true')
-parser.add_argument('--is-procedure',             action='store_true')
-parser.add_argument('--cal-groups',               action='store_true')
-parser.add_argument('--is-cal-unit',              action='store_true')
-parser.add_argument('--cal-unit-ports',           action='store_true')
-parser.add_argument('--start-calibration',        action='store_true')
-parser.add_argument('--perform-calibration-step', action='store_true')
-parser.add_argument('--apply-calibration',        action='store_true')
-parser.add_argument('--save-calibration',         action='store_true')
-parser.add_argument('--measure',                  action='store_true')
-# settings
-parser.add_argument('--vna-address',              dest="vna_address")
-parser.add_argument('--vna-log',                  dest="vna_log_filename")
-parser.add_argument('--cal-group',                dest="cal_group")
+parser = ArgumentParser(description='Set the switch matrix up for a particular path')
 parser.add_argument('--matrix-address',           dest="matrix_address")
 parser.add_argument('--matrix-log',               dest="matrix_log_filename")
-parser.add_argument('--procedure',                dest="procedure_filename")
-parser.add_argument('--step',                     dest="step")
+parser.add_argument('--path',                     dest="path_filename")
 args = parser.parse_args()
 
-def conditional_exit(success):
-	sys.exit(0 if success else 1)
+# is args
+if not args.matrix_address:
+	print('No switch matrix address')
+	sys.exit(1)
+if not args.path_filename:
+	print('No switch matrix path file')
+	sys.exit(1)
+if not Path(args.path_filename).is_file():
+	print('Could not find path file')
+	sys.exit(1)
 
-# Process Actions
-# --is-vna
-if args.is_vna:
-	conditional_exit(is_vna(args))
+# read path
+switches = read_yaml(args.path_filename)
+if not switches:
+	print('Could not read path file')
+	sys.exit(1)
 
-# --is-matrix
-if args.is_matrix:
-	conditional_exit(is_matrix(args))
+# find driver
+driver_filename = find_driver(path_filename)
+if not driver_filename:
+	print('Could not find switch matrix driver')
+	sys.exit(1)
 
-# --is-procedure
-if args.is_procedure:
-	conditional_exit(is_procedure(args))
+# connect
+matrix = None
+try:
+	matrix = SwitchMatrix(driver_filename)
+	matrix.open_tcp(args.matrix_address)
+	matrix.is_error()
+	matrix.clear_status()
+except ConnectionRefusedError:
+	print('Could not connect to switch matrix')
+	sys.exit(1)
+except socket.timeout:
+	print('Could not connect to switch matrix')
+	sys.exit(1)
+except FileNotFoundError:
+	print('Could not read driver')
+	sys.exit(1)
+except:
+	print(sys.exc_info()[0])
+	sys.exit(1)
 
-# --is-cal-group
-if args.cal_groups:
-	conditional_exit(cal_groups(args))
+# log
+try:
+	if args.matrix_log_filename:
+		matrix.open_log(args.matrix_log_filename)
+		matrix.print_info()
+except:
+	print('Could not open log file')
+	sys.exit(1)
 
-# --is-cal-unit
-if args.is_cal_unit:
-	conditional_exit(is_cal_unit(args))
+if not matrix or not matrix.connected():
+	print('Could not connect to switch matrix')
+	sys.exit(1)
 
-# --cal-unit-ports
-if args.cal_unit_ports:
-	conditional_exit(cal_unit_ports(args))
+# set switch positions
+matrix.set_switches(switches)
 
-# --start-calibration
-if args.start_calibration:
-	conditional_exit(calibrate.start(args))
-
-# --perform-calibration-step
-if args.perform_calibration_step:
-	conditional_exit(calibrate.perform_step(args))
-
-# --apply-calibration
-if args.apply_calibration:
-	conditional_exit(calibrate.apply(args))
-
-# --save-calibration
-if args.save_calibration:
-	conditional_exit(calibrate.save(args))
-
-# --measure
-if args.measure:
-	conditional_exit(measure(args))
-
-# else
-print('No action given.')
-sys.exit(1)
+# exit
+matrix.is_error()
+matrix.clear_status()
+if matrix.log:
+	matrix.close_log()
+matrix.local()
+matrix.close()
+sys.exit(0)
