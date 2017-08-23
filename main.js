@@ -15,7 +15,7 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   const windowOptions = {
-    width: 1024, height: 768,
+    width: 450, height: 300,
     show: false
   };
   // if (process.platform == 'darwin') {

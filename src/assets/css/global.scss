@@ -7,35 +7,15 @@
 .disabled {
   // opacity: 0.65;
 }
-div.page h2 {
-  color: #444;
-}
-.with-step {
-  display: inline;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.step-heading {
-  display: inline;
-  margin-top: 0;
-  margin-bottom: 0;
-  color: #666666;
-}
 .no-margin-top {
   margin-top: 0;
+}
+.no-padding-top {
+  padding-top: 0;
 }
 .form-group {
   margin-bottom: 15px;
   input {
     margin-top: -8px;
-  }
-}
-table {
-  border: 1px solid #ddd;
-  &.port-table {
-    max-width: 500px;
-  }
-  &.port-list {
-    max-width: 250px;
   }
 }

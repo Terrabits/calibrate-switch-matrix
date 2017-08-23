@@ -13,7 +13,7 @@
   // font-weight: bold;
   padding: $alert-padding-y $alert-padding-x;
   margin: 3px;
-  margin-bottom: 0;
+  margin-bottom: 5px;
   border: $alert-border-width solid transparent;
   @include border-radius($alert-border-radius);
 }

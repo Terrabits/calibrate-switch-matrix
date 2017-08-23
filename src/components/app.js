@@ -45,7 +45,7 @@ class App extends React.Component {
       <div className="window">
         <div className="window-content">
           <div className="pane-group">
-            <div className="pane padded-more">
+            <div className="pane padded-more no-padding-top">
               <Alert  ref={(alert)  => {this.alert = alert;  }} />
               <LineEdit label={'Matrix address'}
                         value={this.address}
