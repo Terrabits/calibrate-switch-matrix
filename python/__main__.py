@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from   lib.cli.driver         import find_driver
+from   lib.cli.matrix         import cleanup as cleanup_matrix
 from   lib.readyaml           import read_yaml
 from   lib.switchmatrix       import SwitchMatrix
 
@@ -74,21 +75,20 @@ try:
 		matrix.print_info()
 except:
 	print('Could not open log file')
-	if matrix.log:
-		matrix.close_log()
-	matrix.close()
+	cleanup_matrix(matrix)
 	sys.exit(1)
 
 # set switch positions
 matrix.is_error()
 matrix.clear_status()
-matrix.set_switches(switches)
+try:
+	matrix.set_switches(switches)
+except:
+	print('SCPI error. See log for details.')
+	cleanup_matrix(matrix)
+	sys.exit(1)
+
 
 # exit
-matrix.is_error()
-matrix.clear_status()
-if matrix.log:
-	matrix.close_log()
-matrix.local()
-matrix.close()
+cleanup_matrix(matrix)
 sys.exit(0)

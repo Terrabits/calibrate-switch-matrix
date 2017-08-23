@@ -13,6 +13,7 @@ class Controller {
   async apply() {
     winston.debug('controller.apply');
     this.updateModel();
+    this.view.alert.clear();
     if (!this.model.matrixAddress) {
       this.view.alert.showMessage('danger', 'Enter IP address');
       return;
