@@ -41,7 +41,7 @@ class Controller {
   async next() {
     winston.debug('controller.next', {index: this.index});
     this.disableInputs();
-    this.displayOverlay()
+    this.displayOverlay();
     this.view.alert.clear();
     this.updateModel();
     try {
@@ -108,6 +108,13 @@ class Controller {
     params.sidebar           = await this.summary();
     if (this.index.page == Pages.CHOOSE_CAL) {
         params.calGroups = await this.model.calGroups();
+        if (params.calGroups.length) {
+          let lowercase = (i) => { return String(i).toLowerCase(); };
+          let index = params.calGroups.map(lowercase).indexOf(params.calGroup);
+          if (index == -1) {
+            params.calgroup = params.calGroups[0];
+          }
+        }
     }
     else {
       params.calGroups = [];

@@ -11,6 +11,10 @@ class View {
     this.state = {
       sidebar: null
     };
+    this.alert = {
+      showMessage: () => {},
+      clear: () => {}
+    }
   }
 
   renderNewParameters(params) {

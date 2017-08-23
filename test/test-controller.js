@@ -1,12 +1,12 @@
-const {Choices} = require('../src/lib/calibration.js')
+const {Choices}            = require('../src/lib/calibration.js')
 const {Controller, Pages}  = require('../src/lib/controller.js');
 const Model                = require('./helpers/model.js');
 const View                 = require('./helpers/view.js');
+global.winston             = require('./helpers/winston.js');
 const test                 = require('ava');
 
 let model = new Model();
 let view  = new View();
-view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
 
 test('Controller without calibration basically works', t => {
   let c = new Controller(model, view);
