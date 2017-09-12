@@ -1,20 +1,56 @@
 class Winston {
   constructor() {
     this.contents = {
-      info: [],
-      debug: [],
-      error: []
+      error:   [],
+      warn:    [],
+      info:    [],
+      verbose: [],
+      debug:   [],
+      silly:   []
     };
   }
 
-  debug(text, meta={}) {
-    this.contents.debug.push({text, meta});
+  log(level, message, meta={}) {
+    switch (String(level).toLowerCase) {
+      case 'error':
+        this.error(message, meta);
+        break;
+      case 'warn':
+        this.warn(message, meta);
+        break;
+      case 'info':
+        this.info(message, meta);
+        break;
+      case 'verbose':
+        this.verbose(message, meta);
+        break;
+      case 'debug':
+        this.debug(message, meta);
+        break;
+      case 'silly':
+        this.silly(message, meta);
+        break;
+      default:
+        this.debug(message, meta);
+    }
   }
-  info(text, meta={}) {
-    this.contents.info.push({text, meta});
+  error(message, meta={}) {
+    this.contents.error.push(  {message, meta});
   }
-  error(text, meta={}) {
-    this.contents.error.push({text, meta});
+  warn(message, meta={}) {
+    this.contents.warn.push(   {message, meta});
+  }
+  info(message, meta={}) {
+    this.contents.info.push(   {message, meta});
+  }
+  verbose(message, meta={}) {
+    this.contents.verbose.push({message, meta});
+  }
+  debug(message, meta={}) {
+    this.contents.debug.push(  {message, meta});
+  }
+  silly(message, meta={}) {
+    this.contents.silly.push(  {message, meta});
   }
 }
 

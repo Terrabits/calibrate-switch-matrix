@@ -12,7 +12,8 @@
   "license": "Rohde & Schwarz Inc. Terms and Conditions for Royalty-Free Products",
   "main": "main.js",
   "scripts": {
-    "test": "ava || true",
+    "babel-node": "babel-node",
+    "test": "ava --watch || true",
     "prod": "yarn run buildpy && yarn run build && electron --noDevServer .",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
     "clean": "git clean -x -d -f build/ && del dist/**/* dist/** !dist !dist/*.dmg !dist/*.zip !dist/*.exe",
@@ -54,6 +55,7 @@
   },
   "devDependencies": {
     "ava": "^0.20.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.0",
     "babel-preset-es2017": "^6.24.1",

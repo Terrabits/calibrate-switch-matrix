@@ -20,14 +20,14 @@ class Controller {
 
   // user actions
   async restart() {
-    winston.debug('controller.restart', {index: this.index});
+    winston.debug('controller.restart');
     this.index = new PageIndex(Pages.SETTINGS, 0);
     this.history   = [];
     await this.render();
     this.enableInputs();
   }
   async back() {
-    winston.debug('controller.back', {index: this.index});
+    winston.debug('controller.back', {index: this.index, history: this.history});
     if (!this.history.length) {
       return;
     }
@@ -83,9 +83,10 @@ class Controller {
 
   // model/view control
   async render() {
-    winston.debug('controller.render');
+    let params = await this.parameters();
+    winston.debug('controller.render', {params});
     if (this.view) {
-      await this.view.renderNewParameters(await this.parameters());
+      await this.view.renderNewParameters(params);
     }
   }
   updateModel() {
@@ -128,7 +129,6 @@ class Controller {
     else {
       params.ports = [];
     }
-    winston.debug('controller.parameters', {params});
     return params;
   }
   getInputs() {
@@ -157,11 +157,12 @@ class Controller {
   async summary() {
     let procedure = null;
     if (this.index.page == Pages.CALIBRATE) {
-        procedure = await this.model.getProcedure(true);
+      procedure = await this.model.getProcedure(true);
     }
     else {
       procedure = await this.model.getProcedure();
     }
+
     let settings  = {name: 'Settings'};
     let calibrate = {name: 'Calibrate'};
     let measure   = {name: 'Measure'};
@@ -279,7 +280,7 @@ class Controller {
 
     // next
     this.index.step++;
-    const procedure = await this.model.getProcedure();
+    const procedure = await this.model.getProcedure(true);
     const steps     = procedure.calibrationSteps;
     if (this.index.step >= steps.length) {
       await this.model.applyCalibration();

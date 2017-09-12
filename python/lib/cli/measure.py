@@ -9,7 +9,7 @@ from   lib.procedure     import set_file_extension
 from   lib.readyaml      import read_yaml
 
 from   rohdeschwarz.instruments.vna            import Vna
-from   rohdeschwarz.instruments.vna.vnachannel import TouchstoneFormat
+from   rohdeschwarz.instruments.vna.channel import TouchstoneFormat
 
 import os
 from   pathlib import Path

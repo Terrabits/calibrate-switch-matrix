@@ -14,15 +14,15 @@ class TestProcedure(unittest.TestCase):
 
     def test_missing_file(self):
         p = Procedure('')
-        self.assertFalse(p.is_valid)
+        self.assertFalse(p.validate()['is valid'])
 
     def test_invalid_yaml_file(self):
         p = Procedure(str(self.invalid_yaml))
-        self.assertFalse(p.is_valid)
+        self.assertFalse(p.validate()['is valid'])
 
     def test_valid_procedure(self):
         p = Procedure(str(self.valid_proc))
-        self.assertTrue(p.is_valid)
+        self.assertTrue(p.validate()['is valid'])
 
     def test_paths_missing_files(self):
         p = Procedure('/path/to/no/procedures/procedure', set_file_extension='.zvx')
@@ -36,7 +36,7 @@ class TestProcedure(unittest.TestCase):
 
     def test_paths_exist(self):
         p = Procedure(str(self.valid_proc), set_file_extension='.zvx')
-        self.assertTrue(p.is_valid)
+        self.assertTrue(p.validate()['is valid'])
         self.assertTrue(p.paths.is_set_file('set'))
         self.assertTrue(p.paths.is_switch_matrix_driver('matrix1'))
         self.assertTrue(p.paths.is_switch_matrix_path_file('matrix1','path1'))

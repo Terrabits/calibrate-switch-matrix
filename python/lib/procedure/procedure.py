@@ -63,7 +63,7 @@ class Procedure:
                 if not 'switch path' in m or not m['switch path']:
                     status['message'] = 'Switch path missing in step(s)'
                     return status
-                if not self.paths.is_switch_matrix_path_file(m['switch path']):
+                if not self.paths.is_switch_matrix_path_file(self.yaml['switch matrix'], m['switch path']):
                     status['message'] = "Switch path '{0}' not found".format(m['switch path'])
                     return status
                 if not 'vna setup' in m or not m['vna setup']:

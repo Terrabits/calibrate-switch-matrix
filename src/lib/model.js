@@ -60,22 +60,19 @@ class Model {
   }
 
   // procedure
-  getProcedure(fetchCalUnitPorts=false) {
+  async getProcedure(fetchCalUnitPorts=false) {
     winston.debug('model.getProcedure');
     if (!fetchCalUnitPorts) {
       return new Procedure(this.procedureFilename, 0);
     }
-
-    let calUnitPorts;
-    return (async () => {
+    else {
       try {
-        calUnitPorts = await this.calUnitPorts();
-        return new Procedure(this.procedureFilename, calUnitPorts);
+        return new Procedure(this.procedureFilename, await this.calUnitPorts());
       }
       catch (result) {
         return new Procedure(this.procedureFilename, 0);
       }
-    })();
+    }
   }
 
   // switch matrix

@@ -1,36 +1,66 @@
-const {Choices: CalibrationChoices} = require('../../src/lib/calibration.js')
+const {Choices} = require('../../src/lib/calibration.js')
+const  Alert    = require('./alert.js');
+const PageIndex = require('../../src/lib/page-index');
 
 class View {
   constructor() {
-    this.vnaAddress = '127.0.0.1';
-    this.matrixAddress = '1.2.3.4';
-    this.procedureFilename = ''
-    this.calibrationChoice = CalibrationChoices.NONE;
-    this.calGroup = 'my cal group';
-    this.page = null;
     this.state = {
-      sidebar: null
+      disableInputs:  false,
+      displayOverlay: false,
+      sidebar:        null
     };
-    this.alert = {
-      showMessage: () => {},
-      clear: () => {}
-    }
+    this.alert = new Alert();
+    this.wizard = {
+      vnaAddress:        null,
+      matrixAddress:     null,
+      procedureFilename: '',
+      calChoice:         Choices.NONE,
+      calGroup:          null,
+      calGroups:         [],
+      ports:             {},
+      index:             new PageIndex()
+    };
   }
 
   renderNewParameters(params) {
-    return;
+    if (params.vnaAddress) {
+      this.wizard.vnaAddress        = params.vnaAddress;
+    }
+    if (params.matrixAddress) {
+      this.wizard.matrixAddress     = params.matrixAddress;
+    }
+    if (params.procedureFilename) {
+      this.wizard.procedureFilename = params.procedureFilename;
+    }
+    if (params.calChoice) {
+      this.wizard.calChoice         = params.calChoice;
+    }
+    if (params.calGroup) {
+      this.wizard.calGroup          = params.calGroup;
+    }
+    if (params.calGroups) {
+      this.wizard.calGroups         = params.calGroups;
+    }
+    if (params.ports) {
+      this.wizard.ports             = params.ports;
+    }
+    if (params.index) {
+      this.wizard.index             = params.index;
+    }
+    if (params.sidebar) {
+      this.state.sidebar            = params.sidebar;
+    }
   }
   getUserInputs() {
     return {
-      vnaAddress:        this.vnaAddress,
-      matrixAddress:     this.matrixAddress,
-      procedureFilename: this.procedureFilename,
-      calChoice:         this.calChoice,
-      calGroup:          this.calGroup
+      vnaAddress:        this.wizard.vnaAddress,
+      matrixAddress:     this.wizard.matrixAddress,
+      procedureFilename: this.wizard.procedureFilename,
+      calChoice:         this.wizard.calChoice,
+      calGroup:          this.wizard.calGroup
     };
   }
   getSaveCalFromDialog() {
-    console.log('save cal as...');
     return 'calibration';
   }
   render() {

@@ -1,10 +1,10 @@
-from   lib.switchmatrix          import Spdt, SwitchMatrix
-from   rohdeschwarz.test.mockbus import MockBus
+from   lib.switchmatrix           import Spdt, SwitchMatrix
+from   rohdeschwarz.test.mock.bus import FifoBus
 
-from   ruamel                    import yaml
+from   ruamel                     import yaml
 
-from   ddt                       import ddt, data
-from   pathlib                   import Path
+from   ddt                        import ddt, data
+from   pathlib                    import Path
 import pdb
 import unittest
 
@@ -15,7 +15,6 @@ def scpi_query(module, switch, state):
     scpi = 'ROUT:CLOS? (@F01A{0:02d}({1:02d}{2:02d}))'
     return scpi.format(module, state, switch)
 
-
 @ddt
 class TestSwitchMatrix(unittest.TestCase):
     @classmethod
@@ -23,7 +22,7 @@ class TestSwitchMatrix(unittest.TestCase):
         cls.fixture_path      = Path(__file__).parent / 'fixtures'
         cls.yaml_file         = str(cls.fixture_path / 'switch_matrix.yaml')
         cls.switch_matrix     = SwitchMatrix(cls.yaml_file)
-        cls.switch_matrix.bus = MockBus()
+        cls.switch_matrix.bus = FifoBus()
 
     def setUp(cls):
         cls.switch_matrix.bus.reset()

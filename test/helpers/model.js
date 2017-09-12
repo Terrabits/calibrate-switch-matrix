@@ -1,56 +1,104 @@
 const Procedure = require('../../src/lib/procedure.js');
+const {Choices} = require('../../src/lib/calibration.js');
 
 class Model {
   constructor() {
-    this.vnaAddress   = '127.0.0.1';
-    this.matrixAddress   = '1.2.3.4';
+    this.vnaAddress        = '192.168.1.100';
+    this.matrixAddress     = '192.168.1.101';
     this.procedureFilename = null;
+    this.calChoice         = Choices.NONE;
     this.calGroup          = null;
-
-    this.calUnitPorts = () => {
-      const ports = 2;
-      console.log(`cal unit ports: ${ports}`);
-      return ports;
+    this.state = {
+      isVna:                  true,
+      isMatrix:               true,
+      isProcedure:            true,
+      calGroups:                [],
+      isCalUnit:              true,
+      calUnitPorts:              2,
+      startCalibration:       true,
+      performCalibrationStep: true,
+      applyCalibration:       true,
+      saveCalibration:        true,
+      measure:                true
     };
   }
 
-  isVna() {
-    console.log("Vna connected");
-    return true;
+  async isVna() {
+    return this.state.isVna;
   }
-  isMatrix() {
-    console.log("Switch matrix connected");
-    return true;
+  async isMatrix() {
+    return this.state.isMatrix;
   }
 
-  getProcedure() {
-    return new Procedure(this.procedureFilename, this.calUnitPorts());
+  async getProcedure(fetchCalUnitPorts=false) {
+    if (!fetchCalUnitPorts) {
+      return new Procedure(this.procedureFilename, 0);
+    }
+    else {
+      return new Procedure(this.procedureFilename, await this.calUnitPorts());
+    }
   }
 
-  isCalUnit() {
-    console.log('is cal unit');
-    return true;
+  async calGroups() {
+    return this.state.calGroups;
   }
-  startCalibration() {
-    console.log('starting calibration');
-    return true;
+
+  async isCalUnit() {
+    if (this.state.isCalUnit) {
+      return true;
+    }
+    else {
+      throw new Error('is cal unit failed');
+    }
   }
-  performCalibrationStep(i) {
-    console.log('Performing calibration step ' + i);
-    return true;
+  async calUnitPorts() {
+    if (this.state.isCalUnit) {
+      return this.state.calUnitPorts;
+    }
+    else {
+      throw new Error('cal unit ports failed');
+    }
   }
-  applyCalibration() {
-    console.log('Applying calibration');
-    return true;
+  async startCalibration() {
+    if (this.state.startCalibration) {
+      return true;
+    }
+    else {
+      throw new Error('start calibration failed');
+    }
   }
-  saveCalibration(name) {
-    console.log('Saving calibration as ' + name);
-    this.calGroup = name;
-    return true;
+  async performCalibrationStep(i) {
+    if (this.state.performCalibrationStep) {
+      return true
+    }
+    else {
+      throw new Error(`calibration step ${i} failed`);
+    }
   }
-  measure(i) {
-    console.log('Performing measurement step ' + i);
-    return true;
+  async applyCalibration() {
+    if (this.state.applyCalibration) {
+      return true;
+    }
+    else {
+      throw new Error('apply calibration failed');
+    }
+  }
+  async saveCalibration(name) {
+    if (this.state.saveCalibration) {
+      this.calGroup = name;
+      return true;
+    }
+    else {
+      throw new Error('save calibration failed');
+    }
+  }
+  async measure(i) {
+    if (this.state.measure) {
+      return true;
+    }
+    else {
+      throw new Error(`measure step ${i} failed`);
+    }
   }
 }
 

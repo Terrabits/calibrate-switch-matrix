@@ -1,25 +1,14 @@
-const {Choices}           = require('../src/lib/calibration.js');
-const {Controller, Pages} = require('../src/lib/controller.js');
-const Model               = require('../test/helpers/model.js');
-const View                = require('../test/helpers/view.js');
+var {Choices}            = require('../src/lib/calibration.js')
+var {Controller, Pages}  = require('../src/lib/controller.js');
+var Model                = require('../test/helpers/model.js');
+var View                 = require('../test/helpers/view.js');
+global.winston           = require('../test/helpers/winston.js');
 
-let view  = new View();
-view.vnaAddress        = 'localhost';
-view.matrixAddress     = '1.2.3.4';
-view.procedureFilename = './test/fixtures/procedures/procedure.yaml';
-view.calChoice         = Choices.CALIBRATE;
-view.calGroup          = null;
+var model = new Model();
+model.vnaAddress        = '127.0.0.1';
+model.matrixAddress     = '1.2.3.4';
+model.procedureFilename = './test/fixtures/procedures/procedure.yaml';
 
-let model = new Model();
-let c     = new Controller(model, view)
+var view  = new View();
 
-c.next(); // accept vna, matrix, procedure
-c.next(); // accept Choices.CALIBRATE
-c.next(); // cal step 1/3
-c.next(); // cal step 2/3
-c.next(); // cal step 3/3, => measure
-
-console.log('===HISTORY===')
-for (let i of c.history) {
-  console.log(`${i.page}`);
-}
+var c = new Controller(model, view);
