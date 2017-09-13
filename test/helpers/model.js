@@ -5,9 +5,9 @@ class Model {
   constructor() {
     this.vnaAddress        = '192.168.1.100';
     this.matrixAddress     = '192.168.1.101';
-    this.procedureFilename = null;
+    this.procedureFilename = '';
     this.calChoice         = Choices.NONE;
-    this.calGroup          = null;
+    this.calGroup          = '';
     this.state = {
       isVna:                  true,
       isMatrix:               true,

@@ -103,3 +103,27 @@ test('Controller performing calibration basically works', async t => {
   t.is(view.wizard.index.page, Pages.MEASURE);
   t.is(view.wizard.index.step, NUM_STEPS-1);
 });
+
+test('parameters: Non-existent cal group cleared', async t => {
+  let view  = new View();
+  let model = new Model();
+  let c     = new Controller(model, view);
+
+  model.calGroup        = 'does not exist';
+  model.state.calGroups = ['cal group 1', 'cal group 2'];
+  c.index.page          = Pages.CHOOSE_CAL;
+  let params            = await c.parameters();
+  t.is(params.calGroup, 'cal group 1');
+});
+
+test('parameters: No cal groups clears cal group', async t => {
+  let view  = new View();
+  let model = new Model();
+  let c     = new Controller(model, view);
+
+  model.calGroup        = 'does not exist';
+  model.state.calGroups = [];
+  c.index.page          = Pages.CHOOSE_CAL;
+  let params            = await c.parameters();
+  t.is(params.calGroup, '');
+});

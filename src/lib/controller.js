@@ -111,13 +111,17 @@ class Controller {
         params.calGroups = await this.model.calGroups();
         if (params.calGroups.length) {
           let lowercase = (i) => { return String(i).toLowerCase(); };
-          let index = params.calGroups.map(lowercase).indexOf(params.calGroup);
+          let index = params.calGroups.map(lowercase).indexOf(params.calGroup.toLowerCase());
           if (index == -1) {
-            params.calgroup = params.calGroups[0];
+            params.calGroup = params.calGroups[0];
           }
+        }
+        else {
+          params.calGroup = '';
         }
     }
     else {
+      params.calGroup  = '';
       params.calGroups = [];
     }
     if (this.index.page == Pages.CALIBRATE) {
