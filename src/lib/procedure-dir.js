@@ -3,7 +3,17 @@ const mkdirp = require('mkdirp');
 
 class ProcedureDir {
   constructor() {
-    this.state.path = null;
+    this.reset();
+  }
+
+  get path() {
+    return this.state.path;
+  }
+  set path(value) {
+    this.state.path = value;
+  }
+  reset() {
+    this.state = Object.create(null);
     switch (process.platform) {
       case 'win32':
         this.state.path = 'C:\\Users\\Public\\Documents\\Rohde-Schwarz\\Calibrate Switch Matrix';
@@ -16,13 +26,6 @@ class ProcedureDir {
     }
   }
 
-  get path() {
-    return this.state.path;
-  }
-  set path(value) {
-    this.state.path = value;
-  }
-
   mkdir() {
     if (!fs.exists(this.path)) {
       mkdirp.sync(this.path);
@@ -30,21 +33,4 @@ class ProcedureDir {
   }
 }
 
-let this.path;
-
-
-const mkdir = () => {
-  if (!fs.existsSync(this.path)) {
-    mkdirp.sync(this.path);
-  }
-};
-
-const overridePath = (newPath) => {
-  this.path = newPath;
-};
-
-module.exports = {
-  path: this.path,
-  mkdir,
-  overridePath,
-};
+module.exports = new ProcedureDir();

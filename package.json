@@ -12,7 +12,8 @@
   "license": "Rohde & Schwarz Inc. Terms and Conditions for Royalty-Free Products",
   "main": "main.js",
   "scripts": {
-    "babel-node": "babel-node",
+    "c": "babel-node",
+    "console": "babel-node",
     "test": "ava --watch || true",
     "prod": "yarn run buildpy && yarn run build && electron --noDevServer .",
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
