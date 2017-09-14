@@ -40,6 +40,10 @@ For MacOS:
 
 `/Users/Shared/Rohde-Schwarz/Calibrate Switch Matrix`
 
+For Linux:
+
+`/home/public/calibrate switch matrix`
+
 Regardless of the absolute location, the directory structure of the procedure files is important. Procedure files themselves are located in the `procedures/` sub-folder. Results are placed into the `results/` sub-folder after measurement.
 
 The other folders around these are required for the procedure to run but can be ignored by the end-user.

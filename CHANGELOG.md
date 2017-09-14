@@ -1,6 +1,12 @@
 R&S Calibrate Switch Matrix Change Log
 ======================================
 
+2017-09-12 Version 0.8.4
+------------------------
+
+* Non-existent cal group cleared for choose cal group
+* Procedure dialog opens `yaml` files only, starts in documented default location
+
 2017-08-06 Version 0.8.3
 ------------------------
 

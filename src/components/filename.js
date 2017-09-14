@@ -13,7 +13,12 @@ function Filename(props) {
     filenameClasses.push('disabled');
   }
   const handleClick = (event) => {
+    let defaultPath = 'C:\\Users\\Public\\Documents\\Rohde-Schwarz\\Calibrate Switch Matrix';
+    if (props.filename) {
+      defaultPath = path.dirName(props.filename);
+    }
     const result = dialog.showOpenDialog(remote.getCurrentWindow(), {
+      defaultPath,
       properties: [
         'openFile'
     ]});
