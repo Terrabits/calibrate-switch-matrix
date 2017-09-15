@@ -1,9 +1,12 @@
 import React    from 'react';
-import electron from 'electron'
-import path     from 'path';
 
+import procedureDir from '../lib/procedure-dir.js'
+
+import electron from 'electron'
 const remote    = electron.remote;
 const  dialog   = remote.dialog;
+
+import path     from 'path';
 
 function Filename(props) {
   const buttonClasses   = ['btn', 'btn-default'];
@@ -13,15 +16,19 @@ function Filename(props) {
     filenameClasses.push('disabled');
   }
   const handleClick = (event) => {
-    let defaultPath = 'C:\\Users\\Public\\Documents\\Rohde-Schwarz\\Calibrate Switch Matrix';
+    let defaultPath = procedureDir.path;
     if (props.filename) {
-      defaultPath = path.dirName(props.filename);
+      defaultPath = path.dirname(props.filename);
     }
     const result = dialog.showOpenDialog(remote.getCurrentWindow(), {
       defaultPath,
       properties: [
         'openFile'
-    ]});
+      ],
+      filters: [
+        { name: 'YAML', extensions: ['yaml'] }
+      ]
+    });
     if (result) {
       props.onChange(result[0]);
     }

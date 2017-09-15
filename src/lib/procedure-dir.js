@@ -28,7 +28,7 @@ class ProcedureDir {
 
   mkdir() {
     if (!fs.exists(this.path)) {
-      mkdirp.sync(this.path);
+      mkdirp(this.path);
     }
   }
 }
