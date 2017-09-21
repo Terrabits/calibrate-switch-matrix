@@ -54,8 +54,9 @@ window.render = Component => {
       <Component
         ref={(app) => { window.view = app; }}
         title={`${pkg.productName} ${pkg.version}`}
-        onNext={() => {controller.next()}}
-        onBack={() => {controller.back()}}/>
+        onNext={   () => {controller.next()}}
+        onBack={   () => {controller.back()}}
+        onRestart={() => {controller.restart()}}/>
     </AppContainer>,
     document.getElementById('root')
   )

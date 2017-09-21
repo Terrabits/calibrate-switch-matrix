@@ -109,6 +109,13 @@ class App extends React.Component {
               onClick={this.props.onBack}
               disabled={this.state.disableInputs}
             />
+            <Button
+              text="Restart"
+              role="default"
+              pullRight={true}
+              onClick={this.props.onRestart}
+              disabled={this.state.disableInputs}
+            />
           </div>
         </footer>
       </div>
