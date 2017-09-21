@@ -32,6 +32,7 @@ class Controller {
     }
     this.disableInputs();
     this.displayOverlay();
+    this.view.alert.clear();
     if (this.index.page = Pages.CHOOSE_CAL) {
       this.updateModel();
     }
@@ -328,10 +329,10 @@ class Controller {
     const procedure = await this.model.getProcedure();
     const steps     = procedure.steps;
     if (this.index.step + 1 >= steps.length) {
-      this.view.alert.showMessage('success', 'Procedure completed!');
+      this.view.alert.showMessage('success', 'Procedure is complete!');
     }
     else {
-      this.view.alert.showMessage('success', 'Step complete!');
+      this.view.alert.showMessage('success', `Step ${this.index.step+1}/${this.index.totalSteps} complete!`);
       this.pushCurrentIndexToHistory();
       this.index.step++;
       await this.render();
