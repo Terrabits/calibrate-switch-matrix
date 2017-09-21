@@ -11,6 +11,12 @@ $alert-border-radius:         $default-border-radius !default;
 $alert-link-font-weight:      $font-weight-bold !default;
 $alert-border-width:          1px !default;
 
+// close
+$close-font-size:             $font-size-default*1.5;
+$close-font-weight:           bold;
+$close-color:                 black;
+$close-text-shadow:           0 1px 0 #fff;
+
 //
 // Color system
 //

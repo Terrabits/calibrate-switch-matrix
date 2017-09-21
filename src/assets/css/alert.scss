@@ -18,6 +18,35 @@
   @include border-radius($alert-border-radius);
 }
 
+.alert-dismissible {
+  padding-right: $alert-padding-x + 0.1rem;
+
+  // Adjust close link position
+  .close {
+    // bootstrap global .close
+    float: right;
+    font-size: $close-font-size;
+    font-weight: $close-font-weight;
+    text-decoration: none;
+    line-height: 1;
+    color: $close-color;
+    text-shadow: $close-text-shadow;
+    @include opacity(.2);
+
+    &:hover,
+    &:focus {
+      color: $close-color;
+      cursor: pointer;
+      @include opacity(.5);
+    }
+    // alert.close:
+    position: relative;
+    top: -4px;
+    right: -10px;
+    color: inherit;
+  }
+}
+
 // Alternate styles
 //
 // Generate contextual modifier classes for colorizing the alert.

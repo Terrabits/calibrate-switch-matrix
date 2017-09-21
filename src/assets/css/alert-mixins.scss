@@ -1,3 +1,11 @@
+// From general bootstrap
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  // IE8 filter
+  $opacity-ie: ($opacity * 100);
+  filter: alpha(opacity=$opacity-ie);
+}
+
 @mixin alert-variant($background, $border, $color) {
   color: $color;
   background-color: $background;

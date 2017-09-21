@@ -19,6 +19,7 @@ function ChooseCalPage(props) {
     calGroups: props.values.calGroups,
     onChange:  props.onChanges.handleCalGroupChange
   }
+  const disableCalGroups = props.disabled || !props.values.calGroups || !props.values.calGroups.length
   return(
     <div id="choose-cal-page" className={classes}>
       <h2 className="no-margin-top">Choose Calibration</h2>
@@ -29,18 +30,18 @@ function ChooseCalPage(props) {
           value={Choices.CALIBRATE}
           checked={props.values.choice == Choices.CALIBRATE}
           onChange={props.onChanges.handleChoiceChange}
-          disabled={!!props.disabled} />
+          disabled={props.disabled} />
         <CalGroup
           radio={calGroupRadio}
           combo={calGroupCombo}
-          disabled={!!props.disabled} />
+          disabled={disableCalGroups} />
         <Radio
           label="None"
           name="choice"
           value={Choices.NONE}
           checked={props.values.choice == Choices.NONE}
           onChange={props.onChanges.handleChoiceChange}
-          disabled={!!props.disabled} />
+          disabled={props.disabled} />
       </form>
     </div>
   );

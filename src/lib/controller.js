@@ -14,7 +14,6 @@ class Controller {
   constructor(model=null, view=null) {
     this.model = model;
     this.view  = view;
-    this.index = new PageIndex(Pages.SETTINGS);
     this.restart();
   }
 
@@ -33,6 +32,9 @@ class Controller {
     }
     this.disableInputs();
     this.displayOverlay();
+    if (this.index.page = Pages.CHOOSE_CAL) {
+      this.updateModel();
+    }
     this.index = this.history.pop();
     await this.render();
     this.hideOverlay();

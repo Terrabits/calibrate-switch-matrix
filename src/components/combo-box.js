@@ -12,23 +12,12 @@ function ComboBox(props) {
   const options = [];
   if (props.options && props.options.length) {
     for (let option of props.options) {
-      if (option == props.selected) {
-        options.push(
-          <Option
-            key={option}
-            value={option}
-            selected
-          />
-        );
-      }
-      else {
-        options.push(
-          <Option
-            key={option}
-            value={option}
-          />
-        );
-      }
+      options.push(
+        <Option
+          key={option}
+          value={option}
+        />
+      );
     }
   }
   const classes = [];
@@ -38,6 +27,7 @@ function ComboBox(props) {
   return (
     <select
       className={classes}
+      value={props.selected}
       onChange={props.onChange}
       disabled={!!props.disabled}
     >

@@ -20,10 +20,8 @@ class Alert extends React.Component {
       context: context,
       message: message
     });
-    this.setTimer();
   }
   clear() {
-    this.clearTimer();
     this.setState({
       visible: false,
       context: 'success',
@@ -31,32 +29,17 @@ class Alert extends React.Component {
     });
   }
 
-  setTimer() {
-    let handleTimeout = () => {
-      this.clearTimer();
-      this.setState({
-        visible: false,
-        message: 'hidden'
-      });
-    };
-    this.timer = setTimeout(handleTimeout, 7000);
-  }
-  clearTimer() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-  }
-
   render() {
-    let classes = ['alert'];
+    let classes = ['alert', 'alert-dismissible'];
     classes.push(`alert-${this.state.context}`)
     if (!this.state.visible) {
       classes.push('hidden');
     }
     const className = classes.join(' ');
+    const handleClick = () => { this.clear(); };
     return (
       <div className={className}>
+        <a href="#" className="close" data-dismiss="alert" aria-label="close" onClick={handleClick}>&times;</a>
         {this.state.message}
       </div>
     );
