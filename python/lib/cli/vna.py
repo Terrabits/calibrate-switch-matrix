@@ -56,10 +56,12 @@ def process(args):
     # All good
     return vna
 
-def init(vna):
+def init(vna, set_file=None):
     vna.is_error()
     vna.clear_status()
     vna.close_sets()
+    if set_file:
+        return open_set(vna, set_file)
 
 def open_set(vna, filename):
     vna.is_error()

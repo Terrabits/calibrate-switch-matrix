@@ -2,7 +2,6 @@ from   lib.cli.matrix    import process as process_matrix
 from   lib.cli.matrix    import init    as init_matrix
 from   lib.cli.matrix    import cleanup as cleanup_matrix
 from   lib.cli.procedure import process as process_procedure
-from   lib.cli.vna       import open_set
 from   lib.cli.vna       import process as process_vna
 from   lib.cli.vna       import init    as init_vna
 from   lib.cli.vna       import cleanup as cleanup_vna
@@ -28,7 +27,6 @@ def perform_step(args):
     vna = process_vna(args)
     if not vna:
         return False
-    init_vna(vna)
     procedure = process_procedure(args, set_file_extension(vna))
     if not procedure:
         cleanup(vna, matrix)
@@ -63,7 +61,7 @@ def perform_step(args):
             print(msg)
             cleanup(vna, matrix)
             return False
-        if not open_set(vna, m['vna setup']):
+        if not init_vna(vna, m['vna setup']):
             msg = "Error loading vna setup '{0}' in step '{1}'"
             msg = msg.format(m['vna setup'], step['name'])
             print(msg)
