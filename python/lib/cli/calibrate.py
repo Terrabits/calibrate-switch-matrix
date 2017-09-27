@@ -1,9 +1,9 @@
 from lib.procedure     import set_file_extension
 from lib.cli.procedure import process as process_procedure
 from lib.cli.vna       import process as process_vna
-from   lib.cli.vna     import init    as init_vna
-from   lib.cli.vna     import cleanup as cleanup_vna
-from lib.cli.vna       import is_cal_unit, cal_unit_ports
+from lib.cli.vna       import init    as init_vna
+from lib.cli.vna       import cleanup as cleanup_vna
+from lib.cli.vna       import is_cal_unit, cal_unit_ports, open_set
 
 from pathlib           import Path
 
@@ -42,13 +42,19 @@ def start(args):
         cleanup_vna(vna)
         return False
     # TODO: Start calibration here
-    init_vna(vna)
     set_path = procedure.calibration_set_path()
     if not Path(set_path).is_file():
         print('Could not find calibration setup file')
         cleanup_vna(vna)
         return False
-    vna.open_set_locally(set_path)
+    init_vna(vna)
+    if open_set(vna, set_path):
+        msg = "Error loading vna calibration setup '{0}'"
+        msg = msg.format(m['vna setup'], step['name'])
+        print(msg)
+        cleanup(vna, matrix)
+        return False
+
     vna.write("SENS1:CORR:COLL:AUTO:CONF FNP, ''")
     steps = procedure.calibration_steps()
     for i in range(0, len(steps)):

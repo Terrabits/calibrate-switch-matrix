@@ -61,6 +61,19 @@ def init(vna):
     vna.clear_status()
     vna.close_sets()
 
+def open_set(vna, filename):
+    vna.is_error()
+    vna.clear_status()
+    is_error = None
+    try:
+        vna.open_set_locally(filename)
+        vna.pause()
+        is_error = vna.is_error()
+        vna.clear_status()
+    except:
+        is_error = True
+    return not is_error
+
 def cleanup(vna):
     if not vna or not vna.connected():
         return

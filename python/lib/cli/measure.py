@@ -2,6 +2,7 @@ from   lib.cli.matrix    import process as process_matrix
 from   lib.cli.matrix    import init    as init_matrix
 from   lib.cli.matrix    import cleanup as cleanup_matrix
 from   lib.cli.procedure import process as process_procedure
+from   lib.cli.vna       import open_set
 from   lib.cli.vna       import process as process_vna
 from   lib.cli.vna       import init    as init_vna
 from   lib.cli.vna       import cleanup as cleanup_vna
@@ -62,8 +63,12 @@ def perform_step(args):
             print(msg)
             cleanup(vna, matrix)
             return False
-        vna.open_set_locally(m['vna setup'])
-        vna.pause()
+        if not open_set(vna, m['vna setup']):
+            msg = "Error loading vna setup '{0}' in step '{1}'"
+            msg = msg.format(m['vna setup'], step['name'])
+            print(msg)
+            cleanup(vna, matrix)
+            return False
 
         if not 1 in vna.channels:
             msg = "Could not find channel 1 in '{0}' of step '{1}'"
