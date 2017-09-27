@@ -4,8 +4,7 @@ const  Store    = require('electron-store');
 import CalibratePage from './pages/calibrate.js';
 import Choices       from '../lib/calibration.js';
 import ChooseCalPage from './pages/choose-cal.js';
-import PageIndex     from '../lib/page-index.js';
-import {Pages}       from '../lib/controller.js';
+import {PageIndex, Pages} from '../lib/page-index.js';
 import MeasurePage   from './pages/measure.js';
 import SettingsPage  from './pages/settings.js';
 

@@ -1,14 +1,8 @@
 const {Choices} = require('./calibration.js');
-const PageIndex = require('./page-index.js');
+const {PageIndex, Pages} = require('./page-index.js');
 
 
-// pages:
-let Pages = {
-  SETTINGS:   'Settings',
-  CHOOSE_CAL: 'Choose calibration',
-  CALIBRATE:  'Calibrate',
-  MEASURE:    'Measure'
-};
+
 
 class Controller {
   constructor(model=null, view=null) {
@@ -20,23 +14,22 @@ class Controller {
   // user actions
   async restart() {
     winston.debug('controller.restart');
-    this.index = new PageIndex(Pages.SETTINGS, 0);
-    this.history   = [];
+    this.index = new PageIndex();
     await this.render();
     this.enableInputs();
   }
   async back() {
-    winston.debug('controller.back', {index: this.index, history: this.history});
-    if (!this.history.length) {
+    winston.debug('controller.back', {index: this.index});
+    if (this.index.isSettingsPage()) {
       return;
     }
     this.disableInputs();
     this.displayOverlay();
     this.view.alert.clear();
-    if (this.index.page = Pages.CHOOSE_CAL) {
+    if (this.index.isChooseCalPage()) {
       this.updateModel();
     }
-    this.index = this.history.pop();
+    this.index.back();
     await this.render();
     this.hideOverlay();
     this.enableInputs();
@@ -110,27 +103,29 @@ class Controller {
     params.calGroup          = this.model.calGroup;
     params.index             = this.index;
     params.sidebar           = await this.summary();
-    if (this.index.page == Pages.CHOOSE_CAL) {
+    if (this.index.isChooseCalPage()) {
         params.calGroups = await this.model.calGroups();
         if (params.calGroups.length) {
           let lowercase = (i) => { return String(i).toLowerCase(); };
-          let index = params.calGroups.map(lowercase).indexOf(params.calGroup.toLowerCase());
-          if (index == -1) {
+          let isCalGroup = params.calGroups.map(lowercase).includes(params.calGroup.toLowerCase());
+          if (!isCalGroup) {
             params.calGroup = params.calGroups[0];
           }
         }
         else {
           params.calGroup = '';
+          if (params.calChoice == Choices.EXISTING) {
+            params.calChoice = Choices.CALIBRATE;
+          }
         }
     }
     else {
-      params.calGroup  = '';
       params.calGroups = [];
     }
-    if (this.index.page == Pages.CALIBRATE) {
+    if (this.index.isCalibrationPage()) {
       params.ports = await this.getCalPorts();
     }
-    else if (this.index.page == Pages.MEASURE) {
+    else if (this.index.isMeasurementPage()) {
       params.ports = await this.getMeasurementPorts();
     }
     else {
@@ -163,7 +158,7 @@ class Controller {
   }
   async summary() {
     let procedure = null;
-    if (this.index.page == Pages.CALIBRATE) {
+    if (this.index.isCalibrationPage()) {
       procedure = await this.model.getProcedure(true);
     }
     else {
@@ -180,7 +175,7 @@ class Controller {
         measure
       ];
     }
-    if (this.index.page == Pages.SETTINGS) {
+    if (this.index.isSettingsPage()) {
       settings.underline = true;
     }
     else {
@@ -190,14 +185,14 @@ class Controller {
         const step = procedure.steps[i];
         measure.items.push({
           name: step.name,
-          active: this.index.page == Pages.MEASURE? this.index.step == i : false
+          active: this.index.isMeasurementPage()? this.index.step == i : false
         });
       }
     }
-    if (this.index.page == Pages.CHOOSE_CAL) {
+    if (this.index.isChooseCalPage()) {
       calibrate.underline = true;
     }
-    if (this.index.page == Pages.CALIBRATE) {
+    if (this.index.isCalibrationPage()) {
       // display calibration steps
       calibrate.items = [];
       const steps = procedure.calibrationSteps;
@@ -216,16 +211,14 @@ class Controller {
     ];
   }
   async getCalPorts() {
-    const isCalPage = this.index.page == Pages.CALIBRATE;
-    if (!isCalPage) {
+    if (!this.index.isCalibrationPage()) {
       return [-1];
     }
     const procedure = await this.model.getProcedure(true);
     return procedure.calibrationSteps[this.index.step];
   }
   async getMeasurementPorts() {
-    const isMeasurePage = this.index.page == Pages.MEASURE;
-    if (!isMeasurePage) {
+    if (!this.index.isMeasurementPage()) {
       return {};
     }
     const procedure = await this.model.getProcedure();
@@ -251,8 +244,7 @@ class Controller {
     if (!procedure.status.isValid) {
       throw new Error(procedure.status.message);
     }
-    this.pushCurrentIndexToHistory();
-    this.index.page = Pages.CHOOSE_CAL;
+    this.index.next();
     await this.render();
   }
   async processCalibrationChoice(params) {
@@ -271,79 +263,53 @@ class Controller {
   async startCalibration() {
     winston.debug('controller.startCalibration', {index: this.index});
     await this.model.isCalUnit();
-    await this.model.startCalibration();
+    this.index.startCalibration();
     const procedure = await this.model.getProcedure(true);
-    this.pushCurrentIndexToHistory();
-    this.index.page = Pages.CALIBRATE;
-    this.index.step = 0;
-    this.index.totalSteps = procedure.calibrationSteps.length;
+    this.index.calibrationSteps = procedure.calibrationSteps.length;
+    await this.model.startCalibration();
     await this.render();
   }
   async processCalibrationStep() {
     winston.debug('controller.processCalibrationStep', {index: this.index});
-    // run step
     await this.model.performCalibrationStep(this.index.step);
-    this.pushCurrentIndexToHistory();
-
-    // next
-    this.index.step++;
-    const procedure = await this.model.getProcedure(true);
-    const steps     = procedure.calibrationSteps;
-    if (this.index.step >= steps.length) {
+    if (this.index.isLastStep()) {
       await this.model.applyCalibration();
-      // TODO: Finish dialog
-      const name = this.view.getSaveCalFromDialog();
+      // TODO: Finish save dialog
+      // const name = this.view.getSaveCalFromDialog();
+      const name = 'calibrate switch matrix';
       if (name) {
         await this.model.saveCalibration(name);
-        this.purgeCalibrationSteps();
         this.model.calChoice = Choices.EXISTING;
         this.model.calGroup  = name;
         await this.startMeasurements();
       }
     }
     else {
+      this.index.next();
       await this.render();
     }
   }
-  purgeCalibrationSteps() {
-    for (let i = this.history.length-1; i >= 0; i--) {
-      const page = this.history[i].page;
-      if (page == Pages.CALIBRATE) {
-        this.history.splice(i);
-      }
-    }
-    this.index = this.history.pop();
-  }
   async startMeasurements() {
     winston.debug('controller.startMeasurements', {index: this.index});
-    this.pushCurrentIndexToHistory();
-    this.index.page = Pages.MEASURE;
-    this.index.step = 0;
+    this.index.startMeasurement();
     const procedure = await this.model.getProcedure();
-    this.index.totalSteps = procedure.steps.length;
+    this.index.measurementSteps = procedure.steps.length;
     await this.render();
   }
   async processMeasurementStep() {
     winston.debug('controller.processMeasurementStep', {index: this.index});
     await this.model.measure(this.index.step);
-    const procedure = await this.model.getProcedure();
-    const steps     = procedure.steps;
-    if (this.index.step + 1 >= steps.length) {
+    if (this.index.isLastStep()) {
       this.view.alert.showMessage('success', 'Procedure is complete!');
     }
     else {
-      this.view.alert.showMessage('success', `Step ${this.index.step+1}/${this.index.totalSteps} complete!`);
-      this.pushCurrentIndexToHistory();
-      this.index.step++;
+      const step  = this.index.step+1;
+      const steps = this.index.measurementSteps;
+      this.view.alert.showMessage('success', `Step ${step}/${steps} complete!`);
+      this.index.next();
       await this.render();
     }
   }
-  pushCurrentIndexToHistory() {
-    this.history.push(this.index.copy());
-  }
 }
 
-module.exports = {
-  Controller: Controller,
-  Pages: Pages
-}
+module.exports = Controller;

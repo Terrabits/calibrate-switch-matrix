@@ -1,12 +1,13 @@
 R&S Calibrate Switch Matrix Change Log
 ======================================
 
-2017-09-12 Version 0.8.4
+2017-09-12 Version 0.9.0
 ------------------------
 
 * Existing cal group bug(s) fixed. User choice persists despite back/next.
 * Procedure dialog opens `yaml` files only, starts in documented default location
 * Alerts are persistent and dismissible
+* Restart button added
 
 2017-08-06 Version 0.8.3
 ------------------------

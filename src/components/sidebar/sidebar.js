@@ -1,6 +1,7 @@
 import Section from './section.js';
 import Item    from './item.js';
 import React, { Component } from 'react';
+import "../../assets/css/sidebar.scss";
 
 function Sidebar(props) {
   let elements = [];

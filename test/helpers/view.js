@@ -1,6 +1,6 @@
-const {Choices} = require('../../src/lib/calibration.js')
-const  Alert    = require('./alert.js');
-const PageIndex = require('../../src/lib/page-index');
+const {Choices}   = require('../../src/lib/calibration.js')
+const  Alert      = require('./alert.js');
+const {PageIndex} = require('../../src/lib/page-index');
 
 class View {
   constructor() {

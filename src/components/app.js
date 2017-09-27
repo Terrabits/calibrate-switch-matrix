@@ -112,7 +112,7 @@ class App extends React.Component {
             <Button
               text="Restart"
               role="default"
-              pullRight={true}
+              pullRight={false}
               onClick={this.props.onRestart}
               disabled={this.state.disableInputs}
             />

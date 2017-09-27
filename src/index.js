@@ -3,7 +3,7 @@ import ReactDOM        from 'react-dom';
 import {AppContainer}  from 'react-hot-loader';
 
 import App             from './components/app.js';
-import {Controller}    from './lib/controller.js';
+import Controller      from './lib/controller.js';
 import Model           from './lib/model.js';
 
 import Store           from 'electron-store';

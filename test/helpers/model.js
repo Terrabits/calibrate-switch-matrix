@@ -85,7 +85,13 @@ class Model {
   }
   async saveCalibration(name) {
     if (this.state.saveCalibration) {
-      this.calGroup = name;
+      const _name = name.toLowerCase();
+      const toLowerCase = (x) => { return x.toLowerCase(); };
+      const _groups = this.state.calGroups.map(toLowerCase);
+      if (!_groups.includes(_name)) {
+        this.state.calGroups.push(name);
+        this.state.calGroups.sort();
+      }
       return true;
     }
     else {

@@ -178,7 +178,6 @@ class Model {
       '--cal-group',   name
     ];
     return python.start(args).then((result) => {
-      this.calGroup = name;
       return true;
     });
   }
