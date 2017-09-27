@@ -7,10 +7,12 @@ let Pages = {
 };
 
 class PageIndex {
-  constructor(calibrationSteps=-1, measurementSteps=-1) {
+  constructor(page=Pages.SETTINGS, step=0) {
     this.restart();
+    this.page = page;
+    this.step = step;
     this.calibrationSteps = -1;
-    this.measurementSteps   = -1;
+    this.measurementSteps = -1;
   }
 
   restart() {

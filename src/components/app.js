@@ -18,7 +18,8 @@ class App extends React.Component {
     this.state = {
       disableInputs: false,
       displayOverlay: false,
-      sidebar: null
+      sidebar: null,
+      changeIndex: null
     };
   }
   renderNewParameters(params) {
@@ -48,6 +49,9 @@ class App extends React.Component {
     }
     if (params.sidebar) {
       this.setState({sidebar: params.sidebar});
+    }
+    if (params.changeIndex) {
+      this.setState({changeIndex: params.changeIndex});
     }
   }
   getUserInputs() {
@@ -85,7 +89,8 @@ class App extends React.Component {
             <div className="pane-sm sidebar">
             <Sidebar
               ref={(sidebar) => { this.sidebar = sidebar; }}
-              sections={this.state.sidebar} />
+              sections={this.state.sidebar}
+              onClick={this.state.changeIndex} />
             </div>
             <div className="pane">
               <Alert  ref={(alert)  => {this.alert = alert;  }} />

@@ -6,15 +6,20 @@ function Item(props) {
     let className = `icon icon-${props.icon}`;
     icon = <span className={className}></span>
   }
-  let className = ''
+  const classes = ['nav-group-item'];
   if (props.active) {
-    className = 'nav-group-item active';
+    classes.push('active');
   }
-  else {
-    className = 'nav-group-item';
+  const handleClick = () => {
+    if (props.onClick) {
+      props.onClick(props.index);
+    }
+    else {
+      console.log(`${props.name} clicked`);
+    }
   }
   return (
-    <span className={className}>
+    <span className={classes.join(' ')} onClick={handleClick}>
       {icon}
       {props.name}
     </span>

@@ -1,9 +1,6 @@
 const {Choices} = require('./calibration.js');
 const {PageIndex, Pages} = require('./page-index.js');
 
-
-
-
 class Controller {
   constructor(model=null, view=null) {
     this.model = model;
@@ -76,6 +73,26 @@ class Controller {
     this.hideOverlay();
     this.enableInputs();
   }
+  setIndex(i) {
+    if (i.isSettingsPage()) {
+      this.restart();
+      return;
+    }
+    if (this.index.isSettingsPage()) {
+      this.view.alert.showMessage('danger', 'Complete settings and click next to continue.');
+      return;
+    }
+    if (this.index.isChooseCalPage() && !i.isChooseCalPage()) {
+      this.view.alert.showMessage('danger', 'Choose calibration and click next to continue.');
+      return;
+    }
+    if (this.index.isCalibrationPage() && !i.isCalibrationPage()) {
+      this.view.alert.showMessage('danger', 'Calibration aborted');
+    }
+    this.index.page = i.page;
+    this.index.step = i.step;
+    this.render();
+  }
 
   // model/view control
   async render() {
@@ -131,6 +148,9 @@ class Controller {
     else {
       params.ports = [];
     }
+    params.changeIndex = (i) => {
+      this.setIndex(i);
+    }
     return params;
   }
   getInputs() {
@@ -157,6 +177,26 @@ class Controller {
     this.displayOverlay(!value);
   }
   async summary() {
+    let settings  = {
+      name: 'Settings',
+      index: new PageIndex(Pages.SETTINGS),
+      active: this.index.isSettingsPage()
+    };
+    let calibrate = {
+      name: 'Calibrate',
+      index: new PageIndex(Pages.CHOOSE_CAL),
+      active: this.index.isChooseCalPage()
+    };
+    let measure   = {
+      name: 'Measure',
+      index: new PageIndex(Pages.MEASURE),
+      active: false
+    };
+    if (this.index.isSettingsPage()) {
+      return [settings, calibrate, measure];
+    }
+
+    // Get procedure
     let procedure = null;
     if (this.index.isCalibrationPage()) {
       procedure = await this.model.getProcedure(true);
@@ -164,51 +204,37 @@ class Controller {
     else {
       procedure = await this.model.getProcedure();
     }
-
-    let settings  = {name: 'Settings'};
-    let calibrate = {name: 'Calibrate'};
-    let measure   = {name: 'Measure'};
     if (!procedure.status.isValid) {
-      return [
-        settings,
-        calibrate,
-        measure
-      ];
+      return [settings, calibrate, measure];
     }
-    if (this.index.isSettingsPage()) {
-      settings.underline = true;
+
+    // Calibrate
+    if (this.index.isCalibrationPage()) {
+      const items = [];
+      const steps = procedure.calibrationSteps;
+      const STEPS = steps.length;
+      for (let i = 0; i < STEPS; i++) {
+        items.push({
+          name:   `Ports ${steps[i]}`,
+          index:  new PageIndex(Pages.CALIBRATE, i),
+          active: this.index.step == i
+        });
+      }
+      calibrate.items = items;
     }
-    else {
-      // Have procedure, display measurement steps
+    // Measure
+    if (!this.index.isSettingsPage()) {
       measure.items = [];
       for (let i = 0; i < procedure.steps.length; i++) {
         const step = procedure.steps[i];
         measure.items.push({
-          name: step.name,
-          active: this.index.isMeasurementPage()? this.index.step == i : false
+          name:   step.name,
+          index:  new PageIndex(Pages.MEASURE, i),
+          active: this.index.isMeasurementPage() && this.index.step == i
         });
       }
     }
-    if (this.index.isChooseCalPage()) {
-      calibrate.underline = true;
-    }
-    if (this.index.isCalibrationPage()) {
-      // display calibration steps
-      calibrate.items = [];
-      const steps = procedure.calibrationSteps;
-      for (let i = 0; i < steps.length; i++) {
-        const step = steps[i];
-        calibrate.items.push({
-          name: `Ports ${step}`,
-          active: this.index.step == i
-        });
-      }
-    }
-    return [
-      settings,
-      calibrate,
-      measure
-    ];
+    return [settings, calibrate ,measure];
   }
   async getCalPorts() {
     if (!this.index.isCalibrationPage()) {
@@ -244,6 +270,7 @@ class Controller {
     if (!procedure.status.isValid) {
       throw new Error(procedure.status.message);
     }
+    this.index.measurementSteps = procedure.steps.length;
     this.index.next();
     await this.render();
   }

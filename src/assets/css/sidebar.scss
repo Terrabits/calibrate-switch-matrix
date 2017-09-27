@@ -1,0 +1,21 @@
+
+$sidebar-padding-left: 5px;
+
+.sidebar.pane-sm {
+  .nav-group {
+    padding-top: 10px;
+    .nav-group-title {
+      padding-left: $sidebar-padding-left + 10px;
+      &.active {
+        color: lighten(black, 20%);
+        font-weight: bold;
+      }
+    }
+    .nav-group-item {
+      padding-left: $sidebar-padding-left + 25px;
+      &.active {
+        // No special styling for this
+      }
+    }
+  }
+}
