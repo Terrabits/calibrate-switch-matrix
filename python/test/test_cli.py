@@ -14,7 +14,7 @@ procedures_path = fixture_path    / 'procedures'
 invalid_yaml    = procedures_path / 'invalid.yaml'
 valid_proc      = procedures_path / 'procedure.yaml'
 
-set_file        = fixture_path    / 'sets' / 'set.zvx' # .zvx | .znb added by Vna
+set_file        = fixture_path    / 'sets' / 'set' # .zvx | .znb added by Vna
 text_file       = valid_proc
 
 @ddt
