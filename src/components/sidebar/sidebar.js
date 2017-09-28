@@ -27,7 +27,7 @@ function Sidebar(props) {
     }
   }
   return (
-    <div id="sidebar" className="pane-sm sidebar">
+    <div className="pane-sm sidebar">
       <nav className="nav-group">
         {elements}
       </nav>

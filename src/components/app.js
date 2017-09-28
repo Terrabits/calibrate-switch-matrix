@@ -86,12 +86,10 @@ class App extends React.Component {
         <div className="window-content">
           <Overlay on={this.state.displayOverlay} />
           <div className="pane-group">
-            <div className="pane-sm sidebar">
             <Sidebar
               ref={(sidebar) => { this.sidebar = sidebar; }}
               sections={this.state.sidebar}
               onClick={this.state.changeIndex} />
-            </div>
             <div className="pane">
               <Alert  ref={(alert)  => {this.alert = alert;  }} />
               <Wizard ref={(wizard) => {this.wizard = wizard;}} />
