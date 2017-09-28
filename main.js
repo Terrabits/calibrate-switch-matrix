@@ -1,7 +1,5 @@
 'use strict';
 
-const procedureDir = require('./src/lib/procedure-dir.js');
-
 // Import parts of electron to use
 const {app, BrowserWindow} = require('electron');
 const isDev                = require('electron-is-dev');
@@ -82,5 +80,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-procedureDir.mkdir();

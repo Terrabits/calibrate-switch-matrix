@@ -5,6 +5,7 @@ import {AppContainer}  from 'react-hot-loader';
 import App             from './components/app.js';
 import Controller      from './lib/controller.js';
 import Model           from './lib/model.js';
+import procedureDir    from './lib/procedure-dir.js';
 
 import Store           from 'electron-store';
 import ElectronConsole from 'winston-electron';
@@ -68,3 +69,7 @@ if (module.hot) {
 window.model      = new Model();
 window.controller = new Controller(model, view);
 controller.restart();
+
+// Make sure recommended procedure
+// directory exists
+procedureDir.mkdir();
