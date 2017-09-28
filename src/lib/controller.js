@@ -3,6 +3,7 @@ const {PageIndex, Pages} = require('./page-index.js');
 
 class Controller {
   constructor(model, view) {
+    this.index = new PageIndex();
     this.model = model;
     this.view  = view;
     this.restart();
@@ -11,13 +12,13 @@ class Controller {
   // user actions
   async restart() {
     winston.debug('controller.restart');
-    if (this.index && this.index.isCalibrationPage()) {
+    if (this.index.isCalibrationPage()) {
       this.view.alert.showMessage('danger', 'Calibration aborted');
     }
     else {
       this.view.alert.clear();
     }
-    this.index = new PageIndex();
+    this.index.restart();
     await this.render();
     this.enableInputs();
   }
