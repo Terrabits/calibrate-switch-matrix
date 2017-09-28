@@ -1,7 +1,6 @@
-import React     from 'react';
-import LineEdit  from '../line-edit.js';
+import React    from 'react';
+import LineEdit from '../line-edit.js';
 import Filename from '../filename.js';
-
 
 function SettingsPage(props) {
   let classes = props.invisible ? 'invisible page' : 'page';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React    from 'react';
 import PortList from '../port-list/port-list.js';
 
 function CalibratePage(props) {

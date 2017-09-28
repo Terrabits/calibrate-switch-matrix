@@ -4,6 +4,7 @@ const  Store    = require('electron-store');
 import CalibratePage from './pages/calibrate.js';
 import Choices       from '../lib/calibration.js';
 import ChooseCalPage from './pages/choose-cal.js';
+import FinishedPage  from './pages/finished.js';
 import {PageIndex, Pages} from '../lib/page-index.js';
 import MeasurePage   from './pages/measure.js';
 import SettingsPage  from './pages/settings.js';
@@ -87,7 +88,7 @@ class Wizard extends React.Component {
 
   render() {
     // settings page
-    const isSettingsInvisible = this.state.index.page != Pages.SETTINGS;
+    const isSettingsInvisible = !this.state.index.isSettingsPage();
     const settings = {
       vnaAddress:        this.vnaAddress,
       matrixAddress:     this.matrixAddress,
@@ -99,7 +100,7 @@ class Wizard extends React.Component {
       handleProcedureFilenameChange: (filename) => {this.procedureFilename = filename;          }
     };
     // choose cal page
-    const isChooseCalPageInvisible = this.state.index.page != Pages.CHOOSE_CAL;
+    const isChooseCalPageInvisible = !this.state.index.isChooseCalPage();
     const chooseCal = {
       choice:    this.state.calChoice,
       calGroup:  this.state.calGroup,
@@ -113,16 +114,17 @@ class Wizard extends React.Component {
         this.calGroup  = event.target.value
       }
     };
-    const isCalibrationInvisible = this.state.index.page != Pages.CALIBRATE;
+    const isCalibrationInvisible = !this.state.index.isCalibrationPage();
     const calibration = {
       index: this.state.index,
       ports: (isCalibrationInvisible? [] : this.state.ports)
     };
-    const isMeasureInvisible = this.state.index.page != Pages.MEASURE;
+    const isMeasureInvisible = !this.state.index.isMeasurementPage();
     const measure = {
       index: this.state.index,
       ports: (isMeasureInvisible? {} : this.state.ports)
     };
+    const isFinishedPageInvisible = !this.state.index.isFinishedPage();
 
     return (
       <div id="pages" className="wizard padded-more">
@@ -150,6 +152,7 @@ class Wizard extends React.Component {
           invisible={isMeasureInvisible}
           disabled={this.state.disabled}
         />
+        <FinishedPage invisible={isFinishedPageInvisible}/>
       </div>
     );
   }

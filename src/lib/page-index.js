@@ -3,7 +3,8 @@ let Pages = {
   SETTINGS:   'Settings',
   CHOOSE_CAL: 'Choose calibration',
   CALIBRATE:  'Calibrate',
-  MEASURE:    'Measure'
+  MEASURE:    'Measure',
+  FINISHED:   'Finished'
 };
 
 class PageIndex {
@@ -60,6 +61,12 @@ class PageIndex {
       this.step = step;
     }
   }
+  isFinishedPage() {
+    return this.page == Pages.FINISHED;
+  }
+  setFinishedPage() {
+    this.page = Pages.FINISHED;
+  }
 
   isFirstStep() {
     return this.step == 0;
@@ -72,7 +79,14 @@ class PageIndex {
       return this.step >= this.measurementSteps-1;
     }
   }
+  isFinished() {
+    return this.page == Pages.FINISHED;
+  }
   next() {
+    if (this.isFinished()) {
+      return;
+    }
+
     if (this.isSettingsPage()) {
       this.setChooseCalPage();
     }
@@ -85,6 +99,9 @@ class PageIndex {
     else if (this.isCalibrationPage()) {
       this.startMeasurement();
     }
+    else if (this.isMeasurementPage()) {
+      this.setFinishedPage();
+    }
     else {
       throw new Error(`PageIndex cannot go to next from ${this.page} step ${this.step}`)
     }
@@ -95,6 +112,10 @@ class PageIndex {
     }
     else if (this.isChooseCalPage()) {
       this.page = Pages.SETTINGS;
+    }
+    else if (this.isFinished()) {
+      const lastStep = this.measurementSteps-1;
+      this.setMeasurementStep(lastStep);
     }
     else if (!this.isFirstStep()) {
       this.step--;
@@ -109,7 +130,7 @@ class PageIndex {
     let index  = new PageIndex();
     index.page = this.page;
     index.step = this.step;
-    index.calibrationSteps = this.calibrationSteps;
+    index.calibrationSteps   = this.calibrationSteps;
     index.measurementSteps   = this.measurementSteps;
     return index;
   }

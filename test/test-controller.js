@@ -26,8 +26,7 @@ test('Controller without calibration basically works', async t => {
     await c.next();
   }
   await c.next();
-  t.true(view.wizard.index.isMeasurementPage());
-  t.is(view.wizard.index.step, NUM_STEPS-1);
+  t.true(view.wizard.index.isFinishedPage());
 });
 
 test('Controller with saved cal basically works', async t => {
@@ -58,8 +57,7 @@ test('Controller with saved cal basically works', async t => {
     await c.next();
   }
   await c.next();
-  t.true(view.wizard.index.isMeasurementPage());
-  t.is(view.wizard.index.step, NUM_STEPS-1);
+  t.true(view.wizard.index.isFinishedPage());
 });
 
 test('Controller performing calibration basically works', async t => {
@@ -98,8 +96,7 @@ test('Controller performing calibration basically works', async t => {
     await c.next();
   }
   await c.next();
-  t.true(view.wizard.index.isMeasurementPage());
-  t.is(view.wizard.index.step, NUM_STEPS-1);
+  t.true(view.wizard.index.isFinishedPage());
 });
 
 test('parameters: Non-existent cal group cleared', async t => {

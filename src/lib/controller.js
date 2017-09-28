@@ -331,16 +331,13 @@ class Controller {
   async processMeasurementStep() {
     winston.debug('controller.processMeasurementStep', {index: this.index});
     await this.model.measure(this.index.step);
-    if (this.index.isLastStep()) {
-      this.view.alert.showMessage('success', 'Procedure is complete!');
-    }
-    else {
+    if (!this.index.isLastStep()) {
       const step  = this.index.step+1;
       const steps = this.index.measurementSteps;
       this.view.alert.showMessage('success', `Step ${step}/${steps} complete!`);
-      this.index.next();
-      await this.render();
     }
+    this.index.next();
+    await this.render();
   }
 }
 

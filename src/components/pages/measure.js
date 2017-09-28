@@ -1,4 +1,4 @@
-import React from 'react';
+import React     from 'react';
 import PortTable from '../port-table/port-table.js';
 
 function MeasurePage(props) {

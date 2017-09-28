@@ -25,19 +25,16 @@ test('start calibration', t => {
   index.calibrationSteps = 10;
   index.startCalibration();
   t.is(index.page, Pages.CALIBRATE);
+  t.true(index.isCalibrationPage());
   t.is(index.step, 0);
-});
-test('is first calibration step', t => {
-  const index = new PageIndex();
-  index.calibrationSteps = 2;
-  index.startCalibration();
   t.true(index.isFirstStep());
   t.not(index.isLastStep());
 });
 test('is last calibration step', t => {
   const index = new PageIndex();
-  index.calibrationSteps = 2;
-  index.setCalibrationStep(1);
+  index.calibrationSteps = 10;
+  index.setCalibrationStep(9);
+  t.true(index.isCalibrationPage());
   t.not(index.isFirstStep());
   t.true(index.isLastStep());
 });
@@ -55,7 +52,7 @@ test('complete calibration', t => {
   index.measurementSteps   = 1;
   index.startCalibration();
   for (let i = 0; i < STEPS-1; i++) {
-    t.is(index.page, Pages.CALIBRATE);
+    t.true(index.isCalibrationPage());
     t.is(index.step, i);
     index.next();
   }
@@ -63,19 +60,14 @@ test('complete calibration', t => {
   t.true(index.isLastStep());
   index.next();
   t.true(index.isMeasurementPage());
-  t.is(index.step, 0);
+  t.true(index.isFirstStep());
 });
 test('start measurement', t => {
   const index = new PageIndex();
   index.measurementSteps = 10;
   index.startMeasurement();
   t.is(index.page, Pages.MEASURE);
-  t.is(index.step, 0);
-});
-test('is first measurement step', t => {
-  const index = new PageIndex();
-  index.measurementSteps = 2;
-  index.startMeasurement();
+  t.true(index.isMeasurementPage());
   t.true(index.isFirstStep());
   t.not(index.isLastStep());
 });
@@ -83,6 +75,7 @@ test('is last measurement step', t => {
   const index = new PageIndex();
   index.measurementSteps = 2;
   index.setMeasurementStep(1);
+  t.true(index.isMeasurementPage());
   t.not(index.isFirstStep());
   t.true(index.isLastStep());
 });
@@ -99,11 +92,13 @@ test('complete measurement', t => {
   index.measurementSteps = STEPS;
   index.startMeasurement();
   for (let i = 0; i < STEPS-1; i++) {
-    t.is(index.page, Pages.MEASURE);
+    t.true(index.isMeasurementPage());
     t.is(index.step, i);
     index.next();
   }
   t.true(index.isLastStep());
+  index.next();
+  t.true(index.isFinished());
 });
 test('procedure without calibration', t => {
   const STEPS = 10;
@@ -119,6 +114,8 @@ test('procedure without calibration', t => {
     index.next();
   }
   t.true(index.isLastStep());
+  index.next();
+  t.true(index.isFinished());
 });
 test('procedure with calibration', t => {
   const CALIBRATION_STEPS = 3;
@@ -147,6 +144,8 @@ test('procedure with calibration', t => {
     index.next();
   }
   t.true(index.isLastStep());
+  index.next();
+  t.true(index.isFinished());
 });
 test('back from settings page does nothing', t => {
   const index = new PageIndex();
@@ -154,14 +153,14 @@ test('back from settings page does nothing', t => {
   index.back();
   t.true(index.isSettingsPage());
 });
-test('back from last measurement', t => {
+test('back from finished page', t => {
   const STEPS = 10;
   const index = new PageIndex();
   index.measurementSteps = STEPS;
   index.setMeasurementStep(STEPS-1)
-  t.true(index.isMeasurementPage());
-  t.true(index.isLastStep());
+  index.setFinishedPage();
 
+  index.back();
   for (i = STEPS-1; i > 0; i--) {
     t.true(index.isMeasurementPage());
     t.is(index.step, i);
