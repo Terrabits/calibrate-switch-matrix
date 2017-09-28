@@ -11,7 +11,12 @@ class Controller {
   // user actions
   async restart() {
     winston.debug('controller.restart');
-    this.view.alert.clear();
+    if (this.index && this.index.isCalibrationPage()) {
+      this.view.alert.showMessage('danger', 'Calibration aborted');
+    }
+    else {
+      this.view.alert.clear();
+    }
     this.index = new PageIndex();
     await this.render();
     this.enableInputs();
