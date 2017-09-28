@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const BabiliPlugin = require('babili-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Config directories
@@ -21,7 +20,6 @@ const externals = Object.create(null);
 for (let d of dependencies) {
   externals[d] = `require('${d}')`;
 }
-
 
 module.exports = {
   entry: SRC_DIR + '/index.js',
@@ -75,8 +73,7 @@ module.exports = {
     new ExtractTextPlugin('bundle.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new BabiliPlugin()
+    })
   ],
   devtool: 'cheap-module-eval-source-map',
   externals: externals,
