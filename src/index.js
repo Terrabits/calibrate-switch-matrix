@@ -43,10 +43,6 @@ let root = document.createElement('div');
 root.id = "root";
 document.body.appendChild( root );
 
-// Model, Controller
-window.model      = new Model();
-window.controller = new Controller(model, null);
-
 // View
 window.render = Component => {
   ReactDOM.render(
@@ -69,5 +65,6 @@ if (module.hot) {
   module.hot.accept('./components/app', () => { window.render(App) })
 }
 
-controller.view = window.view
+window.model      = new Model();
+window.controller = new Controller(model, view);
 controller.restart();

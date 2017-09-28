@@ -2,7 +2,7 @@ const {Choices} = require('./calibration.js');
 const {PageIndex, Pages} = require('./page-index.js');
 
 class Controller {
-  constructor(model=null, view=null) {
+  constructor(model, view) {
     this.model = model;
     this.view  = view;
     this.restart();
@@ -11,6 +11,7 @@ class Controller {
   // user actions
   async restart() {
     winston.debug('controller.restart');
+    this.view.alert.clear();
     this.index = new PageIndex();
     await this.render();
     this.enableInputs();
@@ -98,9 +99,7 @@ class Controller {
   async render() {
     let params = await this.parameters();
     winston.debug('controller.render', {params});
-    if (this.view) {
-      await this.view.renderNewParameters(params);
-    }
+    await this.view.renderNewParameters(params);
   }
   updateModel() {
     winston.debug('controller.updateModel');
