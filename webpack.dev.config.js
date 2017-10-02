@@ -4,19 +4,19 @@ const { spawn }         = require('child_process');
 const webpack           = require('webpack');
 
 // Config directories
-const SRC_DIR = path.resolve(__dirname, 'src');
-const OUTPUT_DIR = path.resolve(__dirname, 'build');
+const SRC_DIR        = path.resolve(__dirname, 'src');
+const OUTPUT_DIR     = path.resolve(__dirname, 'build');
 
 // Any directories you will be adding code/files into, need to be added to this array so webpack will pick them up
 const defaultInclude = [SRC_DIR];
 
 // Title
-const package = require('./package.json');
-const title = `${package.productName} ${package.version}`
+const package        = require('./package.json');
+const title          = `${package.productName} ${package.version}`
 
 // Dependencies (use node_modules)
-const dependencies = Object.keys(package.dependencies);
-const externals = Object.create(null);
+const dependencies   = Object.keys(package.dependencies);
+const externals      = Object.create(null);
 for (let d of dependencies) {
   externals[d] = `require('${d}')`;
 }
