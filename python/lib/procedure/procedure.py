@@ -6,14 +6,25 @@ from pathlib             import Path
 
 class Procedure:
     def __init__(self, filename='', set_file_extension='.zvx', cal_unit_ports=0):
-        self.load(filename)
         self.paths = Paths(filename, set_file_extension)
+        if self.paths.is_procedure():
+            self.yaml = read_yaml(self.paths.procedure)
+        else:
+            self.yaml = {}
         self.cal_unit_ports = cal_unit_ports
 
     def validate(self):
         status = {'is valid': False, 'message': ''}
         if not self.yaml:
-            status['message'] = 'Could not read procedure file'
+            if not self.paths.is_procedure():
+                status['message'] = 'Procedure not found'
+                return status
+            else:
+                status['message'] = 'Could not read procedure file'
+                return status
+
+        if not self.paths.is_root():
+            status['message'] = "Cannot find 'sets' and/or 'switch matrices' folder(s) for procedure."
             return status
 
         # Confirm presence of switch matrix,
@@ -81,14 +92,6 @@ class Procedure:
                     return status
         status['is valid'] = True
         return status
-
-    def load(self, filename):
-        if not filename.lower().endswith('.yaml'):
-            filename += '.yaml'
-        self.filename = filename
-        self.paths    = Paths(filename)
-        self.yaml     = read_yaml(filename)
-        return self.validate()['is valid']
 
     def matrix_name(self):
         return self.yaml['switch matrix']

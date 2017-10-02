@@ -8,7 +8,9 @@ R&S Calibrate Switch Matrix Change Log
 * Procedure dialog opens `yaml` files only, starts in documented default location
 * Alerts are persistent and dismissible
 * Restart button added
-* Invalid vna set files are detected and a user-friendly error messsage provided
+* Invalid vna set files are detected and a user-friendly error message provided
+* Procedures can be organized into sub-directories
+* Guided calibration works with all VNAs
 
 2017-08-06 Version 0.8.3
 ------------------------
