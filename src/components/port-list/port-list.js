@@ -2,11 +2,11 @@ import React from 'react';
 import Head  from './head.js';
 import Row   from './row.js';
 
-function PortTable(props) {
+function PortList(props) {
   let rows = [];
   if (props.ports) {
-    for (let port of props.ports) {
-      rows.push(<Row key={port} port={port} />);
+    for (let i of props.ports) {
+      rows.push(<Row key={i[0]} vnaPort={i[0]} calUnitPort={i[1]} />);
     }
   }
   return (
@@ -19,4 +19,4 @@ function PortTable(props) {
   );
 }
 
-export default PortTable;
+export default PortList;

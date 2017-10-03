@@ -12,7 +12,7 @@ function CalibratePage(props) {
         <h2 className="step-heading pull-right"> {step} / {steps}</h2>
       </div>
       <p>
-        Connect the following VNA ports to any cal unit port. The VNA will auto-detect the connections you make.
+        Make the following connections between the VNA and the cal unit.
       </p>
       <PortList ports={props.ports} />
     </div>

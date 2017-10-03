@@ -1,6 +1,14 @@
 const {Choices} = require('./calibration.js');
 const {PageIndex, Pages} = require('./page-index.js');
 
+function getVnaPorts(step) {
+  const vnaPorts = [];
+  for (i of step) {
+    vnaPorts.push(i[0]);
+  }
+  return vnaPorts;
+}
+
 class Controller {
   constructor(model, view) {
     this.index = new PageIndex();
@@ -219,8 +227,9 @@ class Controller {
       const steps = procedure.calibrationSteps;
       const STEPS = steps.length;
       for (let i = 0; i < STEPS; i++) {
+        const vnaPorts = getVnaPorts(steps[i]);
         items.push({
-          name:   `Ports ${steps[i]}`,
+          name:   `Ports ${vnaPorts.join(', ')}`,
           index:  new PageIndex(Pages.CALIBRATE, i),
           active: this.index.step == i
         });
@@ -315,8 +324,12 @@ class Controller {
         this.model.calGroup  = name;
         await this.startMeasurements();
       }
+      this.view.alert.showMessage('success', 'Calibration complete!');
     }
     else {
+      const step  = this.index.step+1;
+      const steps = this.index.calibrationSteps;
+      this.view.alert.showMessage('success', `Calibration step ${step}/${steps} complete!`);
       this.index.next();
       await this.render();
     }
@@ -334,7 +347,7 @@ class Controller {
     if (!this.index.isLastStep()) {
       const step  = this.index.step+1;
       const steps = this.index.measurementSteps;
-      this.view.alert.showMessage('success', `Step ${step}/${steps} complete!`);
+      this.view.alert.showMessage('success', `Measurement Step ${step}/${steps} complete!`);
     }
     this.index.next();
     await this.render();
