@@ -1,0 +1,58 @@
+name: Matrix1 Characterization
+switch matrix: matrix1
+vna calibration:
+  setup: calibration set
+  ports:    [1,2,3,4,5,6,7,8,9,10]
+measurement steps:
+  - name: Step 1
+    vna connections:
+      1: Switch matrix port 1
+      2: Switch matrix port 2
+      3: Switch matrix port 3
+      4: Switch matrix port 4
+    measurements:
+      - switch path: path1
+        vna setup:   set
+        vna ports:   [1, 2]
+      - switch path: path2
+        vna setup:   set
+        vna ports:   [3, 4]
+  - name: Step 2
+    vna connections:
+      1: Switch matrix port 5
+      2: Switch matrix port 6
+      3: Switch matrix port 7
+      4: Switch matrix port 8
+    measurements:
+      - switch path: path1
+        vna setup:   set
+        vna ports:   [1, 2]
+      - switch path: path2
+        vna setup:   set
+        vna ports:   [3, 4]
+  - name: Step 3
+    vna connections:
+      1: Switch matrix port  9
+      2: Switch matrix port 10
+      3: Switch matrix port 11
+      4: Switch matrix port 12
+    measurements:
+      - switch path: path1
+        vna setup:   set
+        vna ports:   [1, 2]
+      - switch path: path2
+        vna setup:   set
+        vna ports:   [3, 4]
+  - name: Step 4
+    vna connections:
+      1: Switch matrix port 13
+      2: Switch matrix port 14
+      3: Switch matrix port 15
+      4: Switch matrix port 16
+    measurements:
+      - switch path: path1
+        vna setup:   set
+        vna ports:   [1, 2]
+      - switch path: path2
+        vna setup:   set
+        vna ports:   [3, 4]

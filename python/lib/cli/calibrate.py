@@ -18,9 +18,11 @@ def process_args(args):
     cal_unit_ports   = vna.cal_unit().ports
     if not cal_unit_ports:
         return [None]*2
-    procedure = process_procedure(args, file_extension, cal_unit_ports)
-    if not procedure:
-        return [None]*2
+    procedure = None
+    if not args.apply_calibration and not args.save_calibration:
+        procedure = process_procedure(args, file_extension, cal_unit_ports)
+        if not procedure:
+            return [None]*2
     return [vna, procedure]
 
 def scpi_errors(vna):
@@ -32,16 +34,18 @@ def scpi_errors(vna):
         return True
     return False
 
+def step_to_string(step):
+    ports = []
+    for i in range(0, len(step)):
+        port_pair = step[i]
+        for port in port_pair:
+            ports.append(port)
+    return ",".join(map(str, ports))
+
 def start(args):
-    # TODO
     [vna, procedure] = process_args(args)
     if not vna or not procedure:
         return False
-    if vna.properties.is_zvx():
-        print('Calibrate does not work with ZVA yet...')
-        cleanup_vna(vna)
-        return False
-    # TODO: Start calibration here
     set_path = procedure.calibration_set_path()
     if not Path(set_path).is_file():
         print('Could not find calibration setup file')
@@ -53,35 +57,34 @@ def start(args):
         print(msg)
         cleanup(vna, matrix)
         return False
-
     vna.write("SENS1:CORR:COLL:AUTO:CONF FNP, ''")
     steps = procedure.calibration_steps()
     for i in range(0, len(steps)):
-        scpi = 'SENS1:CORR:COLL:AUTO:ASS{0}:DEF:TPOR {1}'
-        scpi = scpi.format(i+1, ",".join(map(str,steps[i])))
+        scpi = 'SENS1:CORR:COLL:AUTO:ASS{0}:DEF {1}'
+        scpi = scpi.format(i+1, step_to_string(steps[i]))
         vna.write(scpi)
     if scpi_errors(vna):
         cleanup_vna(vna)
         return False
     else:
         return True
-
 def perform_step(args):
     [vna, procedure] = process_args(args)
     if not vna or not procedure:
         return False
     vna.is_error()
     vna.clear_status()
-    ports = procedure.calibration_step_ports(args.step)
+    i = int(args.step)
+    ports = procedure.calibration_step_ports(i)
     # TODO: Check for port connections?
     scpi = 'SENS1:CORR:COLL:AUTO:ASS{0}:ACQuire'
-    scpi = scpi.format(args.step)
+    scpi = scpi.format(i+1)
     vna.write(scpi)
     vna.pause(10*60*1000) # 10 mins
     return not scpi_errors(vna)
 def apply(args):
     [vna, procedure] = process_args(args)
-    if not vna or not procedure:
+    if not vna:
         return False
     vna.is_error()
     vna.clear_status()
@@ -91,7 +94,7 @@ def apply(args):
     return not scpi_errors(vna)
 def save(args):
     [vna, procedure] = process_args(args)
-    if not vna or not procedure:
+    if not vna:
         return False
     vna.is_error()
     vna.clear_status()

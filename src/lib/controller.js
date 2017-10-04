@@ -78,7 +78,7 @@ class Controller {
           this.view.alert.showMessage('danger', String(err.message));
         }
         else {
-          this.view.alert.showMessage('danger', String(err));
+          this.view.alert.showMessage('danger', JSON.stringify(err));
         }
       }
       else {
@@ -307,8 +307,8 @@ class Controller {
     this.index.startCalibration();
     const procedure = await this.model.getProcedure(true);
     this.index.calibrationSteps = procedure.calibrationSteps.length;
-    await this.model.startCalibration();
     await this.render();
+    await this.model.startCalibration();
   }
   async processCalibrationStep() {
     winston.debug('controller.processCalibrationStep', {index: this.index});
@@ -329,9 +329,9 @@ class Controller {
     else {
       const step  = this.index.step+1;
       const steps = this.index.calibrationSteps;
-      this.view.alert.showMessage('success', `Calibration step ${step}/${steps} complete!`);
       this.index.next();
       await this.render();
+      this.view.alert.showMessage('success', `Calibration step ${step}/${steps} complete!`);
     }
   }
   async startMeasurements() {
