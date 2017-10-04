@@ -77,6 +77,12 @@ class Controller {
         if (err.message) {
           this.view.alert.showMessage('danger', String(err.message));
         }
+        else if (err.stdout && err.stdout.text) {
+          this.view.alert.showMessage('danger', err.stdout.text);
+        }
+        else if (err.stderr && err.stderr.text) {
+          this.view.alert.showMessage('danger', err.stderr.text);
+        }
         else {
           this.view.alert.showMessage('danger', JSON.stringify(err));
         }
