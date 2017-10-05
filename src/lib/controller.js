@@ -1,10 +1,6 @@
 const {Choices} = require('./calibration.js');
 const {PageIndex, Pages} = require('./page-index.js');
 
-import electron from 'electron'
-const remote    = electron.remote;
-const  dialog   = remote.dialog;
-
 function getVnaPorts(step) {
   const vnaPorts = [];
   for (i of step) {
