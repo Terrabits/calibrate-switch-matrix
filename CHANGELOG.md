@@ -1,7 +1,7 @@
 R&S Calibrate Switch Matrix Change Log
 ======================================
 
-2017-09-12 Version 0.9.0
+2017-09-12 Version 1.0.0
 ------------------------
 
 * Existing cal group bug(s) fixed. User choice persists despite back/next.
