@@ -202,12 +202,12 @@ class Controller {
       active: this.index.isSettingsPage()
     };
     let calibrate = {
-      name: 'Calibrate',
+      name: 'Calibration',
       index: new PageIndex(Pages.CHOOSE_CAL),
       active: this.index.isChooseCalPage()
     };
     let measure   = {
-      name: 'Measure',
+      name: 'Measurements',
       index: new PageIndex(Pages.MEASURE),
       active: false
     };
