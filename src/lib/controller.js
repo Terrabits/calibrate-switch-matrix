@@ -1,6 +1,10 @@
 const {Choices} = require('./calibration.js');
 const {PageIndex, Pages} = require('./page-index.js');
 
+import electron from 'electron'
+const remote    = electron.remote;
+const  dialog   = remote.dialog;
+
 function getVnaPorts(step) {
   const vnaPorts = [];
   for (i of step) {
@@ -320,17 +324,18 @@ class Controller {
     winston.debug('controller.processCalibrationStep', {index: this.index});
     await this.model.performCalibrationStep(this.index.step);
     if (this.index.isLastStep()) {
-      await this.model.applyCalibration();
-      // TODO: Finish save dialog
-      // const name = this.view.getSaveCalFromDialog();
-      const name = 'calibrate switch matrix';
+      const name = this.view.getSaveCalFromDialog();
       if (name) {
+        await this.model.applyCalibration();
         await this.model.saveCalibration(name);
         this.model.calChoice = Choices.EXISTING;
         this.model.calGroup  = name;
         await this.startMeasurements();
+        this.view.alert.showMessage('success', 'Calibration complete!');
       }
-      this.view.alert.showMessage('success', 'Calibration complete!');
+      else {
+        this.view.alert.showMessage('warning', 'Cal group name');
+      }
     }
     else {
       const step  = this.index.step+1;

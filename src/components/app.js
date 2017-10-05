@@ -7,6 +7,10 @@ import Overlay from './overlay.js';
 import Sidebar from './sidebar/sidebar.js';
 import Wizard  from './wizard.js';
 
+import electron from 'electron'
+const remote    = electron.remote;
+const  dialog   = remote.dialog;
+
 // Note: removed header above window-content:
 // <header className="toolbar toolbar-header draggable">
 // <h1 className="title">{this.props.title || ''}</h1>
@@ -64,8 +68,7 @@ class App extends React.Component {
     };
   }
   getSaveCalFromDialog() {
-    console.log('save cal as...');
-    return 'calibration';
+    return 'calibrate switch matrix';
   }
   get disableInputs() {
     return this.state.disableInputs;
